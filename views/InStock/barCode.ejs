@@ -1,0 +1,84 @@
+<button
+  type="button"
+  class="btn me-2 scan-btn px-2 py-1"
+  data-bs-toggle="modal"
+  data-bs-target="#barcode-<%= stock._id %>"
+>
+  <i class="bi bi-upc-scan"></i>
+</button>
+<div
+  class="modal fade add-storage-modal"
+  id="barcode-<%= stock._id %>"
+  data-bs-keyboard="true"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content add-storage-page-container">
+      <div class="modal-header">
+        <h5 class="modal-title" id="barcode-<%= stock._id %>">Medicament Barcode</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Barcode Preview -->
+        <div class="mb-3 text-center">
+          <img 
+            id="barcode-preview-<%= stock._id %>" 
+            src="<%= stock.barcode %>" 
+            alt="Barcode" 
+            style="max-width: 100%; max-height: 100px;" 
+          />
+        </div>
+
+        <!-- Print Button -->
+        <div class="mb-3 text-center">
+            <button 
+            type="button" 
+            class="btn gear-btn" 
+            onclick="printTicket({
+              barcode: '<%= stock.barcode %>',
+              batchNumber: '<%= stock.batchNumber %>',
+              expiryDate: '<%= stock.expiryDate %>',
+              locationCode: '<%= stock.locationCode %>'
+            })"
+          >
+            Print Ticket
+          </button>
+          
+          
+        </div>
+
+        <!-- Change Barcode Form -->
+        <form
+          id="addToStorageForm"
+          method="POST"
+          class="row needs-validation"
+          action="/inStock/updateBarCode"
+          novalidate
+        >
+          <div class="form-group mb-3">
+            <label for="BarCode-<%= stock._id %>" class="form-label">Modify Barcode:</label>
+            <input 
+              name="BarCode" 
+              id="BarCode-<%= stock._id %>" 
+              value="<%= stock.originalBarcode %>" 
+              class="form-control" 
+              type="text" 
+              placeholder="Enter your custom barcode" 
+              required 
+            />
+          </div>
+          <input type="hidden" name="stockId" value="<%= stock._id %>">
+          <button type="submit" class="btn assign-btn">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

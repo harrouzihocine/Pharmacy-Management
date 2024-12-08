@@ -1,0 +1,1934 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.body {
+  background-color: #143030; /* Dark background */
+  font-family: 'Kanit', Arial, sans-serif;
+  padding: 0;
+  display: flex;
+ margin-left: 40px;
+  justify-content: center;
+
+  overflow-y: auto; /* Allow vertical scrolling */
+  height: 100%;
+  color: #ffffff; /* Light grey text */
+
+}
+
+
+/*----------------------------------------------------------------tags--------------------------------------------*/
+.tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #ffffff; /* Default white text for contrast */
+  background: #2e2e2e; /* Subtle dark background for blending */
+  border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+.tag.low-stock {
+  background: #ff9500a3; /* Cool muted blue tone for low stock */
+  color: #ffffff; /* Soft pastel blue for text */
+  border: 0px ; /* Complementary border for subtle separation */
+}
+
+.tag.out-of-stock {
+  background: #ff000093; /* Neutral dark gray for out of stock */
+  color: #ffffff; /* Light gray for contrast */
+  border: 0px ; /* Slightly lighter gray border */
+}
+
+.tag:hover {
+  transform: translateY(-2px); /* Slight lift effect on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+}
+
+/*----------------------------------------------------------------navbar style-----------------------------------*/
+/* Toggle Button */
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 5px; /* Make the button appear above the sidebar */
+  left: 3px; /* Align with the left edge of the sidebar */
+  background-color: #545454; /* Darker color for contrast */
+  color: #fff;
+  border: 0px;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
+  z-index: 1100;
+  font-size: 1.5rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Hover Effect for the Button */
+.sidebar-toggle-btn:hover {
+  background-color: #acacac;
+  top:5px;
+  border-color: #ffffff;
+  transform: scale(1.1); /* Slight scale effect on hover */
+}
+
+/* Sidebar Container */
+.sidebar-nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 35px; /* Initially only 10px wide */
+  background-color: #0201281d;
+  padding-top: 20px;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  z-index: 1000;
+  transition: width 0.2s ease-in-out;
+  overflow: hidden; /* Prevent content overflow when collapsed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Sidebar Expanded State */
+.sidebar-nav.active {
+  width: 220px; /* Full width when active */
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 0 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Sidebar Title (When Sidebar is closed) */
+.sidebar-header .sidebar-title {
+  display: none; /* Hide when sidebar is open */
+  font-size: 1.5rem;
+  color: #999d9a;
+  font-weight: bolder;
+}
+
+/* Sidebar Title (When Sidebar is closed) - Show Sidebar Navigator in vertical */
+.sidebar-nav:not(.active) .sidebar-title {
+  position: absolute;
+  display: block;
+  writing-mode: vertical-rl; /* Make the text vertical */
+  font-size: 20px;
+  padding: 10px;
+  top: 33%;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin-top: 30px;
+  width: 100%;
+  display: none; /* Hide items when sidebar is closed */
+}
+
+/* Show menu items when sidebar is expanded */
+.sidebar-nav.active .sidebar-menu {
+  display: block;
+}
+
+/* Sidebar Menu Item */
+.sidebar-menu li {
+  margin: 10px 0;
+  width: 100%;
+}
+
+/* Sidebar Links */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+/* Sidebar Link Hover */
+.sidebar-link:hover {
+  background-color: #726c7a;
+  color: white;
+}
+
+/* Active Link Style */
+.sidebar-link.active {
+  background-color: #55104d;
+  font-weight: bold;
+  color: white;
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 10px; /* Initially match sidebar width */
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* When Sidebar is Active, Push Content */
+.main-content.shifted {
+  margin-left: 240px; /* Push main content by sidebar width */
+}
+
+/* Apply smooth transition for all page content */
+.body {
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* When Sidebar is Active, Push Content */
+.body.shifted {
+  margin-left: 450px;
+}
+
+
+/*---------------------------------------------------Ticket Detail Page-----------------------------------------*/
+/* Container for the Ticket Detail Page */
+.ticket-detail-container {
+  
+  width: 70rem; /* Maximum width for large screens */
+  margin: 10px auto; /* Center-align the container */
+  padding: 20px ;
+  background-color: #0201281d; /* Lighter background for the container */
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Title and Header Styling */
+.ticket-detail-container h2 {
+  color: #A3D4FF; /* Modern mint green color for the main heading */
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: bolder;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.ticket-detail-container h3 {
+  color: #A3D4FF; /* Modern mint green color */
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Paragraph Styling */
+.ticket-detail-container p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 10px; 
+}
+.ticket-detail-container strong {
+  font-size: 1.1rem;
+  line-height: 1.6;
+color: #A3D4FF;
+}
+/* Section for Ticket Details */
+.ticket-detail-info {
+  margin-bottom: 30px;
+}
+
+/* Comments Section */
+.ticket-comment-section {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+/* Comment List Styling */
+.ticket-comment-list {
+  margin-top: 20px;
+}
+
+/* Individual Comment Styling */
+.ticket-comment {
+  padding: 15px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background-color: #2b2b2b89;
+  color: #ddd;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.ticket-comment:hover {
+  background-color: #444; /* Slightly lighter background on hover */
+}
+
+/* Comment Metadata (Name and Date) */
+.ticket-comment strong {
+  color: #A3D4FF; /* Use mint green for the commenter's name */
+}
+
+.ticket-comment em {
+  color: #aaa;
+}
+
+/* Comment Form Styling */
+.ticket-comment-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket-comment-form textarea[name="commentText"] {
+  width: 100%;
+  background-color: #333;
+  color: #ffffff;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 12px;
+  resize: vertical;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.ticket-comment-form textarea[name="commentText"]::placeholder {
+  color: #ffffff;
+  opacity: 0.7; /* Adjust opacity for the placeholder */
+}
+
+.ticket-comment-form textarea[name="commentText"]:focus {
+  background-color: #333; /* Keep background dark */
+  color: #ffffff;        /* Keep text white */
+  border-color: #00bfae; /* Mint green for border when focused */
+  outline: none;         /* Remove default blue outline */
+}
+
+/* Buttons */
+.ticket-comment-form button.btn {
+  background-color: #55104d; /* Mint green background for buttons */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.ticket-comment-form button.btn:hover {
+  background-color: #7e1271; /* Slightly darker mint green on hover */
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+  .ticket-detail-container {
+    width: 100%;
+    padding: 15px 20px;
+  }
+
+  .ticket-detail-container h2 {
+    font-size: 1.8rem;
+  }
+
+  .ticket-detail-container h3 {
+    font-size: 1.3rem;
+  }
+
+  .ticket-comment {
+    padding: 12px;
+  }
+
+  .ticket-comment-form button.btn {
+    width: 100%;
+    font-size: 1.2rem;
+  }
+}
+
+/*-----------------------------------login page---------------------------------------*/
+ /* Login Container Styles */
+.login-container {
+  width: 50rem; /* width for large screens */
+  margin: 10% auto; /* Center-align the container */
+  padding: 20px ;
+  background-color: #0201281d; /* Lighter background for the container */
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+ 
+}
+.login-container h1{
+  text-align: center;
+}
+
+/* Heading Style */
+.text-reg {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.text-reg i {
+  margin-right: 10px;
+}
+
+/* Form Inputs */
+.custom-input {
+  background-color: #3e3e3e; /* Darker background for inputs */
+  color: #fff; /* White text in inputs */
+  border: 1px solid #444; /* Slightly lighter border for inputs */
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.custom-input:focus {
+  border-color: #0073e6; /* Blue focus border */
+  background-color: #333; /* Darker background on focus */
+}
+
+/* Button Style */
+.custom-btn {
+  background-color: #726c7a; /* Blue button for dark mode */
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.custom-btn:hover {
+  background-color: #55104d;
+
+}
+
+/* Footer Text */
+.footer-text {
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.footer-text a {
+  color: #89c4cd; /* Blue link color */
+  text-decoration: none;
+}
+
+.footer-text a:hover {
+  text-decoration: underline; /* Underline link on hover */
+}
+ 
+/*--------------------------------- Register styles--------------------------------*/
+/* Register Container Styles */
+.register-container {
+  width: 50rem; /* Maximum width for large screens */
+  margin: 10% auto; /* Center-align the container */
+  padding: 20px ;
+  background-color: #0201281d; /* Lighter background for the container */
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+/* Heading Style */
+.text-reg-page {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.text-reg-page i {
+  margin-right: 10px;
+}
+
+/* Form Inputs */
+.custom-input-register {
+  background-color: #3e3e3e; /* Darker background for inputs */
+  color: #fff; /* White text in inputs */
+  border: 1px solid #444; /* Slightly lighter border for inputs */
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.custom-input-register:focus {
+  border-color: #0073e6; /* Blue focus border */
+  background-color: #333; /* Darker background on focus */
+}
+
+/* Select Inputs */
+.custom-select-register {
+  background-color: #3e3e3e; /* Darker background for select */
+  color: #fff; /* White text */
+  border: 1px solid #444; /* Slightly lighter border */
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+/* Button Style */
+.custom-btn-register {
+  background-color: #726c7a; /* Blue button for dark mode */
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.custom-btn-register:hover {
+  background-color: #55104d; /* Darker blue on hover */
+}
+
+/* Footer Text */
+.footer-text-register {
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.footer-text-register a {
+  color: #89c4cd; /* Blue link color */
+  text-decoration: none;
+}
+
+.footer-text-register a:hover {
+  text-decoration: underline; /* Underline link on hover */
+}
+
+/*--------------------------------- create ticket styles--------------------------------*/
+/* Create Ticket Container Styles */
+.create-ticket-container {
+  width: 70rem; /* Maximum width for large screens */
+  margin: 10px auto; /* Center-align the container */
+  padding: 20px ;
+  background-color: #0201281d; /* Lighter background for the container */
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading Style */
+.text-ticket {
+  font-size: 2.2rem;
+  margin-bottom: 25px;
+  color: #fff;
+  text-align: center;
+  font-weight: 600; /* Added bold for premium feel */
+}
+
+/* Form Inputs */
+.custom-input-ticket {
+  background-color: #3e3e3e; /* Darker background for inputs */
+  color: #fff; /* White text in inputs */
+  border: 1px solid #444; /* Slightly lighter border for inputs */
+  border-radius: 8px; /* Rounded corners for inputs */
+  padding: 12px;
+  margin-bottom: 18px;
+  width: 100%;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.custom-input-ticket:focus {
+  border-color: #0073e6; /* Blue border on focus */
+  background-color: #333; /* Slightly darker background on focus */
+}
+
+/* Select Inputs */
+.custom-select-ticket {
+  background-color: #3e3e3e; /* Darker background for select */
+  color: #fff; /* White text */
+  border: 1px solid #444; /* Slightly lighter border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 12px;
+  margin-bottom: 18px;
+  width: 100%;
+  transition: border-color 0.3s ease;
+}
+
+.custom-select-ticket:focus {
+  border-color: #0073e6; /* Blue border on focus */
+}
+
+.required {
+  color: red;
+  font-weight: bold;
+}
+
+/* Textarea Inputs */
+.custom-textarea-ticket {
+  background-color: #3e3e3e; /* Darker background for textarea */
+  color: #fff; /* White text */
+  border: 1px solid #444; /* Slightly lighter border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 12px;
+  margin-bottom: 18px;
+  width: 100%;
+  resize: vertical;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.custom-textarea-ticket:focus {
+  border-color: #0073e6; /* Blue border on focus */
+  background-color: #333; /* Slightly darker background on focus */
+}
+
+/* File Upload Button (Stylish) */
+.custom-file-upload {
+  background-color: #726c7a; /* Stylish blue background */
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  font-size: 1rem;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.custom-file-upload:hover {
+  background-color:  #55104d; /* Darker blue on hover */
+}
+
+.custom-file-upload input[type="file"] {
+  display: none; /* Hide default file input */
+}
+
+/* Submit Button Style */
+.custom-btn-ticket {
+  background-color: #726c7a; /* Blue button */
+  color: #fff;
+  padding: 14px;
+  border: none;
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer;
+  width: 100%;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+.custom-btn-ticket:hover {
+  background-color: #55104d; /* Darker blue on hover */
+}
+
+/* Footer Text */
+.footer-text-ticket {
+  margin-top: 20px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.footer-text-ticket a {
+  color: #0dc4dd; /* Blue link color */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-text-ticket a:hover {
+  text-decoration: underline; /* Underline link on hover */
+}
+/*-------------------------------Add Location Page---------------------------------*/
+/* Container for the add location form */
+.add-location-page-container {
+  width: 50rem;
+  background-color: #0201281d; /* Dark background */
+  color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Shadow effect */
+  margin-top: 20px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+/* Title Styling */
+.add-location-page-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Form Styling */
+.add-location-form {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* Form Group Styling */
+.add-location-form .form-group {
+  margin-bottom: 20px;
+}
+
+/* Label Styling */
+.add-location-form .form-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+/* Input and Select Styles */
+.add-location-form .form-control,
+.add-location-form .form-select {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #fff;
+}
+
+.add-location-form .form-control:focus,
+.add-location-form .form-select:focus {
+  border-color: #726c7a;
+  background-color: #333;
+  outline: none;
+}
+
+/* Button Styles */
+.add-location-form button[type="submit"] {
+  padding: 12px 30px;
+  background-color: #55104d; /* Dark color for action */
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Make button take the full width */
+}
+
+.add-location-form button[type="submit"]:hover {
+  background-color: #726c7a;
+}
+
+/* Styling for the hidden service name input */
+.add-location-form input[type="hidden"] {
+  display: none;
+}
+
+/*-------------------------------Locations page---------------------------------*/
+/* Container for the tickets page */
+.location-table-container {
+  width: 90rem;
+  background-color: #0201281d; /* Dark background for the container */
+  color: #fff; /* White text for contrast */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin-top: 20px;
+}
+
+/* Title Style (Optional, if added in the future) */
+.location-table-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.location-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.location-table th,
+.location-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.location-table th {
+  background-color: #3e3e3e; /* Slightly darker background for table headers */
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.location-table tr:nth-child(even) {
+  background-color: #333;
+}
+
+.location-table tr:hover {
+  background-color: #444; /* Hover effect to highlight rows */
+}
+
+/* Table Data Cells */
+.location-table td {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.location-table td:hover {
+  background-color: #555; /* Hover effect for cells */
+}
+/*---------------------------------------- service medicaments ----------------------------------------------*/
+.service-medicaments-container {
+  width: 90rem;
+  background-color: #0201281d;
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+}
+
+/* Title Styling */
+.service-medicaments-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.service-medicaments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.service-medicaments-table th,
+.service-medicaments-table td {
+  max-width: 300px !important;
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.service-medicaments-table th {
+  background-color: #3e3e3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.service-medicaments-table tr:nth-child(even) {
+  background-color: #333;
+}
+
+.service-medicaments-table tr:hover {
+  background-color: #444;
+}
+
+/* Table Data Cells */
+.service-medicaments-table td {
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.service-medicaments-table td a {
+  color: #1e90ff;
+  text-decoration: none;
+}
+
+.service-medicaments-table td a:hover {
+  text-decoration: underline;
+}
+
+/* Empty Table Row Styling */
+.service-medicaments-table td[colspan="4"] {
+  text-align: center;
+  font-style: italic;
+  color: #aaa;
+}
+/*------------------------------------- medicament detail (in service)-----------------------------------------*/
+.medicament-service-details-container {
+  width: 90rem;
+  background-color: #0201281d;
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+}
+
+/* Title Styling */
+.medicament-service-details-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.medicament-service-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.medicament-service-details-table th,
+.medicament-service-details-table td {
+  max-width: 300px !important;
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.medicament-service-details-table th {
+  background-color: #3e3e3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.medicament-service-details-table tr:nth-child(even) {
+  background-color: #333;
+}
+
+.medicament-service-details-table tr:hover {
+  background-color: #444;
+}
+
+/* Table Data Cells */
+.medicament-service-details-table td {
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+
+/* Empty Table Row Styling */
+.medicament-service-details-table td[colspan="6"] {
+  text-align: center;
+  font-style: italic;
+  color: #aaa;
+}
+/* Style the select element */
+.custom-select select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #444; /* Darker border for dark mode */
+  border-radius: 5px;
+  background-color: #333; /* Dark background for dark mode */
+  color: #fff; /* White text for readability */
+  font-size: 14px;
+  appearance: none; /* Remove default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  margin: 0; /* Remove margin */
+}
+
+/* Optional: Customize the arrow icon for dark mode */
+.custom-select select::-ms-expand {
+  background-color: transparent;
+  border: none;
+}
+
+.custom-select select option {
+  background-color: #333; /* Dark background for options */
+  color: #fff; /* White text for options */
+}
+
+.custom-select select:focus {
+  outline: none;
+  border-color: #007bff; /* Blue border on focus */
+}
+
+
+/*------------------------------------ medicament detail (stock info) Page-------------------------------------*/
+.stock-details-container {
+  width: 90rem;
+  background-color: #0201281d;
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+}
+
+/* Title Style */
+.stock-details-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+.stock-details-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.stock-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.stock-details-table th,
+.stock-details-table td {
+  max-width: 300px !important;
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.stock-details-table th {
+  background-color: #3e3e3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.stock-details-table tr:nth-child(even) {
+  background-color: #333;
+}
+
+.stock-details-table tr:hover {
+  background-color: #444;
+}
+
+/* Table Data Cells */
+.stock-details-table td {
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.stock-details-table td:hover {
+  background-color: #555;
+}
+
+/*------------------------------- location details (inside each location) Page---------------------------------*/
+.medicaments-table-container {
+  
+  background-color: #0201281d;
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+}
+
+/* Title Style */
+.medicaments-table-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.medicaments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.medicaments-table th,
+.medicaments-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.medicaments-table th {
+  background-color: #3e3e3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.medicaments-table tr:nth-child(even) {
+  background-color: #333;
+}
+
+.medicaments-table tr:hover {
+  background-color: #444;
+}
+
+/* Table Data Cells */
+.medicaments-table td {
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.medicaments-table td:hover {
+  background-color: #555;
+}
+
+
+/*-------------------------------Medicaments Page---------------------------------*/
+/* Container for the medicament table */
+.medicament-table-container {
+  
+  background-color: #0201281d; /* Dark background for the container */
+  color: #fff; /* White text for contrast */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin: 50px;
+}
+
+/* Title Style */
+.medicament-table-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.medicament-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.medicament-table th,
+.medicament-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.medicament-table th {
+  background-color: #3e3e3e; /* Slightly darker background for table headers */
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.medicament-table tr:nth-child(even) {
+  background-color: #333;
+}
+
+.medicament-table tr:hover {
+  background-color: #444; /* Hover effect to highlight rows */
+}
+
+/* Table Data Cells */
+.medicament-table td {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.medicament-table td:hover {
+  background-color: #555; /* Hover effect for cells */
+}
+/*-------------------------------Pharmacy Page---------------------------------*/
+/* Container for the pharmacy table */
+.pharmacy-table-container {
+  background-color: #0120451d; /* Slightly different dark background for the pharmacy */
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin-top: 20px;
+}
+
+/* Title Style */
+.pharmacy-table-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.pharmacy-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pharmacy-table th,
+.pharmacy-table td {
+  padding: 12px 5px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.pharmacy-table th {
+  background-color: #2e2e2e; /* Slightly darker background for table headers */
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.pharmacy-table tr:nth-child(even) {
+  background-color: #222; /* Alternate row color */
+}
+
+.pharmacy-table tr:hover {
+  background-color: #333; /* Hover effect to highlight rows */
+}
+
+/* Table Data Cells */
+.pharmacy-table td {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pharmacy-table td:hover {
+  background-color: #444; /* Hover effect for cells */
+}
+
+/* Action Buttons */
+.pharmacy-btn {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pharmacy-btn-success {
+  background-color: #28a745; /* Green for success */
+}
+
+.pharmacy-btn-danger {
+  background-color: #dc3545; /* Red for danger */
+}
+
+
+
+/*-------------------------------Storage Page---------------------------------*/
+/* Container for the storage table */
+.storage-table-container {
+  width: 70rem;
+  background-color: #0120451d; /* Slightly different dark background for storages */
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin-top: 20px;
+}
+
+/* Title Style */
+.storage-table-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.storage-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.storage-table th,
+.storage-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.storage-table th {
+  background-color: #2e2e2e; /* Slightly darker background for table headers */
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.storage-table tr:nth-child(even) {
+  background-color: #222; /* Alternate row color */
+}
+
+.storage-table tr:hover {
+  background-color: #333; /* Hover effect to highlight rows */
+}
+
+/* Table Data Cells */
+.storage-table td {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.storage-table td:hover {
+  background-color: #444; /* Hover effect for cells */
+}
+
+/* Action Buttons */
+.view-btn,
+.edit-btn,
+.delete-btn {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.view-btn {
+  background-color: #007bff; /* Blue for view */
+}
+.gear-btn {
+  color: white;
+  background-color: #8a8a8a; /* Blue for view */
+}
+.scan-btn{
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.edit-btn {
+  background-color: #ffc107; /* Yellow for edit */
+}
+
+.delete-btn {
+  background-color: #dc3545; /* Red for delete */
+}
+.scan-btn:hover{
+  background-color: #000000a9;
+  color: #ffffff;
+}
+.view-btn:hover {
+  background-color: #0056b3;
+}
+.gear-btn:hover {
+  color:#000000;
+  background-color: #fffbfb; /* Blue for view */
+}
+
+.edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.delete-btn:hover {
+  background-color: #bd2130;
+}
+/*-------------------------------------storage medicamement modal--------------------------------*/
+/* Style the modal container */
+.add-storage-modal .add-storage-page-container {
+  width: 50rem;
+  background-color: #1e313ef5; /* Dark background */
+  color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Shadow effect */
+  margin-top: 20px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+/* Title Styling */
+.add-storage-modal .modal-title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Form Styling */
+.add-storage-form {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* Form Group Styling */
+.add-storage-form .form-group {
+  margin-bottom: 20px;
+}
+
+/* Label Styling */
+.add-storage-form .form-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+/* Input and Select Styles */
+.add-storage-form .form-control,
+.add-storage-form .form-select {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #fff;
+}
+
+.add-storage-form .form-control:focus,
+.add-storage-form .form-select:focus {
+  border-color: #726c7a;
+  background-color: #333;
+  outline: none;
+}
+
+/* Button Styles */
+.add-storage-form button {
+  padding: 12px 30px;
+  background-color: #55104d; /* Dark color for action */
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Make button take the full width */
+}
+
+.add-storage-form button:hover {
+  background-color: #726c7a;
+}
+/* Ensure modal container has scrollable content */
+.add-storage-modal .add-storage-page-container {
+  overflow: auto; /* Enable scrolling when content overflows */
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+.add-storage-modal .add-storage-page-container::-webkit-scrollbar {
+  width: 8px; /* Very thin scrollbar for a modern, sleek look */
+}
+
+.add-storage-modal .add-storage-page-container::-webkit-scrollbar-track {
+  background: #121212; /* Very dark track for dark mode */
+  border-radius: 50px; /* Circular track for a futuristic look */
+}
+
+.add-storage-modal .add-storage-page-container::-webkit-scrollbar-thumb {
+  background: rgba(1, 101, 101, 0.7); /* Neon cyan color for the thumb */
+  border-radius: 50px; /* Circular thumb for a smooth look */
+  border: 3px solid #121212; /* Adds space between the thumb and track */
+  transition: all 0.3s ease; /* Smooth transition effect */
+}
+
+.add-storage-modal .add-storage-page-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 255, 1); /* Brighter neon cyan when hovering */
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.9); /* Glowing effect on hover */
+}
+
+/* Firefox */
+.add-storage-modal .add-storage-page-container {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: rgba(1, 101, 101, 0.7) #121212; /* Neon cyan thumb and dark track */
+}
+
+/*-------------------------------Add Storage Page---------------------------------*/
+/* Container for the add storage form */
+.add-storage-page-container {
+  width: 50rem;
+  background-color: #0201281d; /* Dark background */
+  color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Shadow effect */
+  margin-top: 20px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+/* Title Styling */
+.add-storage-page-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Form Styling */
+.add-storage-form {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* Form Group Styling */
+.add-storage-form .form-group {
+  margin-bottom: 20px;
+}
+
+/* Label Styling */
+.add-storage-form .form-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+/* Input and Select Styles */
+.add-storage-form .form-control,
+.add-storage-form .form-select {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #fff;
+}
+
+.add-storage-form .form-control:focus,
+.add-storage-form .form-select:focus {
+  border-color: #726c7a;
+  background-color: #333;
+  outline: none;
+}
+
+/* Button Styles */
+.add-storage-form button[type="submit"] {
+  padding: 12px 30px;
+  background-color: #55104d; /* Dark color for action */
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Make button take the full width */
+}
+
+.add-storage-form button[type="submit"]:hover {
+  background-color: #726c7a;
+}
+
+/* Styling for the hidden service name input */
+.add-storage-form input[type="hidden"] {
+  display: none;
+}
+/*------------------------------------ in stock medicaments----------------------*/
+.storages-table-container {
+ 
+  background-color: #0201281d;
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+}
+
+/* Title Style */
+.storages-table-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.storages-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.storages-table th,
+.storages-table td {
+  max-width: 300px !important;
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.storages-table th {
+  background-color: #3e3e3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.storages-table tr:nth-child(even) {
+  background-color: #333;
+}
+
+.storages-table tr:hover {
+  background-color: #444;
+}
+
+/* Table Data Cells */
+.storages-table td {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.storages-table td:hover {
+  background-color: #555;
+}
+
+/*-------------------------------Storages Table---------------------------------*/
+/* Container for the storages table */
+.storages-table-container {
+  width: 90rem;
+  background-color: #0201281d;
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+}
+
+/* Title Style */
+.storages-table-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.storages-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.storages-table th,
+.storages-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.storages-table th {
+  background-color: #3e3e3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.storages-table tr:nth-child(even) {
+  background-color: #333;
+}
+
+.storages-table tr:hover {
+  background-color: #444;
+}
+
+/* Table Data Cells */
+.storages-table td {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.storages-table td:hover {
+  background-color: #555;
+}
+
+/*-------------------------------Assign Locations Page Styles with MDB---------------------------------*/
+/* Main container with dark background */
+.assign-locations-container {
+  background-color: #0201281d; /* Dark background for the container */
+  color: #fff; /* White text for contrast */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin-top: 20px;
+}
+
+/* Heading styles */
+.assign-locations-container h1,
+.assign-locations-container h3 {
+  color: #fff;
+  text-align: center;
+}
+
+.assign-locations-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.assign-locations-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+/* Multi-select container */
+.multi-select-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Styling the select box */
+.multi-select {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #333; /* Dark background for the select box */
+  color: #fff; /* White text */
+  border: 1px solid #444; /* Dark border */
+  border-radius: 5px;
+  font-size: 16px;
+  box-shadow: none;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered{
+  max-width: 50rem;
+}
+
+.multi-select:focus {
+  outline: none;
+  border-color: #726c7a; /* Blue border on focus */
+}
+
+.multi-select option {
+  background-color: #333; /* Dark background for options */
+  color: #fff; /* White text for options */
+}
+
+.multi-select option:hover {
+  background-color: #444; /* Darker background on hover */
+}
+
+/* Button styling */
+.assign-btn {
+  background-color: #55104d; /* Blue background */
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: block;
+  margin-top: 5px;
+  width: 100%;
+}
+
+.assign-btn:hover {
+  background-color: #726c7a; /* Darker blue on hover */
+}
+
+/* For Select2 Dropdown */
+.select2-container--default .select2-selection--multiple {
+  background-color: #333;
+  border: 1px solid #444;
+  color: white;
+}
+
+.select2-container--default .select2-selection__choice {
+  background-color: #726c7a;
+  color: white;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background-color: #55104d;
+  color: white;
+
+}
+
+.select2-container--default .select2-selection__choice__remove {
+  color: white;
+}
+
+.select2-container--default .select2-results__option[aria-selected=true] {
+  background-color: #444;
+  color: #fff;
+}
+
+.select2-container--default .select2-results__option {
+  background-color: #333;
+  color: #fff;
+}
+
+.select2-container--default .select2-results__option:hover {
+  background-color: #726c7a;
+  color: #fff;
+}
+.choices {
+  background-color: #222;
+  color: #fff;
+}
+
+.choices__list--dropdown {
+  background-color: #333;
+  border: 1px solid #444;
+}
+
+.choices__item {
+  background-color: #444;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.choices__item--selectable {
+  cursor: pointer;
+}
+/*-------------------------------Storage Location Page---------------------------------*/
+/* Container for the storage location table */
+.storage-location-page-container {
+  width: 90rem;
+  background-color: #0201281d; /* Dark background for the page */
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin-top: 20px;
+}
+
+/* Title Style */
+.storage-location-page-container h2{
+  font-size: 2rem;
+  margin-bottom: 30px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.storage-location-page-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.storage-location-table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.storage-location-table-custom th,
+.storage-location-table-custom td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.storage-location-table-custom th {
+  background-color: #2e2e2e; /* Slightly darker background for table headers */
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.storage-location-table-custom tr:nth-child(even) {
+  background-color: #222; /* Alternate row color */
+}
+
+.storage-location-table-custom tr:hover {
+  background-color: #333; /* Hover effect to highlight rows */
+}
+
+/* Table Data Cells */
+.storage-location-table-custom td {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.storage-location-table-custom td:hover {
+  background-color: #444; /* Hover effect for cells */
+}
+
+/*-------------------------------------------------demand details ----------------------------------------*/
+/* Container for the demand detail page */
+.demand-detail-container {
+  width: 50%;
+ 
+  background-color: #0201281d; /* Dark background */
+  color: #fff; /* White text */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow */
+  margin-top: 30px;
+  margin-bottom: 50px;
+  font-size: 1.1rem;
+}
+
+/* Header Style for Demand Detail */
+.demand-detail-container h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Styling for each paragraph */
+.demand-detail-container p {
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.demand-detail-container p strong {
+  color: #0073e6; /* Highlighted text for labels */
+  font-weight: bold;
+}
+
+/* Styling for date and time */
+.demand-detail-container p:last-of-type {
+  font-style: italic;
+  color: #bbb; /* Light color for the date */
+}
+
+
+
+/*---------------------------------------close ticket button------------------------------------------------*/
+.close-ticket-btn {
+  background-color: #b7ffc9;
+  color: #000000;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-ticket-btn:hover {
+  background-color: #5f8167;
+}
+.confirmed{
+  background-color: #01320d;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 5px 10px;
+}
+
+/*-------------------------------remove button---------------------------------*/
+.remove-btn{
+  background-color: #c12828;
+  color: #0c0000;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  
+}
+.remove-btn:hover {
+  background-color: #720000;
+}
+/*--------------------------------barcode img--------------------------------*/

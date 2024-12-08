@@ -1,0 +1,78 @@
+<button
+  type="button"
+  class="btn me-2 btn-success px-2 py-1"
+  data-bs-toggle="modal"
+  data-bs-target="#stock-<%= medicament.medicamentId._id %>"
+>
+  <i class="bi bi-plus-lg"></i>
+</button>
+<div
+  class="modal fade add-storage-modal"
+  id="stock-<%= medicament.medicamentId._id %>"
+  data-bs-keyboard="true"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content add-storage-page-container">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addstock-<%= medicament.medicamentId._id %>">Add Medicament to Storage</h5>
+        <h6><%= medicament.medicamentId.designation %></h6>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form
+          id="addToStorageForm"
+          method="POST"
+          class="add-storage-form row needs-validation"
+          action="/inStock"
+          novalidate
+        >
+          <input type="hidden" id="medicamentId" name="medicamentId" value="<%= medicament.medicamentId._id %>">
+          <!-- Service Dropdown -->
+          <div class="form-group">
+            <label for="service" class="form-label">Select Service:</label>
+            <select name="service" id="service-<%= medicament.medicamentId._id %>" class="form-select" required>
+              <option value="">Choose Service...</option>
+              <% services.forEach((service) => { %>
+                <option value="<%= service.serviceABV %>"><%= service._id %></option>
+              <% }); %>
+            </select>
+          </div>
+
+          <!-- Storage Dropdown -->
+          <div class="form-group">
+            <label for="storage" class="form-label">Select Storage:</label>
+            <select name="storageId" id="storage-<%= medicament.medicamentId._id %>" class="form-select" disabled required>
+              <option value="">Choose a Storage</option>
+            </select>
+          </div>
+
+          <!-- Other Fields -->
+          <div class="form-group">
+            <label for="quantity" class="form-label">Quantity:</label>
+            <input name="quantity" id="quantity" class="form-control" type="number" min="1" placeholder="Enter quantity" required>
+          </div>
+          <div class="form-group">
+            <label for="batchNumber" class="form-label">Batch Number:</label>
+            <input name="batchNumber" id="batchNumber" class="form-control" type="text" placeholder="Enter batch number" required>
+          </div>
+          <div class="form-group">
+            <label for="expiryDate" class="form-label">Expiry Date:</label>
+            <input name="expiryDate" id="expiryDate" class="form-control" type="date">
+          </div>
+
+          <button type="submit" id="saveToStorage" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

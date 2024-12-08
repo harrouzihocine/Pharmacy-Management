@@ -1,0 +1,99 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="stock-details-container">
+  <h1>Stock Details for Service: <%= serviceName %></h1>
+
+  <table class="stock-table">
+    <thead>
+      <tr>
+        <th>Storage Name</th>
+        <th>Location Code</th>
+        <th>Code Interne</th>
+        <th>Designation</th>
+        <th>Nom Commercial</th>
+        <th>Quantity</th>
+        <th>Batch Number</th>
+        <th>Expiry Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (stockDetails.length > 0) { %>
+        <% stockDetails.forEach((stock) => { %>
+          <tr>
+            <td><%= stock.storageId.storageName %></td>
+            <td>
+                <% if (!stock.locationCode){ %> 
+                <form method="POST" action="/inStock/assign-location/<%= stock._id %>">
+                    <div class="custom-select">
+                    <select name="selectedlocationCode" required>
+                        <option value="">Select Location</option>
+                        <% Locations.forEach(location => { %>
+                            <option value="<%= location.locationCode %>">
+                                <%= location.locationCode %>
+                            </option>
+                        <% }) %>
+                    </select>
+                    <button type="submit" class="assign-btn">Assign</button>
+                    </div>
+                </form>
+                        <% }else{ %>
+                       <%= stock.locationCode %>
+                    <% } %>
+                    </td>
+           
+            <td><%= stock.medicamentId.code_interne %></td>
+            <td><%= stock.medicamentId.designation %>  <% if(stock.isExpiringSoon != 'Valid'){ %>
+              <span class="tag out-of-stock"><%= stock.isExpiringSoon %></span>
+              <% } %></td>
+            <td><%= stock.medicamentId.nom_commercial %></td>
+            <td><%= stock.quantity %></td>
+            <td><%= stock.batchNumber %></td>
+            <td><%= stock.expiryDate ? stock.expiryDate.toLocaleDateString() : 'N/A' %>
+            </td>
+            <td>
+              <div class="d-flex">
+                <%- include("./barCode", { stock }) %>
+                <% if(stock.locationCode){ %>
+                    <!-- Form for removing medicament -->
+                    <form method="POST" action="/inStock/remove-medicament/<%= stock._id %>">
+                        <button type="submit" class="btn delete-btn"><i class="bi bi-trash"></i></button>
+                    </form>
+                <% } %>
+               
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="8" style="text-align: center;">No stock available for this service</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .stock-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: #ddd;
+  }
+  .stock-table th, .stock-table td {
+    border: 1px solid #444;
+    padding: 8px;
+    text-align: left;
+  }
+  .stock-table th {
+    background-color: #222;
+    color: #fff;
+  }
+  .stock-table tr:nth-child(even) {
+    background-color: #333;
+  }
+  .stock-table tr:hover {
+    background-color: #444;
+  }
+</style>

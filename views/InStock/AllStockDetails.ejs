@@ -1,0 +1,45 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="stock-details-container">
+  <h1>Stock Details for Medicament</h1>
+  <h2><%= designantion %></h2>
+
+  <table class="stock-details-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Storage</th>
+        <th>Location Code</th>
+        <th>Quantity</th>
+        <th>Batch Number</th>
+        <th>Expiry Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (stockDetails.length) { %>
+       
+      <% stockDetails.forEach((stock) => { %>
+      <tr>
+        <!-- Service and Storage -->
+        <td><%= stock.storageId ? stock.storageId.service : 'Not Assigned' %></td>
+        <td><%= stock.storageId ? stock.storageId.storageName : 'Not Assigned' %></td>
+
+        <!-- Existing Details -->
+        <td><%= stock.locationCode ? stock.locationCode : 'Not Assigned' %></td>
+        <td><%= stock.quantity %></td>
+        <td><%= stock.batchNumber %></td>
+        <td><%= stock.expiryDate ? new Date(stock.expiryDate).toLocaleDateString() : 'N/A' %>
+            <% if (stock.isExpiringSoon !='Valid' ) { %>
+          <span class="tag out-of-stock">Expiration Soon</span>
+        <% } %>
+         
+        </td>
+      </tr>
+      <% }); }else{%>
+        <tr>
+          <td colspan="6">No stock details found for this medicament.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

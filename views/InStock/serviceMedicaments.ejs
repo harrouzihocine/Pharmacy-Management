@@ -1,0 +1,55 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="service-medicaments-container">
+  <h1>Medicaments in Service: <%= serviceName %></h1>
+
+  <table class="service-medicaments-table">
+    <thead>
+      <tr>
+        <th>Code Interne</th>
+        <th>Designation</th>
+        <th>Commercial Name</th>
+        <th>Total Quantity</th>
+        <th>Min Quantity</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (medicaments.length > 0) { %>
+        <% medicaments.forEach((medicament) => { %>
+          <tr>
+            <td onclick="window.location.href='/inStock/service/medicament-details/<%= serviceName %>/<%= medicament._id %>'">
+              <%= medicament.medicamentDetails.code_interne %>
+            </td>
+            <td onclick="window.location.href='/inStock/service/medicament-details/<%= serviceName %>/<%= medicament._id %>'">
+              <%= medicament.medicamentDetails.designation %>
+              <% if (medicament.totalQuantity === 0) { %>
+                <span class="tag out-of-stock">Out of Stock</span>
+              <% } else if (medicament.totalQuantity < medicament.minQuantity) { %>
+                <span class="tag low-stock">Low Stock</span>
+              <% } %>
+            </td>
+            <td onclick="window.location.href='/inStock/service/medicament-details/<%= serviceName %>/<%= medicament._id %>'">
+              <%= medicament.medicamentDetails.nom_commercial %>
+            </td>
+            <td onclick="window.location.href='/inStock/service/medicament-details/<%= serviceName %>/<%= medicament._id %>'">
+              <%= medicament.totalQuantity %>
+            </td>
+            <td>
+              <% if (medicament.minQuantity !== 'N/A') { %>
+                <%= medicament.minQuantity %>
+              <% } else { %>
+                <span >N/A</span>
+              <% } %>
+            </td>
+            <td><%- include("./settings", { medicament, serviceName }) %></td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="6" style="text-align: center;">No medicaments found for this service</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

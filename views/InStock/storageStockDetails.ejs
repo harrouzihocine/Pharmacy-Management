@@ -1,0 +1,66 @@
+<% layout('layouts/boilerplate') %>
+<div class="storages-table-container">
+    <h1>Storage Details: (<%= storage.serviceABV %>) <%= storage.storageName %> </h1>
+
+    <h3>Medicaments in this Storage:</h3>
+
+    <table class="storages-table">
+        <thead>
+            <tr>
+                <th>Location Code</th>
+                <th>Code Interne</th>
+                <th>Medicament Name</th>
+                <th>Commercial Name</th>
+                <th>Quantity</th>
+                <th>Batch Number</th>
+                <th>Expiry Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (items.length === 0) { %>
+                <tr>
+                    <td colspan="8">No medicaments in this storage.</td>
+                </tr>
+            <% } else { %>
+                <% items.forEach(item => { %>
+                    <tr>
+                        <td>
+                            <% if (!item.locationCode){ %> 
+                            <form method="POST" action="/inStock/assign-location/<%= item._id %>">
+                                <div class="custom-select">
+                                <select name="selectedlocationCode" required>
+                                    <option value="">Select Location</option>
+                                    <% storage.locations.forEach(location => { %>
+                                        <option value="<%= location.locationCode %>">
+                                            <%= location.locationCode %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                                <button type="submit" class="assign-btn">Assign</button>
+                                </div>
+                            </form>
+                                    <% }else{ %>
+                                   <%= item.locationCode %>
+                                <% } %>
+                                </td>
+                        <td><%= item.medicamentId.code_interne %></td>
+                        <td><%= item.medicamentId.designation %></td>
+                        <td><%= item.medicamentId.nom_commercial%></td>
+                        <td><%= item.quantity %></td>
+                        <td><%= item.batchNumber %></td>
+                        <td><%= item.expiryDate ? new Date(item.expiryDate).toLocaleDateString() : 'N/A' %></td>
+                        <td>
+                            <% if(item.locationCode){ %>
+                                <!-- Form for removing medicament -->
+                                <form method="POST" action="/inStock/remove-medicament/<%= item._id %>">
+                                    <button type="submit" class="delete-btn"><i class="bi bi-trash"></i></button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } %>
+        </tbody>
+    </table>
+</div>

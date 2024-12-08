@@ -1,0 +1,37 @@
+<% layout('layouts/boilerplate') %>
+<div class="storages-table-container">
+  <h1>Storages for Service: <%= serviceId %></h1>
+  <table class="storages-table">
+    <thead>
+      <tr>
+        <th>Storage Name</th>
+        <th>Code Storage</th>
+        <th>Area Description</th>
+       
+        <th>N° of Locations</th>
+        <th>Creation Date</th>
+       
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (let storage of storages) { %>
+        <tr>
+          <td onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>'"><%= storage.storageName %></td>
+          <td onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>'"><%= storage.endroitCode %></td>
+          <td onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>'"><%= storage.endroitDescription %></td>
+         
+          <td onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>'"><%= storage.locationCount %></td>
+          <td onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>'"><%= storage.created_at.toLocaleDateString() %></td>
+          
+          <td>
+            <button class="view-btn" onclick="window.location.href='/storage/<%= storage._id %>/assign-locations'">Add Locations</button>
+            <button class="view-btn" style="background-color: green;" onclick="window.location.href='/inStock/<%= storage._id %>'">Stock Details</button>
+           
+            <button class="delete-btn"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

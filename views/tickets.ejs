@@ -1,0 +1,84 @@
+<% layout('layouts/boilerplate') %>
+<div class="tickets-container">
+  <h1>Tickets</h1>
+
+  <table class="ticket-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <% if (user.role != 'user') { %>
+        <th>Created By</th>
+        <th>Assigned To</th>
+        <% } %>
+        <th>Created at</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (ticket of tickets) { %>
+      <tr id="ticket-<%= ticket._id %>" data-ticket-id=<%= ticket._id %>>
+        <td onclick="window.location.href='/ticket/<%= ticket._id %>'"><%= ticket.title %></td>
+        <td onclick="window.location.href='/ticket/<%= ticket._id %>'"><%= ticket.category %></td>
+        <td onclick="window.location.href='/ticket/<%= ticket._id %>'"><%= ticket.priority %></td>
+        <td>
+          <% if (ticket.assignedTo){ %>
+          <% if (user && user.role === 'technician' && ticket.assignedTo.id === user.userId) { %>
+            <div class="ticket-status-select">
+              <form action="/update-ticket-status/<%= ticket._id %>" method="POST">
+                <select name="status" onchange="this.form.submit()"  <% if (ticket.status === 'Closed') { %>
+                  disabled
+                <% } %>>
+                  <option value="Pending" <%= ticket.status === 'Reopened' ? 'selected' : '' %> disabled>Reopened</option>
+                  <option value="Pending" <%= ticket.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                  <option value="In Progress" <%= ticket.status === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+                  <option value="Resolved" <%= ticket.status === 'Resolved' ? 'selected' : '' %>>Resolved</option>
+                  <option value="Closed" <%= ticket.status === 'Closed' ? 'selected' : '' %> disabled>Closed</option>
+                </select>
+              </form>
+            </div>
+          <%}else{%>
+            <span onclick="window.location.href='/ticket/<%= ticket._id %>'" class="status-badge status-<%= ticket.status.toLowerCase().replace(' ', '-') %>"><%= ticket.status %></span>
+            <% }}else{ %>
+              <span onclick="window.location.href='/ticket/<%= ticket._id %>'" class="status-badge status-<%= ticket.status.toLowerCase().replace(' ', '-') %>"><%= ticket.status %></span>
+              <% } %>
+            </td>
+
+        <% if (user.role != 'user'){ %>
+        <td onclick="window.location.href='/ticket/<%= ticket._id %>'"><%= ticket.createdBy %></td>
+        <td>
+          <% if (ticket.assignedTo){ %>
+            <%= ticket.assignedTo.username %>
+          <% } else if (user.role === 'admin') { %>
+            <form action="/assign-ticket/<%= ticket._id %>" method="POST" class="assign-form">
+              <select name="technicianId" required>
+                <option value="">Select Technician</option>
+                <% for (tech of technicians) { %>
+                  <option value="<%= tech._id %>"><%= tech.username %></option>
+                <% } %>
+              </select>
+              <button class="assign-button" type="submit">Assign</button>
+            </form>
+          <% }else{  %>
+            <span>Unassigned</span>
+          <% } %>
+        </td>
+        <td><%= new Date(ticket.createdAt).toLocaleString() %></td>
+        <td data-ticket-id="<%= ticket._id %>">
+          <% if (ticket.status != 'Closed') { %>
+            <button class="btn close-ticket-btn" data-id="<%= ticket._id %>"><i class="bi bi-check2-circle"></i></button>
+            <button class="btn remove-btn"><i class="bi bi-trash" data-id="<%= ticket._id %>"></i></button>
+          <% } else { %>
+            <span class="Confirmed">Confirmed</span>
+          <% } %>
+        </td>
+        <% } %>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <p class="footer-tickets">© 2024 Clinic Ticketing System. All Rights Reserved.</p>
+</div>

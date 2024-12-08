@@ -1,0 +1,59 @@
+<% layout('layouts/boilerplate') %>
+<div class="add-storage-page-container">
+  <h2>Add New Storage</h2>
+  <form action="/storage/new" method="POST" class="add-storage-form">
+    
+    <div class="form-group">
+      <label for="storageName" class="form-label">Storage Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="storageName"
+        name="storageName"
+        placeholder="Enter storage name"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="locationType" class="form-label">Type d'entrepôt :</label>
+      <select id="locationType" name="locationType" class="form-control" required>
+          <option value="">Sélectionner le type</option>
+          <option value="PC">Pharmacie Centrale (PC)</option>
+          <option value="PS">Pharmacie de Service (PS)</option>
+      </select>
+  </div>
+    <div class="form-group">
+      <label for="serviceSelect" class="form-label">Select Service</label>
+      <select class="form-select" id="serviceSelect" name="serviceABV" required>
+        <option value="" disabled selected>Select a service</option>
+        <% services.forEach(service => { %>
+          <option value="<%= service._id %>" data-service-name="<%= service.name %>">
+            <%= service.name %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+     <!-- Description endroit -->
+     <div class="form-group">
+      <label for="endroitDescription" class="form-label">Désignation Endroit Service :</label>
+      <select id="endroitDescription" name="endroitDescription" class="form-control" required>
+          <option value="">Sélectionner la désignation endroit</option>
+          <% endroits.forEach(endroit => { %>
+              <option value="<%= endroit %>">
+                  <%= endroit %>
+              </option>
+          <% }) %>
+      </select>
+  </div>
+ <!-- Code d'endroit -->
+ <div class="form-group">
+  <label for="endroitCode" class="form-label">Code d'endroit :</label>
+  <input type="number" id="endroitCode" name="endroitCode" class="form-control" placeholder="Entrez le numéro (1, 2, 3...)" required>
+</div>
+
+
+    <!-- Hidden input to store service name -->
+    <input type="hidden" id="serviceName" name="service" />
+    <button type="submit" class="btn btn-primary">Add Storage</button>
+  </form>
+</div>

@@ -1,0 +1,51 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="storage-location-page-container">
+  <h1>Storage: <%= storage.storageName %> (Service: <%= serviceId %>)</h1>
+  <h2>Locations for this Storage:</h2>
+
+  <table class="storage-location-table-custom">
+    <thead>
+      <tr>
+        <th>Location Code</th>
+        <th>Endroit Description</th>
+        <th>Location Type</th>
+        <th>Destination Service</th>
+        <th>Endroit Code</th>
+        <th>Information de Rangement</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (let location of storage.locations) { %>
+      <tr 
+       
+      >
+        <td  onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>/<%= location._id %>'"
+          style="cursor: pointer;"><%= location.locationCode %></td>
+        <td  onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>/<%= location._id %>'"
+          style="cursor: pointer;"><%= storage.endroitDescription %></td>
+        <td  onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>/<%= location._id %>'"
+          style="cursor: pointer;"><%= storage.locationType %></td>
+        <td  onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>/<%= location._id %>'"
+          style="cursor: pointer;"><%= storage.service %></td>
+        <td  onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>/<%= location._id %>'"
+          style="cursor: pointer;"><%= storage.endroitCode %></td>
+        <td  onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>/<%= location._id %>'"
+          style="cursor: pointer;">
+          <% if (location.outilRangement === 'RY') { %>
+            Rayonnage (Bloc: <%= location.bloc %>, Niveau: <%= location.niveauRayon %>)
+          <% } else { %>
+            <%= location.outilRangement %> (<%= location.outilNumero %>)
+          <% } %>
+        </td>
+        <td>
+          <button class="delete-btn" onclick="confirmUnassign('<%= storage._id %>', '<%= location._id %>')">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

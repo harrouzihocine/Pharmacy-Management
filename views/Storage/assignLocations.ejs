@@ -1,0 +1,44 @@
+<% layout('layouts/boilerplate') %>
+<div class="assign-locations-container">
+  <h1>Creation of Locations to Storage: <%= storage.storageName %></h1>
+  
+  <form action="/storage/<%= storage._id %>/assign-locations" method="POST">
+   
+   <!-- Choix de l'outil de rangement -->
+   <div class="form-group">
+    <label for="outilRangement" class="form-label">Outil de Rangement :</label>
+    <select id="outilRangement" name="outilRangement" class="form-control" required>
+        <option value="">Sélectionner l'outil</option>
+        <option value="AR">Armoire (AR)</option>
+        <option value="CF">Congélateur (CF)</option>
+        <option value="FR">Frigo (FR)</option>
+        <option value="RY">Rayonnage (RY)</option>
+    </select>
+</div>
+
+<!-- Numéro de l'outil de rangement -->
+<div class="form-group">
+    <label for="outilNumero" class="form-label">Numéro de l'Outil:</label>
+    <input type="number" id="outilNumero" name="outilNumero" class="form-control" placeholder="Entrez le numéro (1, 2, 3...)" required>
+</div>
+
+<!-- Détails supplémentaires pour le rayonnage -->
+<div id="rayonnageDetails" class="form-group" style="display: none;">
+    <label for="bloc" class="form-label">Bloc :</label>
+    <select id="bloc" name="bloc" class="form-control">
+        <option value="">Sélectionner le bloc</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+    </select>
+
+    <label for="niveauRayon" class="form-label">Niveau du Rayon :</label>
+    <input type="number" id="niveauRayon" name="niveauRayon" class="form-control" placeholder="Niveau du rayon (1, 2, 3...)">
+</div>
+<input type="hidden" id="storageServiceAbv" value="<%= storage.serviceABV %>">
+<input type="hidden" id="storageId" value="<%= storage._id %>"> 
+<button type="submit" class="assign-btn" id="createLocationBtn">Create Location</button>
+  </form>
+</div>
+
+

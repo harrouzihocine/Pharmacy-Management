@@ -1,0 +1,64 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="medicament-service-details-container">
+  <h1>Details for Medicament: <%= medicament.nom_commercial %> in Service: <%= serviceName %></h1>
+
+  <table class="medicament-service-details-table">
+    <thead>
+      <tr>
+        <th>Location Code</th>
+        <th>Storage Name</th>
+        <th>Batch Number</th>
+        <th>Expiry Date</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (stockDetails.length > 0) { %>
+        <% stockDetails.forEach((stock) => { %>
+          <tr>
+            <td>
+                <% if (!stock.locationCode) { %>
+                  <form method="POST" action="/inStock/assign-location/<%= stock._id %>">
+                    <div class="custom-select">
+                      <select name="selectedlocationCode" required>
+                        <option value="">Select Location</option>
+                        <% locations.forEach(location => { %>
+                          <option value="<%= location.locationCode %>"><%= location.locationCode %></option>
+                        <% }) %>
+                      </select>
+                      <button type="submit" class="assign-btn">Assign</button>
+                    </div>
+                  </form>
+                <% } else { %>
+                  <%= stock.locationCode %>
+                <% } %>
+              </td>
+              
+            <td><%= stock.storageId.storageName %></td>
+            <td><%= stock.batchNumber %></td>
+            <td><%= stock.expiryDate ? stock.expiryDate.toLocaleDateString() : 'N/A' %> 
+              <% if (stock.isExpiringSoon !='Valid'&&  stock.isExpiringSoon !='No Expiration Data') { %>
+                <span class="tag out-of-stock">Expiration Soon</span>
+              <% } %>
+            </td>
+            <td><%= stock.quantity %> </td>
+            <td>
+              <% if (stock.locationCode) { %>
+                <form method="POST" action="/inStock/remove-medicament/<%= stock._id %>">
+                  <button type="submit" class="delete-btn"><i class="bi bi-trash"></i></button>
+                </form>
+              <% } %>
+             
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="6" style="text-align: center;">No stock details available for this medicament in the service.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

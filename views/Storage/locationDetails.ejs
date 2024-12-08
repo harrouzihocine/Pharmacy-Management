@@ -1,0 +1,32 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="medicaments-table-container">
+  <h1>Medicaments in Location: <%= location.locationCode %> (Storage: <%= storage.storageName %>)</h1>
+
+  <table class="medicaments-table">
+    <thead>
+      <tr>
+        <th>Medicament Name</th>
+        <th>Quantity</th>
+        <th>Batch Number</th>
+        <th>Expiry Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (medicaments.length === 0) { %>
+        <tr>
+          <td colspan="4">No medicaments in this location.</td>
+        </tr>
+      <% } else { %>
+        <% medicaments.forEach(medicament => { %>
+          <tr>
+            <td><%= medicament.medicamentId.designation %></td>
+            <td><%= medicament.quantity %></td>
+            <td><%= medicament.batchNumber %></td>
+            <td><%= medicament.expiryDate ? new Date(medicament.expiryDate).toLocaleDateString() : 'N/A' %></td>
+          </tr>
+        <% }) %>
+      <% } %>
+    </tbody>
+  </table>
+</div>

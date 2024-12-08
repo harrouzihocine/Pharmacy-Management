@@ -1,0 +1,53 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="ticket-detail-container" data-aos="fade-up">
+  <h2>Ticket Details</h2>
+  <p><strong>Title:</strong> <%= ticket.title %></p>
+  <p><strong>Category:</strong> <%= ticket.category %></p>
+  <p><strong>Priority:</strong> <%= ticket.priority %></p>
+  <p><strong>Description:</strong> <%= ticket.description %></p>
+  <p><strong>Impact:</strong> <%= ticket.impact %></p>
+  <p><strong>Contact Info:</strong> <%= ticket.contactInfo %></p>
+  <p><strong>Status:</strong> <%= ticket.status %></p>
+  <% if (ticket.assignedTo){ %>
+  <p><strong>Assigned To:</strong> <%= ticket.assignedTo.username %></p>
+  <% }else{ %>
+  <p><strong>Assigned To:</strong> Unassigned</p>
+  <% } %>
+  <p><strong>Created By:</strong> <%= ticket.createdBy %></p>
+
+  <!-- Comments Section -->
+  <div class="ticket-comment-section">
+    <h3>Ticket Logs</h3>
+    <div class="ticket-comment-list">
+      <% if (comments.length > 0) { %>
+      <% comments.forEach(comment => { %>
+      <div class="ticket-comment mb-3">
+        <strong><%= comment.technicianName %></strong> <em>(<%= new Date(comment.createdAt).toLocaleString() %>)</em>
+        <p><%= comment.commentText %></p>
+      </div>
+      <% }) %>
+      <% } else { %>
+      <p>No Logs yet.</p>
+      <% } %>
+    </div>
+
+    <!-- Comment Form -->
+    <% if (ticket.status !="Closed"){ %>
+    <form class="ticket-comment-form" action="/ticket/<%= ticket._id %>/addLog" method="POST">
+      <div class="mb-3">
+        <input type="hidden" name="status" value="<%= ticket.status %>">
+        <% if (user.role === 'user' ||  ticket.createdBy === user.username && user.role!= "technician") {%>
+        <textarea name="commentText" class="form-control" placeholder="Write your Comment..." required></textarea>
+        <% }else if ((ticket.assignedTo && ticket.assignedTo.id === user.userId )|| user.role ==='admin'){ %>
+        <textarea name="commentText" class="form-control" placeholder="Write your report..." required></textarea>
+        <% } %>
+      </div>
+      <% if (user.role === 'user' ||  ticket.createdBy === user.username && user.role!= "technician") {%>
+      <button type="submit" class="btn btn-primary">Add Comment</button>
+      <% }else if ( (ticket.assignedTo && ticket.assignedTo.id === user.userId )|| user.role ==='admin'){%>
+      <button type="submit" class="btn btn-primary">Add Report</button>
+      <% }}%>
+    </form>
+  </div>
+</div>
