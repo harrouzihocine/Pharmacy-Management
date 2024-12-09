@@ -96,9 +96,9 @@ app.use("/storage", storageRoutes);
 const inStockRoutes = require("./routes/inStock"); 
 app.use("/inStock", inStockRoutes); 
 
-const DemandRoutes = require("./routes/demand"); // Import ticket routes
-// Use ticket routes
-app.use("/", DemandRoutes); // Use the ticket routes for ticket management
+const inDemandRoutes = require("./routes/demand"); 
+app.use("/demand", inDemandRoutes); 
+
 
 const port = process.env.PORT;
 

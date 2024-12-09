@@ -1,6 +1,7 @@
 <% layout('layouts/boilerplate') %>
 
 <div class="stock-details-container">
+  <button  class="btn back-btn back-button" onclick="window.location.href='/storage'"><i class="bi bi-arrow-left-circle"></i></button>
   <h1>Stock Details for Service: <%= serviceName %></h1>
 
   <table class="stock-table">
@@ -38,7 +39,12 @@
                     </div>
                 </form>
                         <% }else{ %>
+                          <div class="d-flex">
                        <%= stock.locationCode %>
+                       <form method="POST" action="/inStock/remove-medicament/<%= stock._id %>">
+                        <button type="submit" class="btn delete-btn"><i class="bi bi-trash"></i></button>
+                    </form>
+                  </div>
                     <% } %>
                     </td>
            
@@ -54,13 +60,7 @@
             <td>
               <div class="d-flex">
                 <%- include("./barCode", { stock }) %>
-                <% if(stock.locationCode){ %>
-                    <!-- Form for removing medicament -->
-                    <form method="POST" action="/inStock/remove-medicament/<%= stock._id %>">
-                        <button type="submit" class="btn delete-btn"><i class="bi bi-trash"></i></button>
-                    </form>
-                <% } %>
-               
+                              
               </div>
             </td>
           </tr>

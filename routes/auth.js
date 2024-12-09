@@ -32,6 +32,6 @@ router
 router.route("/logout").get(logout);
 
 // Dashboard route
-router.route("/dashboard").get(dashboard);
+router.route("/").get(dashboard);
 
 module.exports = router;

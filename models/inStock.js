@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Pharmacy = require("./pharmacy");
+const Medicament = require("./medicament");
 const moment = require("moment"); // Optional, for date calculations
 const opts = {
   toJSON: {
@@ -36,17 +37,30 @@ const inStockSchema = new mongoose.Schema(
 );
 
 // Pre-save middleware to generate barcode automatically
-inStockSchema.pre("save", async function(next) {
+inStockSchema.pre("save", async function (next) {
   if (!this.barcode) {
-    // Generate barcode if not provided
-    this.barcode = `${this._id}`;
+    try {
+      // Fetch the associated Medicament
+      const medicament = await Medicament.findById(this.medicamentId);
 
-    // Check if the barcode is unique
-    const existingBarcode = await this.constructor.findOne({ barcode: this.barcode });
-    if (existingBarcode) {
-      return next(new Error("The generated or provided barcode already exists."));
+      if (!medicament) {
+        return next(new Error("Medicament not found."));
+      }
+
+      // Construct the barcode using code_interne, batchNumber, and expiryDate
+      const formattedExpiryDate = moment(this.expiryDate).format("YYYYMMDD"); // Format expiry date (optional)
+      this.barcode = `${medicament.code_interne}-${this.batchNumber}-${formattedExpiryDate}`;
+
+      // Ensure the barcode is unique
+      const existingBarcode = await this.constructor.findOne({ barcode: this.barcode });
+      if (existingBarcode) {
+        return next(new Error("The generated barcode already exists."));
+      }
+    } catch (error) {
+      return next(error);
     }
   }
+
   next();
 });
 

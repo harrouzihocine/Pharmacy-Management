@@ -101,7 +101,7 @@ exports.showAddStorageForm = async (req, res, next) => {
 
     res.redirect("back");
   };
-  exports.getAssignLocationsForm = async (req, res) => {
+  exports.getaddLocationsForm = async (req, res) => {
     try {
       const { storageId } = req.params;
       // Get the storage by its ID
@@ -110,7 +110,7 @@ exports.showAddStorageForm = async (req, res, next) => {
       // Get all locations that are not already assigned to this storage
        const locations = await Location.find({ assignedStorage: null }); 
   
-      res.render('Storage/assignLocations', { storage, locations });
+      res.render('Storage/addLocations', { storage, locations });
     } catch (err) {
       console.log(err);
       res.status(500).send("Error fetching storage or locations");

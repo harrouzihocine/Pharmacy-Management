@@ -1,73 +1,64 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require("mongoose");
+const Medicament = require("./medicament");
 
-// Define the Demand Schema
-const demandSchema = new Schema(
+const demandSchema = new mongoose.Schema(
   {
-    title: {
+    demandNumber: {
       type: String,
       required: true,
+      unique: true, // Ensure uniqueness for each demand
     },
-    category: {
-      type: String,
-     
-      required: true,
-    },
-    service: {
-      type: String,
-      required: true,
-    },
-    priority: {
-      type: String,
-      enum: ['Low', 'Medium', 'High', 'Urgent'],
-      default: 'Low',
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    quantity: {
-      type: Number,
-      default: null,  // Optional depending on the category
-    },
-    contact: {
-      type: String,
-      required: true,
+    createdDate: {
+      type: Date,
+      default: Date.now, // Automatically set the creation date
     },
     status: {
       type: String,
-      enum: ['Pending', 'In Progress', 'Completed'],
-      default: 'Pending',
+      enum: ["En attente", "Approuvé", "Rejeté", "Terminé"], // Status options
+      default: "En attente",
     },
-    assignedTo: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',  // Reference to the User model if demand is assigned to someone
-      default: null,
-    },
-    createdBy: {
+    sourceDepot: {
       type: String,
       required: true,
     },
+    destinationDepot: {
+      type: String,
+      required: true,
+    },
+    reason: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    products: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Medicament", // Reference to the product collection
+          required: true,
+        },
+        requestedQuantity: {
+          type: Number,
+          required: true,
+          min: 1, // Quantity must be at least 1
+        },
+       
+        sourceAvailability: {
+          type: Number,
+          required: true, // Ensure stock availability is checked
+        },
+        remarks: {
+          type: String,
+          trim: true,
+        },
+      },
+    ],
+    totalItems: {
+      type: Number,
+      default: 0, // Automatically calculated
+    },
   },
-  {
-    timestamps: true, // Automatically add `createdAt` and `updatedAt`
-  }
+  { timestamps: true }
 );
 
-// Example of pre hook to delete associated data if needed (e.g., Demand Logs)
-// demandSchema.pre('findOneAndDelete', async function (next) {
-//   const demandId = this.getQuery()._id;
-//
-//   try {
-//       // Perform cleanup before deleting the demand (e.g., delete related logs)
-//       await DemandLogs.deleteMany({ demandId });
-//       next();
-//   } catch (error) {
-//       next(error);
-//   }
-// });
-
-// Check if the model is already compiled to prevent OverwriteModelError
-const Demand = mongoose.models.Demand || mongoose.model('Demand', demandSchema);
-
-module.exports = Demand;
+module.exports = mongoose.model("Demand", demandSchema);

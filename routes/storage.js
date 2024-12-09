@@ -6,7 +6,7 @@ const {
     getStorage,
     addStorage,
     showAddStorageForm,
-    getAssignLocationsForm,
+    getaddLocationsForm,
     assignLocationsToStorage ,
     unassignLocation,
     serviceLocations,
@@ -18,7 +18,7 @@ const {
 
 router.route("/").get(catchAsync(getStorage));
 router.route("/new").get(catchAsync(showAddStorageForm)).post(catchAsync(addStorage));
-router.route("/:storageId/assign-locations").get(catchAsync(getAssignLocationsForm)).post(catchAsync(assignLocationsToStorage ));
+router.route("/:storageId/add-locations").get(catchAsync(getaddLocationsForm)).post(catchAsync(assignLocationsToStorage ));
 router.route("/:storageId/unassign/:locationId").get(catchAsync(unassignLocation));
 router.route("/:serviceId/storages").get(catchAsync(serviceLocations));
 router.route("/:serviceId/:storageId").get(catchAsync(storageLocations));

@@ -1298,6 +1298,7 @@ color: #A3D4FF;
 }
 
 .view-btn {
+  
   background-color: #007bff; /* Blue for view */
 }
 .gear-btn {
@@ -1308,6 +1309,13 @@ color: #A3D4FF;
   background-color: #ffffff;
   color: #000000;
 }
+.back-btn{
+  font-size: 20px;
+  padding: 0px 5px;
+  border-radius: 100%;
+  background-color: #f67979;
+  color: #ffffff;
+}
 
 .edit-btn {
   background-color: #ffc107; /* Yellow for edit */
@@ -1315,6 +1323,10 @@ color: #A3D4FF;
 
 .delete-btn {
   background-color: #dc3545; /* Red for delete */
+}
+.back-btn:hover{
+  background-color: #474747;
+  color: #ffffff;
 }
 .scan-btn:hover{
   background-color: #000000a9;
@@ -1855,46 +1867,6 @@ color: #A3D4FF;
   background-color: #444; /* Hover effect for cells */
 }
 
-/*-------------------------------------------------demand details ----------------------------------------*/
-/* Container for the demand detail page */
-.demand-detail-container {
-  width: 50%;
- 
-  background-color: #0201281d; /* Dark background */
-  color: #fff; /* White text */
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow */
-  margin-top: 30px;
-  margin-bottom: 50px;
-  font-size: 1.1rem;
-}
-
-/* Header Style for Demand Detail */
-.demand-detail-container h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #fff;
-  font-weight: 600;
-}
-
-/* Styling for each paragraph */
-.demand-detail-container p {
-  margin: 10px 0;
-  line-height: 1.6;
-}
-
-.demand-detail-container p strong {
-  color: #0073e6; /* Highlighted text for labels */
-  font-weight: bold;
-}
-
-/* Styling for date and time */
-.demand-detail-container p:last-of-type {
-  font-style: italic;
-  color: #bbb; /* Light color for the date */
-}
 
 
 
@@ -1931,4 +1903,146 @@ color: #A3D4FF;
 .remove-btn:hover {
   background-color: #720000;
 }
-/*--------------------------------barcode img--------------------------------*/
+/*--------------------------------new demand page--------------------------------*/
+/* General Container Styling */
+.demand-container {
+  background-color: #0201281d; /* Dark background for the page */
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.demand-container .demand-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Form Styling */
+.demand-form {
+  
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Input Fields */
+.demand-form .form-control,
+.demand-form .form-select,
+.demand-form textarea.form-control {
+  background-color: #333; /* Darker background for inputs */
+  color: #fff; /* White text */
+  border: 1px solid #444; /* Lighter border */
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+}
+
+.demand-form .form-control:focus,
+.demand-form .form-select:focus {
+  border-color: #5a5a5a; /* Lighter border color on focus */
+  background-color: #444; /* Slightly lighter background on focus */
+}
+
+/* Validation and Invalid Feedback */
+.demand-form .invalid-feedback {
+  color: #f44336; /* Red color for invalid feedback */
+}
+
+/* Table Styling */
+.demand-table {
+  width: 100%;
+  margin-top: 20px;
+  background-color: #1c1c1c63; /* Dark background for the table */
+  color: #fff;
+  border-collapse: collapse;
+}
+
+.demand-table th,
+.demand-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.demand-table th {
+  background-color: #333; /* Dark background for headers */
+  font-weight: 600;
+}
+
+.demand-table tr:nth-child(even) {
+  background-color: #222;
+}
+
+.demand-table tr:hover {
+  background-color: #333;
+}
+
+.demand-table td {
+  color: #fff;
+}
+
+/* Button Styles */
+.add-command{
+  margin: 10px;
+  background-color: #55104d;
+  color: #fff;
+}
+.add-command:hover{
+  margin-top: 10px;
+  background-color: #726c7a;
+  color: #fff;
+}
+
+.cancel-btn{
+   margin: 10px;
+  background-color: #797979;
+  color: #fff;
+}
+.cancel-btn:hover{
+
+  background-color: #4d4a4a;
+  color: #fff;
+}
+
+.demand-form button:disabled {
+  background-color: #726c7a;
+  cursor: not-allowed;
+}
+
+/* Additional Styling for Specific Buttons */
+.demand-buttons .btn {
+  margin-right: 10px;
+}
+
+/* Modal and Footer Section */
+.demand-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.demand-footer .badge {
+  color: #ffc107; /* Amber color for validation status */
+  font-weight: bold;
+}
+
+/* Custom Input Styling for Textareas */
+.demand-form textarea.form-control {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  resize: vertical;
+}
+
+/* Input for readonly fields */
+.demand-form input[readonly] {
+  background-color: #2a2a2a; /* Darker background for readonly inputs */
+  border: 1px solid #444;
+  color: #777; /* Lighter text color */
+}

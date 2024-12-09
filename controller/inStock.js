@@ -2,12 +2,11 @@ const InStock = require('../models/inStock');  // Assuming you have an InStock m
 const Medicament = require('../models/medicament'); // Assuming you have a Medicament model
 const Storage = require('../models/storage'); // Assuming you have a Storage model
 const MedicamentSettings = require('../models/medicamentSettings');
-const moment = require('moment');
+
+
 const bwipjs = require('bwip-js');
 // Function to generate barcode
-const generateBarcode = (medicamentId, batchNumber, expiryDate) => {
-  return `${medicamentId}-${batchNumber}-${expiryDate ? moment(expiryDate).format('YYYY-MM-DD') : 'N/A'}`;
-};
+
 module.exports.serviceLocations = async (req, res, next) => {
   const { serviceId } = req.params;
 
@@ -31,7 +30,7 @@ try {
 exports.addMedicamentToStorage = async (req, res) => {
   try {
     // Extract form data
-    const { medicamentId, service, storageId, quantity, batchNumber, expiryDate, barcode } = req.body;
+    const { medicamentId, service, storageId, quantity, batchNumber, expiryDate } = req.body;
 
     // Validate data
     if (!medicamentId || !storageId || !quantity || !batchNumber || !service) {
@@ -194,70 +193,71 @@ exports.unassignLocation = async (req, res) => {
     }
   };
  
-
-exports.serviceStockDetails = async (req, res) => {
-  const { serviceABV } = req.params;
-  try {
-    // Find all storages for the given serviceABV
-    const storages = await Storage.find({ serviceABV });
-    if (!storages || storages.length === 0) {
-      return res.status(404).send('No storages found for this service.');
-    }
-
-    // Extract storage IDs
-    const storageIds = storages.map((storage) => storage._id);
-
-    // Fetch inStock data for these storageIds
-    const stockDetails = await InStock
-      .find({ storageId: { $in: storageIds } })
-      .populate('medicamentId', 'code_interne designation nom_commercial') // Populate medicament details
-      .populate('storageId', 'storageName serviceABV'); // Populate storage details
-
-    // Generate barcodes for each stockItem
-    for (let stockItem of stockDetails) {
-      stockItem.isExpiringSoon = await stockItem.getExpirationStatus();
-
-      // Generate barcode for the medicament code_interne (or any other field you want)
-      const barcodeData = stockItem.barcode;
-      const normalizedData = barcodeData.length > 12
-      ? barcodeData.slice(12, 24) // Truncate if too long
-      : (barcodeData.padEnd(12, '0')); // Pad with zeros if too short
-      try {
-        const barcodeImage = await bwipjs.toBuffer({
-          bcid: 'code128',    // Barcode type
-          text: normalizedData,  // Text to encode (medicament code)
-          scale: 3,           // Scale the barcode image
-          height: 10,         // Height of the barcode
-          includetext: true,  // Include text below the barcode
-        });
-
-        // Add the barcode as a base64-encoded PNG image to the stockItem object
-        stockItem.barcode = `data:image/png;base64,${barcodeImage.toString('base64')}`;
+  exports.serviceStockDetails = async (req, res) => {
+    const { serviceABV } = req.params;
+    try {
+      // Find all storages for the given serviceABV
+      const storages = await Storage.find({ serviceABV });
+      if (!storages || storages.length === 0) {
+        return res.status(404).send('No storages found for this service.');
+      }
+  
+      // Extract storage IDs
+      const storageIds = storages.map((storage) => storage._id);
+  
+      // Fetch inStock data for these storageIds
+      const stockDetails = await InStock
+        .find({ storageId: { $in: storageIds } })
+        .populate('medicamentId', 'code_interne designation nom_commercial') // Populate medicament details
+        .populate('storageId', 'storageName serviceABV'); // Populate storage details
+  
+      // Generate barcodes for each stockItem
+      for (const stockItem of stockDetails) {
+        stockItem.isExpiringSoon = await stockItem.getExpirationStatus();
+  
+        // Use the barcode field directly without normalization
+        const barcodeData = stockItem.barcode;
+  
+        try {
+          // Generate barcode image using bwip-js
+          const barcodeImage = await bwipjs.toBuffer({
+            bcid: 'code128',    // Barcode type
+            text: barcodeData,  // Text to encode
+            scale: 3,           // Scale the barcode image
+            height: 10,         // Height of the barcode
+            includetext: true,  // Include text below the barcode
+            textxalign: 'center', // Center-align the text
+          });
+  
+          // Add the barcode as a base64-encoded PNG image to the stockItem object
+          stockItem.barcode = `data:image/png;base64,${barcodeImage.toString('base64')}`;
+        } catch (barcodeError) {
+          console.error('Error generating barcode for:', barcodeData, barcodeError);
+          stockItem.barcode = null; // Set to null if generation fails
+        }
         stockItem.originalBarcode = barcodeData; // Save the original barcode for user input
-      } catch (barcodeError) {
-        console.error('Error generating barcode:', barcodeError);
       }
+  
+      // Aggregate all locations from storages
+      const Locations = storages.reduce((locations, storage) => {
+        if (storage.locations) {
+          locations.push(...storage.locations);
+        }
+        return locations;
+      }, []);
+  
+      // Render the view and pass the stock details along with barcode data
+      res.render('InStock/serviceStockDetails', {
+        stockDetails,
+        serviceName: serviceABV,
+        Locations,
+      });
+    } catch (err) {
+      console.error('Error fetching stock details by service:', err);
+      res.status(500).send('Error fetching stock details.');
     }
-
-    // Aggregate all locations from storages
-    const Locations = storages.reduce((locations, storage) => {
-      if (storage.locations) {
-        locations.push(...storage.locations);
-      }
-      return locations;
-    }, []);
-
-    // Render the view and pass the stock details along with barcode data
-    res.render('InStock/serviceStockDetails', {
-      stockDetails,
-      serviceName: serviceABV,
-      Locations,
-    });
-  } catch (err) {
-    console.error('Error fetching stock details by service:', err);
-    res.status(500).send('Error fetching stock details.');
-  }
-};
+  };
+  
 
     exports.getMedicamentsByService = async (req, res) => {
       const { serviceABV } = req.params;
@@ -425,3 +425,4 @@ exports.serviceStockDetails = async (req, res) => {
         res.status(500).send('Error updating barcode.');
       }
     };
+    

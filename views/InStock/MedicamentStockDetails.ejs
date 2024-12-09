@@ -1,6 +1,7 @@
 <% layout('layouts/boilerplate') %>
 
 <div class="medicament-service-details-container">
+  <button  class="btn back-btn back-button" onclick="window.location.href='/inStock/service/<%= serviceName %>'"><i class="bi bi-arrow-left-circle"></i></button> 
   <h1>Details for Medicament: <%= medicament.nom_commercial %> in Service: <%= serviceName %></h1>
 
   <table class="medicament-service-details-table">

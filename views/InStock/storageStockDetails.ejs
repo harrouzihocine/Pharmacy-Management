@@ -1,5 +1,6 @@
 <% layout('layouts/boilerplate') %>
 <div class="storages-table-container">
+    <button class="btn back-btn back-button" onclick="window.location.href='/storage/<%= storage.serviceABV %>/storages'"><i class="bi bi-arrow-left-circle"></i></button>
     <h1>Storage Details: (<%= storage.serviceABV %>) <%= storage.storageName %> </h1>
 
     <h3>Medicaments in this Storage:</h3>

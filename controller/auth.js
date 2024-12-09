@@ -47,7 +47,7 @@ module.exports.login = async (req, res) => {
   req.flash("success", `Welcome Back ${req.user.firstname}`);
   // update the recently logged in user
   await User.findByIdAndUpdate(req.user.id, { loggedIn: moment() });
-  const redirectUrl = req.session.returnTo || "/dashboard";
+  const redirectUrl = req.session.returnTo || "/";
   delete req.session.returnTo;
   res.redirect(redirectUrl);
 };
@@ -61,5 +61,12 @@ module.exports.logout = (req, res) => {
 };
 // ====================================== Dashboard Route (GET) =================================
 module.exports.dashboard = (req, res) => {
-  res.render("dashboard", { role: req.session.role }); // Send role to the view
+  const stats = {
+    totalMedicines: 120,
+    outOfStock: 5,
+    pendingOrders: 8,
+   
+  };
+
+  res.render("dashboard", { role: req.session.role,stats:stats }); // Send role to the view
 };

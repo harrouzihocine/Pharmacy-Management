@@ -1,5 +1,103 @@
 <% layout('layouts/boilerplate') %>
-  <h1>Welcome to the Dashboard! M. <%= currentUser.username %> why are you gay</h1>
-  <p>You are logged in as <%= currentUser.role %></p>
-  <p><a href="/logout">Logout</a></p>
 
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1>Welcome to the Pharmacy Dashboard, <%= currentUser.username %>!</h1>
+    <p>Role: <%= currentUser.role %></p>
+    <nav>
+      <a href="/logout" class="logout-btn">Logout</a>
+    </nav>
+  </header>
+
+  <main class="dashboard-main">
+    <section class="stats-section">
+      <h2>Quick Stats</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <h3>Total Medicines</h3>
+          <p><%= stats.totalMedicines %></p>
+        </div>
+        <div class="stat-item">
+          <h3>Out of Stock</h3>
+          <p><%= stats.outOfStock %></p>
+        </div>
+        <div class="stat-item">
+          <h3>Pending Orders</h3>
+          <p><%= stats.pendingOrders %></p>
+        </div>
+        
+      </div>
+    </section>
+
+    <section class="actions-section">
+      <h2>Quick Actions</h2>
+      <ul class="actions-list">
+        <li><a href="/add-medicine">Add New Medicine</a></li>
+        <li><a href="/manage-inventory">Manage Inventory</a></li>
+        <li><a href="/orders">View Orders</a></li>
+      
+      </ul>
+    </section>
+  </main>
+</div>
+
+<style>
+
+  .dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .dashboard-header {
+    border: 1px solid #ddd;
+    background-color: #1c2835;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .dashboard-header nav {
+    text-align: right;
+  }
+  .logout-btn {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .dashboard-main .stats-section, .dashboard-main .actions-section {
+    margin-bottom: 20px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  .stat-item {
+    background-color: #1c2835;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    text-align: center;
+  }
+  .stat-item:hover {
+    background-color: #ffffffaf;
+    border: 1px solid #1c2835;
+    color: #000;
+    border-radius: 5px;
+    padding: 15px;
+    text-align: center;
+  }
+  .actions-list {
+    list-style: none;
+    padding: 0;
+  }
+  .actions-list li {
+    margin-bottom: 10px;
+  }
+  .actions-list a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+</style>

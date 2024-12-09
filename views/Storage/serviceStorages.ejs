@@ -1,5 +1,6 @@
 <% layout('layouts/boilerplate') %>
 <div class="storages-table-container">
+  <button  class="btn back-btn back-button" onclick="window.location.href='/storage'"><i class="bi bi-arrow-left-circle"></i></button>
   <h1>Storages for Service: <%= serviceId %></h1>
   <table class="storages-table">
     <thead>
@@ -21,14 +22,14 @@
           <td onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>'"><%= storage.endroitCode %></td>
           <td onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>'"><%= storage.endroitDescription %></td>
          
-          <td onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>'"><%= storage.locationCount %></td>
+          <td><%= storage.locationCount %>
+            <button class="view-btn fs-4 py-0 px-2" onclick="window.location.href='/storage/<%= storage._id %>/add-locations'"><i class="bi bi-plus"></i></button></td>
           <td onclick="window.location.href='/storage/<%= serviceId %>/<%= storage._id %>'"><%= storage.created_at.toLocaleDateString() %></td>
           
           <td>
-            <button class="view-btn" onclick="window.location.href='/storage/<%= storage._id %>/assign-locations'">Add Locations</button>
-            <button class="view-btn" style="background-color: green;" onclick="window.location.href='/inStock/<%= storage._id %>'">Stock Details</button>
-           
-            <button class="delete-btn"><i class="bi bi-trash"></i></button>
+            
+            <button class="view-btn" style="background-color: green;" onclick="window.location.href='/inStock/<%= storage._id %>'"><img width="25" height="25" src="https://img.icons8.com/external-filled-outline-perfect-kalash/64/external-medicament-healthcare-and-medicine-filled-outline-perfect-kalash.png" alt="external-medicament-healthcare-and-medicine-filled-outline-perfect-kalash"/></button>
+            
           </td>
         </tr>
       <% } %>
