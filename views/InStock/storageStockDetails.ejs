@@ -14,6 +14,7 @@
                 <th>Commercial Name</th>
                 <th>Quantity</th>
                 <th>Batch Number</th>
+                <th>Serial number</th>
                 <th>Expiry Date</th>
                 <th>Actions</th>
             </tr>
@@ -50,6 +51,7 @@
                         <td><%= item.medicamentId.nom_commercial%></td>
                         <td><%= item.quantity %></td>
                         <td><%= item.batchNumber %></td>
+                        <td><%= item.serialNumber?item.serialNumber:'N/A'  %> </td>
                         <td><%= item.expiryDate ? new Date(item.expiryDate).toLocaleDateString() : 'N/A' %></td>
                         <td>
                             <% if(item.locationCode){ %>

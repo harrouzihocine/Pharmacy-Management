@@ -11,6 +11,7 @@
         <th>Storage Name</th>
         <th>Batch Number</th>
         <th>Expiry Date</th>
+        <th>Serial number</th>
         <th>Quantity</th>
         <th>Actions</th>
       </tr>
@@ -44,6 +45,8 @@
                 <span class="tag out-of-stock">Expiration Soon</span>
               <% } %>
             </td>
+            
+            <td><%= stock.serialNumber?stock.serialNumber:'N/A'  %> </td>
             <td><%= stock.quantity %> </td>
             <td>
               <% if (stock.locationCode) { %>

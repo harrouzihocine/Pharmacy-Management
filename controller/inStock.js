@@ -30,7 +30,7 @@ try {
 exports.addMedicamentToStorage = async (req, res) => {
   try {
     // Extract form data
-    const { medicamentId, service, storageId, quantity, batchNumber, expiryDate } = req.body;
+    const { medicamentId, service, storageId, quantity, batchNumber, expiryDate,serialNumber } = req.body;
 
     // Validate data
     if (!medicamentId || !storageId || !quantity || !batchNumber || !service) {
@@ -63,6 +63,7 @@ exports.addMedicamentToStorage = async (req, res) => {
       storageId,
       batchNumber,
       expiryDate,
+      serialNumber,
     });
 
     if (existingInStock) {
@@ -78,6 +79,7 @@ exports.addMedicamentToStorage = async (req, res) => {
         quantity,
         createdBy: req.user._id,
         batchNumber,
+        serialNumber,
         expiryDate,
       
       });

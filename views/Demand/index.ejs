@@ -1,4 +1,56 @@
 <% layout('layouts/boilerplate') %>
-<div class="container">
-<button onclick="window.location.href='/demand/<%=serviceABV%>/newdemand'">New Demand</button>
+<div class="demand-page-container">
+    <button class="btn back-btn back-button" onclick="window.location.href='/storage'"><i class="bi bi-arrow-left-circle"></i></button>
+  <!-- Title -->
+  <h1 class="demand-page-title">Table of Demands</h1>
+
+  <!-- Button for New Demand -->
+  <button class="demand-new-button" onclick="window.location.href='/demand/<%= serviceABV %>/newdemand'">New Demand</button>
+
+  <!-- Table of Demands -->
+  <div class="demand-table-container">
+    <table class="demand-table-custom">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Demand Number</th>
+          <th>Source</th>
+          <th>Destination</th>
+          <th>Created Date</th>
+          <th>Created By</th>
+          <th>Status</th>
+        
+        </tr>
+      </thead>
+      <tbody>
+        <% if (demands && demands.length > 0) { %>
+          <% demands.forEach((demand, index) => { %>
+          
+            <tr>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= index + 1 %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= demand.demandNumber %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= demand.source %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= demand.destination %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= new Date(demand.createdAt).toLocaleString() %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= demand.createdBy?.username || "Unknown" %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;">
+                <span class="status-badge 
+                  <% if (demand.status === 'En attente') { %>status-pending<% } %>
+                  <% if (demand.status === 'Approuvé') { %>status-approved<% } %>
+                  <% if (demand.status === 'Rejeté') { %>status-rejected<% } %>
+                  <% if (demand.status === 'Terminé') { %>status-completed<% } %>">
+                  <%= demand.status %>
+                </span>
+              </td>
+             
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="8" class="demand-empty-row">No demands found</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
 </div>

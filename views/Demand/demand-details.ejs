@@ -1,0 +1,91 @@
+<% layout('layouts/boilerplate') %>
+<div class="demand-details-page-container">
+    <div class="demand-details-header">
+        <h1>Demand Details</h1>
+        <% if (demand ) { %>
+    </div>
+
+    <div class="demand-info-section">
+        <h2>General Information</h2>
+        <table class="demand-info-table">
+            <tr>
+                <th>Demand Number</th>
+                <td><%= demand.demandNumber %></td>
+            </tr>
+            <tr>
+                <th>Source</th>
+                <td><%= demand.source %></td>
+            </tr>
+            <tr>
+                <th>Destination</th>
+                <td><%= demand.destination %></td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td><%= demand.status %></td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td><%= demand.comment || 'N/A' %></td>
+            </tr>
+            <tr>
+                <th>Created By</th>
+                <td><%= demand.createdBy.username %></td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td><%= new Date(demand.createdAt).toLocaleString() %></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Medicaments Section -->
+    <div class="medicaments-section">
+        <h2>Medicaments</h2>
+        <table class="medicaments-table">
+            <thead>
+                <tr>
+                    <th>Designation</th>
+                    <th>Dosage</th>
+                    <th>Form</th>
+                    <th>Priority</th>
+                    <th>Quantity</th>
+                    <th>Quantity to Transfer</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% demand.medicaments.forEach(medicament => { %>
+                <tr  data-medicament-id="<%= medicament.medicamentId._id %>">
+                    <td><%= medicament.medicamentId.designation %></td>
+                    <td><%= medicament.medicamentId.dosage %></td>
+                    <td><%= medicament.medicamentId.forme %></td>
+                    <td><%= medicament.priority %></td>
+                    <td><%= medicament.quantity %></td>
+                    <td class="quantity-to-transfer-cell">0</td>
+                    <td><%- include("./assign-medicements",{medicament}) %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- New Section for Other Medicaments -->
+    <% if (demand.otherMedicaments) { %>
+    <div class="other-medicaments-section">
+        <h2>Other Medicaments (Not Listed in Pharmacy)</h2>
+        <p><%= demand.otherMedicaments %></p> <!-- If it's a string -->
+       
+    </div>
+    <% } %>
+
+    <div class="action-buttons-section mb-2">
+        <button class="btn trans-btn" onclick="initiateTransfer('<%= demand._id %>')">Initiate Transfer</button>
+    </div>
+
+    <% } else { %>
+        <tr>
+            <td colspan="8" class="demand-empty-row">No demands found</td>
+        </tr>
+    <% } %>
+</div>

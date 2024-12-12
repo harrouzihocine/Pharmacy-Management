@@ -6,6 +6,7 @@
 >
   <i class="bi bi-plus-lg"></i>
 </button>
+
 <div
   class="modal fade add-storage-modal"
   id="stock-<%= medicament.medicamentId._id %>"
@@ -17,9 +18,10 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content add-storage-page-container">
       <div class="modal-header">
-        <h5 class="modal-title" id="addstock-<%= medicament.medicamentId._id %>">Add Medicament to Storage</h5>
+        <h5 class="modal-title" id="addstock-<%= medicament.medicamentId._id %>">
+          Add Medicament to Storage
+        </h5>
         <h6><%= medicament.medicamentId.designation %></h6>
-
         <button
           type="button"
           class="btn-close"
@@ -36,14 +38,27 @@
           action="/inStock"
           novalidate
         >
-          <input type="hidden" id="medicamentId" name="medicamentId" value="<%= medicament.medicamentId._id %>">
+          <input
+            type="hidden"
+            id="medicamentId"
+            name="medicamentId"
+            value="<%= medicament.medicamentId._id %>"
+          >
+
           <!-- Service Dropdown -->
           <div class="form-group">
             <label for="service" class="form-label">Select Service:</label>
-            <select name="service" id="service-<%= medicament.medicamentId._id %>" class="form-select" required>
+            <select
+              name="service"
+              id="service-<%= medicament.medicamentId._id %>"
+              class="form-select"
+              required
+            >
               <option value="">Choose Service...</option>
               <% services.forEach((service) => { %>
-                <option value="<%= service.serviceABV %>"><%= service._id %></option>
+                <option value="<%= service.serviceABV %>">
+                  <%= service._id %>
+                </option>
               <% }); %>
             </select>
           </div>
@@ -51,28 +66,114 @@
           <!-- Storage Dropdown -->
           <div class="form-group">
             <label for="storage" class="form-label">Select Storage:</label>
-            <select name="storageId" id="storage-<%= medicament.medicamentId._id %>" class="form-select" disabled required>
+            <select
+              name="storageId"
+              id="storage-<%= medicament.medicamentId._id %>"
+              class="form-select"
+              disabled
+              required
+            >
               <option value="">Choose a Storage</option>
             </select>
           </div>
 
-          <!-- Other Fields -->
+          <!-- Quantity -->
           <div class="form-group">
             <label for="quantity" class="form-label">Quantity:</label>
-            <input name="quantity" id="quantity" class="form-control" type="number" min="1" placeholder="Enter quantity" required>
-          </div>
-          <div class="form-group">
-            <label for="batchNumber" class="form-label">Batch Number:</label>
-            <input name="batchNumber" id="batchNumber" class="form-control" type="text" placeholder="Enter batch number" required>
-          </div>
-          <div class="form-group">
-            <label for="expiryDate" class="form-label">Expiry Date:</label>
-            <input name="expiryDate" id="expiryDate" class="form-control" type="date">
+            <input
+              name="quantity"
+              id="quantity"
+              class="form-control"
+              type="number"
+              min="1"
+              placeholder="Enter quantity"
+              required
+            >
           </div>
 
-          <button type="submit" id="saveToStorage" class="btn btn-primary">Save</button>
+          <!-- Batch Number -->
+          <div class="form-group">
+            <label for="batchNumber" class="form-label">Batch Number:</label>
+            <input
+              name="batchNumber"
+              id="batchNumber"
+              class="form-control"
+              type="text"
+              placeholder="Enter batch number"
+              required
+            >
+          </div>
+
+          <!-- Expiry Date -->
+          <div class="form-group">
+            <label for="expiryDate" class="form-label">Expiry Date:</label>
+            <input
+              name="expiryDate"
+              id="expiryDate"
+              class="form-control"
+              type="date"
+            >
+          </div>
+
+          <!-- Checkbox for Serial Number -->
+          <div class="form-group form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="serialNumberToggle-<%= medicament.medicamentId._id %>"
+            >
+            <label
+              class="form-check-label"
+              for="serialNumberToggle-<%= medicament.medicamentId._id %>"
+            >
+              Add Serial Number
+            </label>
+          </div>
+
+          <!-- Serial Number Input -->
+          <div
+            class="form-group"
+            id="serialNumberField-<%= medicament.medicamentId._id %>"
+            style="display: none;"
+          >
+            <label for="serialNumber" class="form-label">Serial Number:</label>
+            <input
+              name="serialNumber"
+              id="serialNumber-<%= medicament.medicamentId._id %>"
+              class="form-control"
+              type="text"
+              placeholder="Enter serial number"
+            >
+          </div>
+
+          <button
+            type="submit"
+            id="saveToStorage"
+            class="btn btn-primary"
+          >
+            Save
+          </button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleCheckbox = document.getElementById(
+      "serialNumberToggle-<%= medicament.medicamentId._id %>"
+    );
+    const serialNumberField = document.getElementById(
+      "serialNumberField-<%= medicament.medicamentId._id %>"
+    );
+
+    toggleCheckbox.addEventListener("change", function () {
+      if (toggleCheckbox.checked) {
+        serialNumberField.style.display = "block";
+      } else {
+        serialNumberField.style.display = "none";
+      }
+    });
+  });
+</script>

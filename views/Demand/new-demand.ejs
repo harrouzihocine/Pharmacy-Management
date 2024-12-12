@@ -1,17 +1,18 @@
 <% layout('layouts/boilerplate') %>
 <div class="demand-container" id="newDemandPage">
+  <button class="btn back-btn back-button" onclick="window.location.href='/demand/demands/<%=serviceABV %>'"><i class="bi bi-arrow-left-circle"></i></button>
   <h5 class="demand-title">New Demand</h5>
 
-  <form method="POST" class="row needs-validation demand-form" action="/inStock/service/medicament-details/settings" novalidate>
+  <form method="POST" id="demand-form" class="row needs-validation demand-form" action="/demand/<%=serviceABV%>/newdemand" novalidate>
     <!-- Header Section: General Information -->
     <div class="row mb-3">
       <!-- Source Depot -->
       <div class="col-md-6">
-        <label for="sourceDepot" class="form-label">Source</label>
-        <select class="form-select" id="sourceDepot" name="sourceDepot" aria-readonly="true">
+        <label for="source" class="form-label">Source</label>
+        <select class="form-select" id="source" name="source" aria-readonly="true">
           <% services.forEach(service => { %>
-          <% if(service._id === serviceABV){ %>
-          <option value="<%= service._id %>" selected><%= service.name %></option>
+          <% if(service._id != serviceABV){ %>
+          <option value="<%= service.name %>" data-source-name="<%= service.name %>" selected><%= service.name %></option>
           <% } %>
           <% }) %>
         </select>
@@ -22,14 +23,14 @@
 
       <!-- Destination Depot -->
       <div class="col-md-6">
-        <label for="destinationDepot" class="form-label">Destination</label>
-        <select class="form-select" id="destinationDepot" name="destinationDepot" required>
+        <label for="destination" class="form-label">Destination</label>
+        <select class="form-select" id="destination" name="destination" required>
           <% services.forEach(service => { %>
-          <% if(service._id !== serviceABV){ %>
-          <option value="<%= service._id %>" data-service-name="<%= service.name %>">
+         
+          <option value="<%= service.name %>" data-destination-name="<%= service.name %>">
             <%= service.name %>
           </option>
-          <% }}) %>
+          <% }) %>
         </select>
         <div class="invalid-feedback">
           Please select a destination depot.
@@ -37,17 +38,7 @@
       </div>
     </div>
 
-    <div class="row mb-3">
-      <!-- Reason -->
-      <div class="col-12">
-        <label for="reason" class="form-label">Comment</label>
-        <textarea id="reason" name="comment" class="form-control" rows="3" required placeholder="Enter reason for the transfer"></textarea>
-        <div class="invalid-feedback">
-          Please provide a comment for the .
-        </div>
-      </div>
-    </div>
-
+    
     <!-- Medicament Table (Main Section) -->
     <div class="table-responsive mb-3" width="100%">
       <table class="demand-table" id="MedicamentTable">
@@ -55,38 +46,58 @@
           <tr>
             <th>Medicament</th>
             <th>Quantity</th>
-            <th>Remarks</th>
+            <th>Priority</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              <select class="form-select" name="Medicament[0][Medicament]" required>
+              <select class="form-select" name="Medicament[0][medicamentId]" required>
                 <option value="" disabled selected>Select Medicament</option>
                 <% Medicaments.forEach(Medicament => { %>
-                  <option value="<%= Medicament.medicamentId %>">
+                  <option value="<%= Medicament.medicamentId._id %>">
                     <%= Medicament.medicamentId.designation %>
                   </option>
-                <% }) %>
-              </select>
+                  <% }) %>
+                </select>
             </td>
-            <td><input type="number" class="form-control" name="Medicament[0][requestedQuantity]" required min="1" /></td>
+            <td><input type="number" class="form-control" name="Medicament[0][quantity]" required min="1" /></td>
             <td><select class="form-select" name="Medicament[0][priority]" required>
-              <option value="" disabled selected>Select Priority</option>
-              
-                <option value="Urgent">Urgent</option>
-                <option value="Normal">Normal</option>
+              <option value="" disabled>Select Priority</option>
+                 <option value="Urgent">Urgent</option>
+                <option value="Normal" selected>Normal</option>
                 <option value="Faible">Faible</option>
-             
-            </select></td>
-            <td>
-              <button type="button" class="btn delete-btn"><i class="bi bi-trash"></i></button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button type="button" class="btn add-command" id="addRowBtn">Add Medicament</button>
+                
+              </select></td>
+              <td>
+                <button type="button" class="btn delete-btn"><i class="bi bi-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="btn add-command" id="addRowBtn">Add Medicament</button>
+        <div class="row mb-3">
+          <div class="row mb-3">
+            <!-- other Meds -->
+            <div class="col-12">
+              <label for="otherMedicaments" class="form-label">Other Medicaments</label>
+              <textarea id="otherMedicaments" name="otherMedicaments" class="form-control" rows="2" placeholder="Enter other Medicamants if not found"></textarea>
+              <div class="invalid-feedback">
+                Please provide other Medicamants if not found on the list .
+              </div>
+            </div>
+          </div>
+          <!-- Comment -->
+          <div class="col-12">
+            <label for="comment" class="form-label">Comment</label>
+            <textarea id="comment" name="comment" class="form-control" rows="2" placeholder="Enter reason for the transfer"></textarea>
+            <div class="invalid-feedback">
+              Please provide a comment .
+            </div>
+          </div>
+        </div>
+        
     </div>
      
     <div class="d-flex">
@@ -108,21 +119,21 @@ document.getElementById("addRowBtn").addEventListener("click", function() {
     newRow = table.insertRow(); // Create a new row
     newRow.innerHTML = `
        <td>
-              <select class="form-select" name="Medicament[0][Medicament]" required>
+              <select class="form-select" name="Medicament[0][medicamentId]" required>
                 <option value="" disabled selected>Select Medicament</option>
                 <% Medicaments.forEach(Medicament => { %>
-                  <option value="<%= Medicament.medicamentId %>">
+                  <option value="<%= Medicament.medicamentId._id %>">
                     <%= Medicament.medicamentId.designation %>
                   </option>
                 <% }) %>
               </select>
             </td>
-            <td><input type="number" class="form-control" name="Medicament[0][requestedQuantity]" required min="1" /></td>
+            <td><input type="number" class="form-control" name="Medicament[0][quantity]" required min="1" /></td>
             <td><select class="form-select" name="Medicament[0][priority]" required>
-              <option value="" disabled selected>Select Priority</option>
+              <option value="" disabled>Select Priority</option>
               
                 <option value="Urgent">Urgent</option>
-                <option value="Normal">Normal</option>
+                <option value="Normal"  selected>Normal</option>
                 <option value="Faible">Faible</option>
              
             </select></td>
@@ -150,5 +161,30 @@ document.getElementById("MedicamentTable").addEventListener("click", function(ev
     event.target.closest("tr").remove();
   }
 });
+document.getElementById("demand-form").addEventListener("submit", function (event) {
+  const table = document.getElementById("MedicamentTable").querySelector("tbody");
+  const rows = table.querySelectorAll("tr");
+  rows.forEach((row) => {
+    const medicamentSelect = row.querySelector('select[name*="[medicamentId]"]');
+    const quantityInput = row.querySelector('input[name*="[quantity]"]');
+    const prioritySelect = row.querySelector('select[name*="[priority]"]');
+
+    // Check if the row is empty
+    if (
+      !medicamentSelect.value || // Medicament not selected
+      !quantityInput.value || // Quantity not entered
+      !prioritySelect.value // Priority not selected
+    ) {
+      row.remove(); // Remove empty row
+    }
+  });
+
+  // If no rows remain after filtering, prevent submission
+  if (table.querySelectorAll("tr").length === 0) {
+    event.preventDefault();
+    alert("Please add at least one valid medicament.");
+  }
+});
+
 
 </script>

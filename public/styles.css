@@ -154,8 +154,7 @@
 .sidebar-link {
   display: flex;
   align-items: center;
-  padding: 12px 20px;
-  color: #fff;
+   color: #fff;
   text-decoration: none;
   border-radius: 5px;
   transition: background-color 0.3s;
@@ -1305,6 +1304,10 @@ color: #A3D4FF;
   color: white;
   background-color: #8a8a8a; /* Blue for view */
 }
+.archive-btn {
+  color: rgb(0, 0, 0);
+  background-color: #ffffff; /* Blue for view */
+}
 .scan-btn{
   background-color: #ffffff;
   color: #000000;
@@ -1325,6 +1328,10 @@ color: #A3D4FF;
   background-color: #dc3545; /* Red for delete */
 }
 .back-btn:hover{
+  background-color: #000000;
+  color: #ffffff;
+}
+.archive-btn:hover{
   background-color: #474747;
   color: #ffffff;
 }
@@ -1906,6 +1913,7 @@ color: #A3D4FF;
 /*--------------------------------new demand page--------------------------------*/
 /* General Container Styling */
 .demand-container {
+  margin: 20px;
   background-color: #0201281d; /* Dark background for the page */
   color: #fff;
   padding: 20px;
@@ -2046,3 +2054,313 @@ color: #A3D4FF;
   border: 1px solid #444;
   color: #777; /* Lighter text color */
 }
+/*-------------------------------Demands Page---------------------------------*/
+/* Container for the demands page */
+.demand-page-container {
+  width: 90rem;
+  background-color: #0201281d; /* Dark background for the page */
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin-top: 20px;
+}
+
+/* Title Styling */
+.demand-page-title {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Button Styling */
+.demand-new-button {
+  display: inline-block;
+  background-color: #55104d;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.demand-new-button:hover {
+  background-color: #726c7a;
+}
+
+/* Table Styling */
+.demand-table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.demand-table-custom th,
+.demand-table-custom td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.demand-table-custom th {
+  background-color: #2e2e2e; /* Slightly darker background for table headers */
+  color: #fff;
+  font-weight: 600;
+}
+
+.demand-table-custom tr:nth-child(even) {
+  background-color: #222; /* Alternate row color */
+}
+
+.demand-table-custom tr:hover {
+  background-color: #333; /* Hover effect to highlight rows */
+}
+
+/* Table Data Cells */
+.demand-table-custom td {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.demand-table-custom td:hover {
+  background-color: #444; /* Hover effect for cells */
+}
+
+/* Empty Row Message */
+.demand-empty-row {
+  text-align: center;
+  font-style: italic;
+  color: #ccc;
+}
+/* General Badge Styling */
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  color: #fff;
+}
+
+/* Specific Badge Colors */
+.status-pending {
+  background-color: #ffd501; /* Yellow for "En attente" */
+  color: #ffffff;
+}
+
+.status-approved {
+  background-color: #28a745; /* Green for "Approuvé" */
+}
+
+.status-rejected {
+  background-color: #dc3545; /* Red for "Rejeté" */
+}
+
+.status-completed {
+  background-color: #17a2b8; /* Blue for "Terminé" */
+}
+/*-------------------------------Demand Details Page---------------------------------*/
+/* Container for the Demand Details Page */
+.demand-details-page-container {
+  width: 90rem;
+  background-color: #0201281d; /* Dark background for the container */
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin-top: 20px;
+}
+
+/* Title Style */
+.demand-details-page-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* General Info Section */
+.demand-info-section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.demand-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.demand-info-table th,
+.demand-info-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.demand-info-table th {
+  background-color: #3e3e3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Medicaments Section */
+.medicaments-section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.medicaments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.medicaments-table th,
+.medicaments-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.medicaments-table th {
+  background-color: #3e3e3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Action Buttons Section */
+.action-buttons-section {
+  margin-top: 30px;
+}
+
+.action-buttons-section .btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  margin-right: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.trans-btn {
+  background-color: #55104d;
+  color: white;
+  border: none;
+}
+.trans-btn:hover {
+  background-color: #726c7a;
+  color: white;
+  border: none;
+}
+
+
+
+/* Empty Row Styling */
+.demand-empty-row {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 20px;
+  color: #ccc;
+}
+.other-medicaments-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #2e2e2e92;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.other-medicaments-section h2 {
+  font-size: 1.6rem;
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+.other-medicaments-section p {
+  font-size: 1rem;
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+
+
+/*-------------------------------Batch Selection Modal (Inspired by Demand Details)---------------------------------*/
+/*-------------------------------Batch Selection Modal (Inspired by Demand Details)---------------------------------*/
+
+/* Table Styling */
+.modal-batch-selection-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin-top: 20px !important;
+  text-align: center !important;
+  background-color: #222 !important; /* Dark background for the table itself */
+  color: #fff !important;
+}
+
+/* Table Header Styling */
+.modal-batch-selection-table th,
+.modal-batch-selection-table td {
+  padding: 12px !important;
+  text-align: left !important;
+  border: 1px solid #444 !important;
+}
+
+.modal-batch-selection-table th {
+  background-color: #3e3e3e !important;
+  color: #fff !important;
+  font-weight: 500 !important;
+}
+#assignementMedicamants-tr td{
+  background-color: #444 !important; 
+  color: #ffffff;
+}
+
+
+#assignementMedicamants-tr td:nth-child(even) {
+  background-color: #3e3e3e !important; /* Dark alternating row color */
+}
+
+#assignementMedicamants-tr td:hover {
+  background-color: #33333331 !important; /* Hover effect to highlight rows */
+}
+
+
+
+/* Input Field Styling */
+.modal-batch-quantity-input {
+  width: 100% !important;
+  padding: 8px !important;
+  border: 1px solid #444 !important;
+  border-radius: 5px !important;
+  background-color: #333 !important;
+  color: #fff !important;
+}
+
+.modal-batch-quantity-input:focus {
+  outline: none !important;
+  border-color: #ffffff !important;
+}
+
+/* Empty Row Styling */
+.modal-batch-empty-row {
+  text-align: center !important;
+  font-style: italic !important;
+  color: #ccc !important;
+}
+

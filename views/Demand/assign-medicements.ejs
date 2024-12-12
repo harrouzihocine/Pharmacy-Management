@@ -1,0 +1,90 @@
+<!-- Batch Selection Modal -->
+<button
+  type="button"
+  class="btn me-2 archive-btn px-2 py-1"
+  data-bs-toggle="modal"
+  data-bs-target="#<%= medicament.medicamentId._id %>"
+>
+<i class="bi bi-truck fs-5"></i>
+</button>
+<div
+  class="modal fade add-storage-modal"
+  id="<%= medicament.medicamentId._id %>"
+  data-bs-keyboard="true"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content add-storage-page-container">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assignementMedicamants-<%= medicament._id %>">Assign Medicament</h5>
+        <div class="d-flex flex-column">
+        <h6><%= medicament.medicamentId.designation %></h6>
+        <h5><strong>Quantity requested:</strong> <%= medicament.quantity %></h5>
+      </div>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <table class="table table-striped table-bordered modal-batch-selection-table" >
+          <thead>
+            <tr>
+              <th>Location Code</th>
+              <th>Batch Number</th>
+              <th>Expiry Date</th>
+              <th>Available Quantity</th>
+              <th>Quantity to Transfer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let hasMatchingStocks = false; %> <!-- Initialize flag -->
+            <% if (sourceStock && sourceStock.length > 0) { %>
+              <% sourceStock.forEach(stock => { %>
+                <% if (stock.medicamentId.toString() === medicament.medicamentId._id.toString()) { %>
+                  <% hasMatchingStocks = true; %> <!-- Mark if a match is found -->
+                  <tr id="assignementMedicamants-tr">
+                    <td><%= stock.locationCode ? stock.locationCode : 'Not Assigned' %></td>
+                    <td><%= stock.batchNumber %></td>
+                    <td><%= stock.expiryDate ? stock.expiryDate.toLocaleDateString() : 'N/A' %></td>
+                    <td class="available-quantity"><%= stock.quantity %></td>
+                    <td>
+                      <input 
+                        type="number" 
+                        class="form-control modal-batch-quantity-input" 
+                        id="transferQuantity-<%= stock._id %>" 
+                        min="0" 
+                        max="<%= stock.quantity %>"
+                      >
+                    </td>
+                  </tr>
+                <% } %>
+              <% }); %>
+              <% if (!hasMatchingStocks) { %> <!-- No matching stocks found -->
+                <tr>
+                  <td colspan="5" class="demand-empty-row">No Medicaments found in stock</td>
+                </tr>
+              <% } %>
+            <% } else { %> <!-- sourceStock is empty or undefined -->
+              <tr>
+                <td colspan="5" class="demand-empty-row">No Medicaments found in stock</td>
+              </tr>
+            <% } %>
+          </tbody>
+          
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn trans-btn" onclick="saveBatchSelection()">Save</button>
+        <button type="button" class="btn gear-btn" data-bs-dismiss="modal">Cancel</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>

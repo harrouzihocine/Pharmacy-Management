@@ -45,8 +45,10 @@
             <%= medicament.PreExpirationAlert ? medicament.PreExpirationAlert : 'N/A' %>
           </td>
           <td>
+            <div class="d-flex">
             <%- include("./addtostorage", { medicament, services }) %>
             <%- include("./settings", { medicament }) %>
+          </div>
           </td>
         </tr>
       <% }); %>

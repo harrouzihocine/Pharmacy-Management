@@ -1,3 +1,78 @@
+// Object to store medicament transfer quantities
+const medicamentTransfers = {};
+
+// Save input changes immediately with available quantity control
+document.addEventListener("input", (event) => {
+  if (event.target.classList.contains("modal-batch-quantity-input")) {
+    const input = event.target;
+    const row = input.closest("tr");
+    const modal = input.closest(".modal");
+    const medicamentId = modal.id; // Extract medicament ID from modal ID
+
+    // Ensure medicament transfers object has entry for the medicamentId
+    if (!medicamentTransfers[medicamentId]) {
+      medicamentTransfers[medicamentId] = {};
+    }
+
+    const batchId = row.querySelector("td:nth-child(2)").textContent.trim(); // Batch number as unique key
+    const availableQuantity = parseInt(row.querySelector(".available-quantity").textContent) || 0; // Get available quantity
+    let quantity = parseInt(input.value) || 0; // Ensure numeric value
+
+    // Validate the input quantity does not exceed the available quantity
+    if (quantity > availableQuantity) {
+      alert(`The quantity to transfer cannot exceed the available quantity (${availableQuantity}).`);
+      input.value = availableQuantity; // Reset to the maximum available
+      quantity = availableQuantity; // Ensure the quantity is not higher than available
+    }
+
+    // Save the valid quantity for specific batch
+    medicamentTransfers[medicamentId][batchId] = quantity;
+  }
+});
+
+// Restore input values when modal opens
+document.addEventListener("show.bs.modal", (event) => {
+  const modal = event.target;
+  const medicamentId = modal.id; // Extract medicament ID from modal ID
+
+  if (medicamentTransfers[medicamentId]) {
+    const rows = modal.querySelectorAll(".modal-batch-selection-table tbody tr");
+
+    rows.forEach((row) => {
+      const batchId = row.querySelector("td:nth-child(2)").textContent.trim(); // Batch number as unique key
+      const input = row.querySelector(".modal-batch-quantity-input");
+
+      if (medicamentTransfers[medicamentId][batchId] !== undefined) {
+        input.value = medicamentTransfers[medicamentId][batchId]; // Restore value
+      }
+    });
+  }
+});
+
+// Update demand table with total quantities
+function updateDemandTable() {
+  Object.keys(medicamentTransfers).forEach((medicamentId) => {
+    const totalQuantity = Object.values(medicamentTransfers[medicamentId]).reduce(
+      (sum, quantity) => sum + quantity,
+      0
+    );
+
+    const row = document.querySelector(`tr[data-medicament-id="${medicamentId}"]`);
+    if (row) {
+      const transferCell = row.querySelector(".quantity-to-transfer-cell");
+      if (transferCell) {
+        transferCell.textContent = totalQuantity; // Update transfer quantity
+      }
+    }
+  });
+}
+
+// Event listener for saving and updating table on modal close
+document.addEventListener("hide.bs.modal", (event) => {
+  updateDemandTable(); // Update the demand table when the modal is closed
+});
+
+
 /*------------------------------------------------selected medicaments------------------------------------------------*/
 document.querySelectorAll('.toggle-btn').forEach(button => {
   button.addEventListener('click', () => {
@@ -25,6 +100,7 @@ document.querySelectorAll('.toggle-btn').forEach(button => {
       .catch(err => console.error('Error:', err));
   });
 });
+
 /*------------------------------------get storages----------------------------------------------------*/
 document.querySelectorAll('[id^="service-"]').forEach(serviceDropdown => {
   serviceDropdown.addEventListener('change', async function () {
@@ -300,4 +376,24 @@ document.getElementById('createLocationBtn').addEventListener('click', function 
       window.location.href = `/storage/${storageServiceAbv}/${storageId}`;
     }
   });
+});
+/*------------------------------------- demand interne creation --------------------------------      */
+document.getElementById("demandsTable").addEventListener("click", function(event) {
+  // Check if the clicked element is a "View Medicaments" button
+  if (event.target.classList.contains("view-medicaments")) {
+    const demandRow = event.target.closest("tr"); // Get the clicked demand row
+    const demandId = demandRow.getAttribute("data-demand-id"); // Get the demand ID
+
+    // Find the medicaments row with the same demand ID
+    const medicamentsRow = document.querySelector(`.medicaments-row[data-demand-id="${demandId}"]`);
+
+    // Toggle visibility
+    if (medicamentsRow.style.display === "none") {
+      medicamentsRow.style.display = "table-row"; // Show medicaments
+      event.target.textContent = "Hide Medicaments"; // Update button text
+    } else {
+      medicamentsRow.style.display = "none"; // Hide medicaments
+      event.target.textContent = "View Medicaments"; // Update button text
+    }
+  }
 });
