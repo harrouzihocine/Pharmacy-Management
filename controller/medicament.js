@@ -3,8 +3,9 @@ const xlsx = require('xlsx');
 // Display all medications
 exports.showAllMedicaments = async (req, res) => {
     try {
-        const medicaments = await Medicament.find();
-        res.render('medicament/index', { medicaments });
+      const medicaments = await Medicament.find().sort({ code_interne: 1 }); 
+      res.render('medicament/index', { medicaments });
+      
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
@@ -33,16 +34,12 @@ module.exports.importMedicaments = async (req, res, next) => {
       // Iterate over the rows and create Medicament documents
       const medicamentPromises = data.map(async (row) => {
         const medicament = new Medicament({
-            numero_enregistrement_pch: row['N°ENREGISTREMENT (PCH)'],
+          code_interne: row['Code interne'],
             code_pch: row['CODE (PCH)'],
-            dci_pch: row['DCI (PCH)'],
             designation: row['Désignation'],
             type_medicament: row['Type de Médicament'],
-            nbre_article_commun: row['Nbre article commun'],
-            code_interne: row['Code interne'], // Should be unique
             forme: row['Forme'],
-            dosage: row['Dosage'],
-            nom_commercial: row['NOM COMMERCIAL ou LABO']
+            boite_de: row['Boite de'],
           });
   
         // Save each medicament to the database
@@ -58,3 +55,82 @@ module.exports.importMedicaments = async (req, res, next) => {
       next(error); // Pass error to the error handler
     }
   };
+
+// Controller to handle editing a Medicament
+exports.editMedicament = async (req, res) => {
+  const medicamentId = req.params.medicamentId; // Get Medicament ID from URL
+  const {
+    code_pch,
+    designation,
+    nom_commercial,
+    type_medicament,
+    forme,
+    boite_de,
+    
+  } = req.body; // Destructure form fields from request body
+
+  try {
+    // Find the medicament by ID and update its values
+    const updatedMedicament = await Medicament.findByIdAndUpdate(
+      medicamentId,
+      {
+        code_pch,
+        designation,
+        nom_commercial,
+        type_medicament,
+        forme,
+        boite_de,
+       
+      },
+      { new: true, runValidators: true } // Return updated document and validate data
+    );
+
+    if (!updatedMedicament) {
+      return res.status(404).send("Medicament not found");
+    }
+
+    // Redirect to a success page or reload current page
+    res.redirect("/medicament"); // Adjust the redirection path as needed
+  } catch (error) {
+    console.error("Error updating Medicament:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+exports.addMedicament = async (req, res) => {
+  const {
+    code_pch,
+    designation,
+    nom_commercial,
+    type_medicament,
+    forme,
+    boite_de,
+  } = req.body; // Destructure form fields from request body
+
+  try {
+    // Find the latest code_interne number from the Medicament collection
+    const lastMedicament = await Medicament.findOne().sort({ code_interne: -1 }).exec();
+
+    // Determine the next code_interne by incrementing the last one by 1 (or starting from 1 if no records exist)
+    const nextCodeInterne = lastMedicament ? lastMedicament.code_interne + 1 : 1;
+
+    // Create a new medicament using the data from the form
+    const newMedicament = new Medicament({
+      code_pch,
+      designation,
+      nom_commercial,
+      type_medicament,
+      forme,
+      boite_de,
+      code_interne: nextCodeInterne, // Assign the next available code_interne
+    });
+
+    // Save the new medicament to the database
+    await newMedicament.save();
+
+    // Redirect to the medicament list page or a success page
+    res.redirect("/medicament"); // Adjust the redirection path as needed
+  } catch (error) {
+    console.error("Error adding Medicament:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};

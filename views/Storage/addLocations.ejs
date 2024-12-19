@@ -3,7 +3,7 @@
     <button class="btn back-btn back-button" onclick="window.location.href='/storage/<%= storage.serviceABV %>/storages'"><i class="bi bi-arrow-left-circle"></i></button>
   <h1>Creation of Locations to Storage: <%= storage.storageName %></h1>
   
-  <form action="/storage/<%= storage._id %>/assign-locations" method="POST">
+  <form action="/storage/<%= storage._id %>/add-locations" method="POST">
    
    <!-- Choix de l'outil de rangement -->
    <div class="form-group">

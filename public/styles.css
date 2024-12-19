@@ -805,7 +805,7 @@ color: #A3D4FF;
 .service-medicaments-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-top: 10px;
   text-align: center;
 }
 
@@ -853,6 +853,11 @@ color: #A3D4FF;
   font-style: italic;
   color: #aaa;
 }
+
+
+
+
+
 /*------------------------------------- medicament detail (in service)-----------------------------------------*/
 .medicament-service-details-container {
   width: 90rem;
@@ -1103,7 +1108,7 @@ color: #A3D4FF;
 .medicament-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-top: 5px;
   text-align: center;
 }
 
@@ -1139,6 +1144,33 @@ color: #A3D4FF;
 .medicament-table td:hover {
   background-color: #555; /* Hover effect for cells */
 }
+/* Style for the Search Form */
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Spread out input and button */
+  gap: 10px;
+  width: 100%;  /* Make form take full width */
+  margin-top: 20px; /* Add margin for spacing */
+}
+
+/* Style for the Search Bar (Input field) */
+.search-bar input[type="text"] {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #444;  /* Dark border for input */
+  background-color: #222;  /* Dark background for input */
+  color: #fff;  /* White text for contrast */
+  width: 100%;  /* Make input take 80% of the width */
+  transition: border-color 0.3s ease;
+}
+
+.search-bar input[type="text"]:focus {
+  border-color: #55104d;  /* Highlight border on focus */
+  outline: none;  /* Remove default focus outline */
+}
+
 /*-------------------------------Pharmacy Page---------------------------------*/
 /* Container for the pharmacy table */
 .pharmacy-table-container {
@@ -1163,7 +1195,7 @@ color: #A3D4FF;
 .pharmacy-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-top: 5px;
   text-align: center;
 }
 
@@ -1304,6 +1336,7 @@ color: #A3D4FF;
   color: white;
   background-color: #8a8a8a; /* Blue for view */
 }
+
 .archive-btn {
   color: rgb(0, 0, 0);
   background-color: #ffffff; /* Blue for view */
@@ -1743,7 +1776,7 @@ color: #A3D4FF;
   cursor: pointer;
   font-size: 16px;
   display: block;
-  margin-top: 5px;
+
   width: 100%;
 }
 
@@ -1956,7 +1989,7 @@ color: #A3D4FF;
 
 /* Validation and Invalid Feedback */
 .demand-form .invalid-feedback {
-  color: #f44336; /* Red color for invalid feedback */
+  color: #ff000093; /* Red color for invalid feedback */
 }
 
 /* Table Styling */
@@ -2153,8 +2186,9 @@ color: #A3D4FF;
 
 /* Specific Badge Colors */
 .status-pending {
-  background-color: #ffd501; /* Yellow for "En attente" */
-  color: #ffffff;
+  background: #f6ff00; /* Cool muted blue tone for low stock */
+  color: #000000; /* Soft pastel blue for text */
+  border: 0px ; /* Complementary border for subtle separation */
 }
 
 .status-approved {
@@ -2162,11 +2196,20 @@ color: #A3D4FF;
 }
 
 .status-rejected {
-  background-color: #dc3545; /* Red for "Rejeté" */
+  background: #ff000093; /* Neutral dark gray for out of stock */
+  color: #ffffff; /* Light gray for contrast */
+  border: 0px ; /* Slightly lighter gray border */
 }
 
-.status-completed {
-  background-color: #17a2b8; /* Blue for "Terminé" */
+.status-Intransfer {
+  background-color: #023fc4; /* Blue for "Terminé" */
+  color: #ffffff; /* Soft pastel blue for text */
+  border: 0px ; /* Complementary border for subtle separation */
+}
+.status-Noncompleted {
+  background-color: #ff9500a3; /* Blue for "Terminé" */
+  color: #ffffff; /* Soft pastel blue for text */
+  border: 0px ; /* Complementary border for subtle separation */
 }
 /*-------------------------------Demand Details Page---------------------------------*/
 /* Container for the Demand Details Page */
@@ -2192,7 +2235,13 @@ color: #A3D4FF;
 /* General Info Section */
 .demand-info-section h2 {
   font-size: 2rem;
-  margin-bottom: 20px;
+  margin: 10px;
+  font-weight: 400;
+  color: #fff;
+}
+.received-medicaments-section h2{
+  font-size: 2rem;
+  margin: 10px;
   font-weight: 400;
   color: #fff;
 }
@@ -2220,11 +2269,39 @@ color: #A3D4FF;
 /* Medicaments Section */
 .medicaments-section h2 {
   font-size: 2rem;
-  margin-bottom: 20px;
+  margin: 10px;
   font-weight: 400;
   color: #fff;
 }
+.Reject-section{
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #3e3e3e;
+  border-radius: 8px;
+  
+}
+.Reject-section h2{
+  font-size: 1.6rem;
+  
+  font-weight: 400;
+  color: #fff;
 
+}
+.Reject-section span{
+  font-size: 1.6rem;
+  color: #ff000093;
+ 
+}
+.reject-btn{
+  background-color: #ff000093;
+  color: white;
+  cursor: pointer;
+}
+.reject-btn:hover{
+  background-color: #ff8888;
+  color: white;
+  cursor: pointer;
+}
 .medicaments-table {
   width: 100%;
   border-collapse: collapse;
@@ -2281,9 +2358,9 @@ color: #A3D4FF;
 .other-medicaments-section {
   margin-top: 30px;
   padding: 20px;
-  background-color: #2e2e2e92;
+  background-color: #3e3e3e;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+ 
 }
 
 .other-medicaments-section h2 {
@@ -2292,15 +2369,39 @@ color: #A3D4FF;
   margin-bottom: 15px;
 }
 
-.other-medicaments-section p {
+.other-medicaments-section span {
   font-size: 1rem;
   color: #ffffff;
   line-height: 1.6;
 }
+/* Add separation lines between sections */
+.demand-info-section,
+.medicaments-section,
+.other-medicaments-section,
+.received-medicaments-section,
+.Reject-section,
+.action-buttons-section {
+  border-bottom: 2px solid #333; /* Dark gray line for separation */
+  padding-bottom: 20px; /* Space inside the section */
+  margin-bottom: 20px; /* Space below the section */
+}
+
+.demand-details-page-container > div:last-child {
+  border-bottom: none; /* Remove line after the last section */
+}
+/* Green color for matching quantities */
+.quantity-match {
+  color: #28a745 !important;
+  font-weight: bold;
+}
+
+/* Red color for mismatching quantities */
+.quantity-mismatch {
+  color: #ff000093 !important;
+  font-weight: bold;
+}
 
 
-
-/*-------------------------------Batch Selection Modal (Inspired by Demand Details)---------------------------------*/
 /*-------------------------------Batch Selection Modal (Inspired by Demand Details)---------------------------------*/
 
 /* Table Styling */
@@ -2340,8 +2441,6 @@ color: #A3D4FF;
   background-color: #33333331 !important; /* Hover effect to highlight rows */
 }
 
-
-
 /* Input Field Styling */
 .modal-batch-quantity-input {
   width: 100% !important;
@@ -2363,4 +2462,573 @@ color: #A3D4FF;
   font-style: italic !important;
   color: #ccc !important;
 }
+
+/*------------------------ receive page styles------------------------*/
+/* Container for the Receive Demand Page */
+.receive-demand-page-container {
+  width: 90rem;
+  background-color: #0201281d;
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+}
+
+/* Header Styling */
+.receive-demand-header h1{
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+.receive-demand-header h2{
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.receive-demand-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.receive-demand-table th,
+.receive-demand-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.receive-demand-table th {
+  background-color: #2e2e2e; /* Slightly darker background for table headers */
+  color: #fff;
+  font-weight: 600;
+}
+
+.receive-demand-table tr:nth-child(even) {
+  background-color: #222; /* Alternate row color */
+}
+
+.receive-demand-table tr:hover {
+  background-color: #333; /* Hover effect to highlight rows */
+}
+
+/* Table Data Cells */
+.receive-demand-table td {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.receive-demand-table td:hover {
+  background-color: #444; /* Hover effect for cells */
+}
+
+/* Empty Row Message */
+.receive-empty-row {
+  text-align: center;
+  font-style: italic;
+  color: #ccc;
+}
+
+/* Column Styling */
+.batch-number,
+.serial-number,
+.expiry-date,
+.transferred-quantity {
+  text-align: center;
+}
+
+/* Input Styling */
+.receive-quantity-input {
+  width: 100%;
+  padding: 5px;
+  font-size: 1rem;
+  background-color: #333;
+  color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Buttons Styling */
+.receive-action-buttons {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.receive-save-btn {
+  background-color: #55104d;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.receive-save-btn:hover {
+  background-color: #726c7a;
+  color: white;
+}
+
+/*-------------------------------Inventories Page---------------------------------*/
+/* Container for the inventories table */
+.inventories-container {
+  width: 90rem;
+  background-color: #0201281d; /* Dark background for the page */
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin-top: 20px;
+}
+
+/* Title Style */
+.inventories-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Table Styling */
+.inventories-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.inventories-table th,
+.inventories-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.inventories-table th {
+  background-color: #2e2e2e; /* Slightly darker background for table headers */
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.inventories-table tr:nth-child(even) {
+  background-color: #222; /* Alternate row color */
+}
+
+.inventories-table tr:hover {
+  background-color: #333; /* Hover effect to highlight rows */
+}
+
+/* Table Data Cells */
+.inventories-table td {
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.inventories-table td:hover {
+  background-color: #444; /* Hover effect for cells */
+}
+/*---------------------------------- New Inventory Page Styling ------------------------------*/
+/* Style the container for the new inventory page */
+.new-inventory-container {
+  width: 50rem;
+  background-color: #1e313ef5; /* Dark background */
+  color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Shadow effect */
+  margin-top: 20px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+/* Title Styling */
+.new-inventory-container h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Form Styling */
+.new-inventory-container form {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* Form Group Styling */
+.new-inventory-container .form-group {
+  margin-bottom: 20px;
+}
+
+/* Label Styling */
+.new-inventory-container .form-group label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+/* Input and Textarea Styles */
+.new-inventory-container .form-control {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #fff;
+}
+
+.new-inventory-container .form-control:focus {
+  border-color: #726c7a;
+  background-color: #333;
+  outline: none;
+}
+
+/* Button Styles */
+.new-inventory-container button {
+  padding: 12px 30px;
+  background-color: #55104d; /* Dark color for action */
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Make button take the full width */
+}
+
+.new-inventory-container button:hover {
+  background-color: #726c7a;
+}
+
+/* Scrollbar Styling for Webkit browsers */
+.new-inventory-container::-webkit-scrollbar {
+  width: 8px; /* Thin scrollbar */
+}
+
+.new-inventory-container::-webkit-scrollbar-track {
+  background: #121212; /* Dark background for the track */
+  border-radius: 50px; /* Circular track for modern look */
+}
+
+.new-inventory-container::-webkit-scrollbar-thumb {
+  background: rgba(1, 101, 101, 0.7); /* Neon cyan color for thumb */
+  border-radius: 50px; /* Circular thumb for smooth look */
+  border: 3px solid #121212; /* Adds space between thumb and track */
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.new-inventory-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 255, 1); /* Brighter cyan on hover */
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.9); /* Glowing effect */
+}
+
+/* Scrollbar Styling for Firefox */
+.new-inventory-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(1, 101, 101, 0.7) #121212; /* Neon cyan thumb and dark track */
+}
+.status-Draft {
+  background: #ffffff; /* Cool muted blue tone for low stock */
+  color: #000000; /* Soft pastel blue for text */
+  border: 0px ; /* Complementary border for subtle separation */
+}
+.status-Validated {
+  background: #28a745; /* Cool muted blue tone for low stock */
+  color: #ffffff; /* Soft pastel blue for text */
+  border: 0px ; /* Complementary border for subtle separation */
+}
+
+/* Style the workflow section to match the container */
+.workflow-section {
+ 
+  color: #fff;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+
+}
+
+/* Label Styling for Workflow Section */
+.workflow-section label {
+  display: flex; /* For alignment */
+  align-items: center;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #ccc; /* Light gray for labels */
+  cursor: pointer; /* Make the label clickable */
+}
+
+/* Radio Button Styling */
+.workflow-section input[type="radio"] {
+  -webkit-appearance: none; /* Remove default styling */
+  -moz-appearance: none; /* Remove default styling */
+  appearance: none; /* Remove default styling */
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 2px solid #ccc; /* Light border */
+  border-radius: 50%; /* Circular shape */
+  background-color: #222; /* Dark background */
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Radio Button Checked State */
+.workflow-section input[type="radio"]:checked {
+  background-color: #55104d; /* Match the action color */
+  border-color: #726c7a; /* Softer border */
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.8); /* Add a glowing effect */
+}
+
+/* Radio Button Hover State */
+.workflow-section input[type="radio"]:hover {
+  border-color: #726c7a; /* Softer border on hover */
+  background-color: #333; /* Darker hover background */
+}
+
+/* Service and Storage Select Dropdowns */
+#serviceSelect, #storageSelect {
+  margin-top: 15px;
+}
+
+#serviceSelect label, #storageSelect label {
+  font-size: 1rem;
+  color: #ccc;
+}
+
+#serviceSelect select, #storageSelect select {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #fff;
+}
+
+#serviceSelect select:focus, #storageSelect select:focus {
+  border-color: #726c7a;
+  background-color: #333;
+  outline: none;
+}
+/*--------------------style for  inventory details page ------------------------*/
+.inventory-details-container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #1e313ef5; /* Dark background */
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Shadow effect */
+  margin-top: 20px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+.validated-btn {
+  padding: 5px 10px;
+  font-size: 15px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.validated-btn-success {
+  background-color: #28a745; /* Green for success */
+}
+.validated-btn-back {
+  background-color:  #fff; /* Green for success */
+  color: #000000;
+}
+
+/*--------------------------- new item in inventory ----------------------------*/
+.choices__inner{
+  background-color: #222;
+  border: 1px solid #444;
+  border-radius: 5px;
+}
+.choices__list{
+  background-color: #222;
+}
+.choices[data-type*=select-one] .choices__input{
+  background-color: #222;
+  border: 1px solid #444;
+  color: #ffffff;
+ 
+}
+.choices__item {
+background-color:  #222; /* Highlight color */
+
+color: rgb(255, 255, 255);
+}
+.choices__list--dropdown .choices__item--selectable.is-highlighted, .choices__list[aria-expanded] .choices__item--selectable.is-highlighted{
+background-color:#55104d; /* Highlight color */
+color: rgb(255, 255, 255);
+}
+
+/*-------------------------------Inventory Details Page---------------------------------*/
+/* Container for the Inventory Details Page */
+.inventory-details-container {
+  width: 90rem;
+  background-color: #0201281d; /* Dark background for the container */
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin: 20px;
+}
+
+/* Title Style */
+.inventory-details-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+.inventory-information-section{
+  text-align:left;
+  margin-top: 30px;
+  background-color: #3e3e3e;
+  padding: 20px;
+  border-radius: 8px;
+}
+/* Service and Storage Info */
+.inventory-dinventory-information-section p {
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.inventory-information-section strong {
+  font-weight: 600;
+}
+
+/* New Item Form Section */
+.new-item-form-section {
+  margin-top: 30px;
+  background-color: #3e3e3e;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.new-item-form-section h3 {
+  font-size: 1.8rem;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+/* Inventory Items Table */
+.inventory-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+  text-align: left;
+}
+
+.inventory-items-table th,
+.inventory-items-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.inventory-items-table th {
+  background-color: #3e3e3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+.inventory-items-table tbody tr:hover {
+  background-color: #4e4e4e;
+}
+
+.inventory-items-table td {
+  color: #fff;
+}
+
+/* Action Buttons */
+.inventory-items-table .btn {
+  padding: 8px 15px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.inventory-items-table .btn-warning {
+  background-color: #f39c12;
+  color: white;
+}
+
+.inventory-items-table .btn-danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.inventory-items-table .btn-warning:hover {
+  background-color: #e67e22;
+}
+
+.inventory-items-table .btn-danger:hover {
+  background-color: #c0392b;
+}
+
+/* Empty Row Styling */
+.inventory-empty-row {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 20px;
+  color: #ccc;
+}
+
+/* Item Details Section */
+.item-details-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #3e3e3e;
+  border-radius: 8px;
+}
+
+.item-details-section h3 {
+  font-size: 1.6rem;
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.item-details-section span {
+  font-size: 1.2rem;
+  color: #fff;
+  line-height: 1.6;
+}
+
+/* Add separation lines between sections */
+.new-item-form-section,
+.item-details-section {
+  border-bottom: 2px solid #333; /* Dark gray line for separation */
+  padding-bottom: 20px; /* Space inside the section */
+  margin-bottom: 20px; /* Space below the section */
+}
+
+/* Remove line after the last section */
+.inventory-details-container > div:last-child {
+  border-bottom: none;
+}
+
+
 

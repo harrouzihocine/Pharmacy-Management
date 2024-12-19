@@ -30,7 +30,7 @@ try {
 exports.addMedicamentToStorage = async (req, res) => {
   try {
     // Extract form data
-    const { medicamentId, service, storageId, quantity, batchNumber, expiryDate,serialNumber } = req.body;
+    const { medicamentId, service, storageId, quantity, batchNumber, expiryDate,serialNumber, purchase_price } = req.body;
 
     // Validate data
     if (!medicamentId || !storageId || !quantity || !batchNumber || !service) {
@@ -81,6 +81,7 @@ exports.addMedicamentToStorage = async (req, res) => {
         batchNumber,
         serialNumber,
         expiryDate,
+        purchase_price
       
       });
 

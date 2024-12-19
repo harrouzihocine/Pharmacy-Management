@@ -1,0 +1,90 @@
+<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit-<%= item._id %>">
+  <i class="bi bi-pencil"></i>
+</button>
+  <!-- Modal for Editing Item -->
+  <div class="modal fade add-storage-modal" id="edit-<%= item._id %>" data-bs-keyboard="true" tabindex="-1" aria-labelledby="edit-item-label-<%= item._id %>" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content add-storage-page-container">
+        <div class="modal-header">
+          <h5 class="modal-title" id="edit-item-label-<%= item._id %>">Edit Item</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body">
+          <form id="editItemForm-<%= item._id %>" method="POST" class="add-storage-form row needs-validation" action="/inventory/item/update/<%= item._id %>" novalidate>
+            <% if (!inventory.serviceABV) { %>
+            <div id="serviceSelect" class="mb-3">
+              <label for="service">Select Service:</label>
+              <select id="service" name="serviceABV" class="form-control" onchange="filterStorages(this.value)">
+                <option value="" disabled>Select a service</option>
+                <% groupedStorages.forEach(group => { %>
+                  <% if (group.storages.length > 0) { %>
+                    <option value="<%= group._id %>" <%= group._id == item.serviceABV ? 'selected' : '' %> >
+                      <%= group.storages[0].service %>
+                    </option>
+                  <% } %>
+                <% }) %>
+              </select>
+            </div>
+            <% } %>
+
+            <div id="storageSelect">
+              <label for="storage">Select Storage:</label>
+              <select id="storage" name="storageName" class="form-control mb-3">
+                <option value="" disabled>Select a storage</option>
+                <% groupedStorages.forEach(group => { %>
+                  <% group.storages.forEach(storage => { %>
+                    <option value="<%= storage.storageName %>" <%= storage.storageName == item.storageName ? 'selected' : '' %>>
+                      <%= storage.storageName %> - <%= storage.endroitDescription %>
+                    </option>
+                  <% }) %>
+                <% }) %>
+              </select>
+            </div>
+
+            <!-- Medicament Select -->
+            <div class="col-12 mb-3">
+              <label for="medicament" class="form-label">Item</label>
+              <select class="form-select" id="medicament" name="medicamentId" required>
+                <option value="" disabled>Select an Item</option>
+                <% medicaments.forEach(function(medicament) { %>
+                <option value="<%= medicament._id %>" <%= medicament._id == item.medicamentId._id ? 'selected' : '' %>>
+                  <%= medicament.designation %>
+                </option>
+                <% }); %>
+              </select>
+            </div>
+
+            <!-- Batch Number Input -->
+            <div class="col-md-6 mb-3">
+              <label for="batchNumber" class="form-label">Batch Number</label>
+              <input type="text" class="form-control" id="batchNumber" name="batchNumber" value="<%= item.batchNumber %>" required>
+            </div>
+
+            <!-- Serial Number Input -->
+            <div class="col-md-6 mb-3">
+              <label for="serialNumber" class="form-label">Serial Number</label>
+              <input type="text" class="form-control" id="serialNumber" name="serialNumber" value="<%= item.serialNumber || '' %>">
+            </div>
+
+            <!-- Quantity Input -->
+            <div class="col-md-6 mb-3">
+              <label for="physicalQuantity" class="form-label">Quantity (en Unité)</label>
+              <input type="number" class="form-control" id="physicalQuantity" name="physicalQuantity" value="<%= item.physicalQuantity %>" required>
+            </div>
+
+            <!-- Purchase Price Input -->
+            <div class="col-md-6 mb-3">
+              <label for="purchasePrice" class="form-label">Purchase Price</label>
+              <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" value="<%= item.purchasePrice %>">
+            </div>
+
+            <!-- Remarks Input -->
+            <div class="col-12 mb-3">
+              <label for="remarks" class="form-label">Remarks</label>
+              <textarea class="form-control" id="remarks" name="remarks"><%= item.remarks %></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </form>
+        </div>

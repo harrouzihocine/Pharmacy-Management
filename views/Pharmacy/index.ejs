@@ -2,20 +2,22 @@
 
 <div class="pharmacy-table-container">
   <h1>List of Medicaments (Interne)</h1>
-
+  <form class="search-bar">
+    <input type="text" id="search"  placeholder="Search medicaments" />
+</form>
   <table class="pharmacy-table">
     <thead>
       <tr>
         <th>Code Interne</th>
         <th>Designation</th>
-        <th>Nom Commercial</th>
+       
         <th>Existing QTE</th>
         <th>Min Qte</th>
         <th>Pre Expiration Days</th>
         <th>Actions</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody  id="tablebody">
       <% selectedMedicaments.forEach((medicament) => { %>
         <tr>
           <td onclick="window.location.href='/inStock/stock-details/<%= medicament.medicamentId._id %>'" style="cursor: pointer;">
@@ -32,9 +34,7 @@
               <span class="tag out-of-stock">Expiring Risk</span>
             <% } %>
           </td>
-          <td onclick="window.location.href='/inStock/stock-details/<%= medicament.medicamentId._id %>'" style="cursor: pointer;">
-            <%= medicament.medicamentId.nom_commercial %>
-          </td>
+         
           <td onclick="window.location.href='/inStock/stock-details/<%= medicament.medicamentId._id %>'" style="cursor: pointer;">
             <%= medicament.totalQuantity %>
           </td>

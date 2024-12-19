@@ -23,6 +23,7 @@ const inStockSchema = new mongoose.Schema(
     locationCode: { type: String },
     barcode: { type: String },
     quantity: { type: Number, required: true },
+    purchase_price: { type: Number},
     serialNumber: { type: Number},
     batchNumber: { type: String, required: true },
     expiryDate: { type: Date },

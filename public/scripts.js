@@ -9,12 +9,19 @@ document.addEventListener("input", (event) => {
     const modal = input.closest(".modal");
     const medicamentId = modal.id; // Extract medicament ID from modal ID
 
-    // Ensure medicament transfers object has entry for the medicamentId
+    // Ensure medicamentTransfers object has entry for the medicamentId
     if (!medicamentTransfers[medicamentId]) {
       medicamentTransfers[medicamentId] = {};
     }
 
-    const batchId = row.querySelector("td:nth-child(2)").textContent.trim(); // Batch number as unique key
+    // Get batch number, expiry date, and serial number (if exists)
+    const batchId = row.querySelector(".batchNumber").textContent.trim();
+    const expiryDate = row.querySelector(".expiryDate") ? row.querySelector(".expiryDate").textContent.trim() : '';
+    const serialNumber = row.querySelector(".serialNumber") ? row.querySelector(".serialNumber").textContent.trim() : '';
+
+    // Combine batchId, expiryDate, and serialNumber to form a unique key
+    const uniqueKey = `${batchId}_${expiryDate}_${serialNumber}`;
+
     const availableQuantity = parseInt(row.querySelector(".available-quantity").textContent) || 0; // Get available quantity
     let quantity = parseInt(input.value) || 0; // Ensure numeric value
 
@@ -25,8 +32,8 @@ document.addEventListener("input", (event) => {
       quantity = availableQuantity; // Ensure the quantity is not higher than available
     }
 
-    // Save the valid quantity for specific batch
-    medicamentTransfers[medicamentId][batchId] = quantity;
+    // Save the valid quantity for the specific batch, expiry date, and serial number
+    medicamentTransfers[medicamentId][uniqueKey] = quantity;
   }
 });
 

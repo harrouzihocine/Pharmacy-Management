@@ -32,11 +32,12 @@
       </div>
 
       <div class="modal-body">
-        <table class="table table-striped table-bordered modal-batch-selection-table" >
+        <table class="table table-striped table-bordered modal-batch-selection-table">
           <thead>
             <tr>
               <th>Location Code</th>
               <th>Batch Number</th>
+              <th>Serial Number</th>
               <th>Expiry Date</th>
               <th>Available Quantity</th>
               <th>Quantity to Transfer</th>
@@ -48,10 +49,11 @@
               <% sourceStock.forEach(stock => { %>
                 <% if (stock.medicamentId.toString() === medicament.medicamentId._id.toString()) { %>
                   <% hasMatchingStocks = true; %> <!-- Mark if a match is found -->
-                  <tr id="assignementMedicamants-tr">
+                  <tr id="assignementMedicamants-tr" data-stock-id="<%=stock._id%>" data-medicament-id ="medicament.medicamentId._id">
                     <td><%= stock.locationCode ? stock.locationCode : 'Not Assigned' %></td>
-                    <td><%= stock.batchNumber %></td>
-                    <td><%= stock.expiryDate ? stock.expiryDate.toLocaleDateString() : 'N/A' %></td>
+                    <td class="batchNumber"><%= stock.batchNumber %></td>
+                    <td class="SerialNumber"><%= stock.serialNumber? stock.serialNumber: "N/A" %></td>
+                    <td class="expiryDate"><%= stock.expiryDate ? stock.expiryDate.toLocaleDateString() : 'N/A' %></td>
                     <td class="available-quantity"><%= stock.quantity %></td>
                     <td>
                       <input 
@@ -67,12 +69,12 @@
               <% }); %>
               <% if (!hasMatchingStocks) { %> <!-- No matching stocks found -->
                 <tr>
-                  <td colspan="5" class="demand-empty-row">No Medicaments found in stock</td>
+                  <td colspan="6" class="demand-empty-row">No Medicaments found in stock</td>
                 </tr>
               <% } %>
             <% } else { %> <!-- sourceStock is empty or undefined -->
               <tr>
-                <td colspan="5" class="demand-empty-row">No Medicaments found in stock</td>
+                <td colspan="6" class="demand-empty-row">No Medicaments found in stock</td>
               </tr>
             <% } %>
           </tbody>

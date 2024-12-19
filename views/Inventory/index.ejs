@@ -1,0 +1,103 @@
+<% layout('layouts/boilerplate') %>
+<div class="inventories-container">
+  <h1>Inventories</h1>
+  <form class="search-bar">
+    <input type="text" id="search"  placeholder="Search in inventory items" />
+</form>
+  <table class="inventories-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Service</th>
+        <th>Storage</th>
+        <th>Created At</th>
+        <th>Created By</th>
+        <th>Status</th>
+        <th>Actions</th>
+
+      </tr>
+    </thead >
+    <tbody id="tablebody">
+      <% if (inventories.length > 0) { %>
+      <% inventories.forEach(inventory => { %>
+      <tr>
+        <td onclick="window.location.href='/inventory/<%= inventory.id %>'"><%= inventory.title %></td>
+        <td onclick="window.location.href='/inventory/<%= inventory.id %>'"><%= inventory.description || 'N/A' %></td>
+        <td onclick="window.location.href='/inventory/<%= inventory.id %>'"><%= inventory.serviceABV || 'N/A' %></td>
+        <td onclick="window.location.href='/inventory/<%= inventory.id %>'"><%= inventory.storageName || 'N/A' %></td>
+        <td onclick="window.location.href='/inventory/<%= inventory.id %>'"><%= inventory.createdAt.toLocaleString() %></td>
+        <td onclick="window.location.href='/inventory/<%= inventory.id %>'"><%= inventory.createdBy || 'N/A' %></td>
+        <td>
+          <span class="tag status-badge <%= inventory.status === 'Draft' ? 'status-Draft' : 'status-Validated' %>">
+            <%= inventory.status%>
+          </span>
+          <% if (inventory.status === 'Draft') { %>
+          <button class="btn validated-btn validated-btn-success " data-id="<%= inventory.id %>"><i class="bi bi-check-circle"></i></button>
+          <% }else{ %>
+            <button class="btn validated-btn validated-btn-back" data-id="<%= inventory.id %>"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <% } %>
+        </td>
+        <td>
+          <button class="btn edit-btn" onclick="window.location.href='/inventory/edit/<%= inventory.id %>'"><i class="bi bi-pencil-square"></i></button>
+          <button class="btn delete-btn" onclick="confirmDelete('<%= inventory.id %>')"><i class="bi bi-trash"></i></button>
+        </td>
+      </tr>
+      <% }); %>
+      <% } else { %>
+      <tr>
+        <td colspan="8">No inventories found.</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+ document.querySelectorAll('.validated-btn').forEach(button => {
+  button.addEventListener('click', async (event) => {
+    const inventoryId = event.currentTarget.dataset.id; // Use event.currentTarget
+    const isBackToDraft = event.currentTarget.classList.contains('validated-btn-back'); // Check class of clicked button
+
+    const result = await Swal.fire({
+      title: isBackToDraft ? 'Revert to Draft?' : 'Validate Inventory?',
+      text: isBackToDraft 
+        ? "You are about to revert this inventory to draft mode!" 
+        : "You are about to validate this inventory!",
+      icon: isBackToDraft ? 'warning' : 'success',
+      showCancelButton: true,
+      confirmButtonText: isBackToDraft ? 'Yes, revert it!' : 'Yes, validate it!',
+      cancelButtonText: 'Cancel'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`/inventory/validate/${inventoryId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            status: isBackToDraft ? 'Draft' : 'Validated'
+          }),
+        });
+
+        if (response.ok) {
+          Swal.fire(
+            isBackToDraft ? 'Reverted!' : 'Validated!',
+            isBackToDraft 
+              ? 'The inventory has been reverted to draft mode.' 
+              : 'The inventory has been validated.',
+            'success'
+          ).then(() => location.reload());
+        } else {
+          throw new Error('Status update failed.');
+        }
+      } catch (error) {
+        Swal.fire('Error!', 'There was an issue updating the inventory status.', 'error');
+      }
+    }
+  });
+});
+
+</script>

@@ -1,0 +1,98 @@
+<% layout('layouts/boilerplate') %>
+<div class="inventory-details-container">
+  <!-- Title Section -->
+  <h2>Inventory Details: <%= inventory.title %></h2>
+
+  <!-- Service and Storage Information -->
+   <div class="inventory-information-section">
+  <p>
+    <% if (inventory.serviceABV) { %>
+      <strong>Service:</strong> <%= inventory.serviceABV %>,
+      <% if (inventory.storageName) { %>
+        <strong>Storage:</strong> <%= inventory.storageName %>
+      <% } %>
+    <% } else { %>
+      <strong>Service:</strong> All Services
+    <% } %>
+   
+  <p><strong>Description:</strong> <%= inventory.description %></p>
+  <% if(inventory.createdBy){ %>
+    <p> <strong>Created By:</strong> <%= inventory.createdBy %></p>
+  <% } %> 
+  <p><strong>Status:</strong> <%= inventory.status %></p>
+</div>
+<% if(inventory.status == 'Draft'){ %>
+  <!-- New Item Form Section -->
+  <div class="new-item-form-section">
+    <h3>Add New Item</h3>
+    <%- include("./new-item", { medicaments, groupedStorages, inventory }) %>
+  </div>
+<% } %>
+  <!-- Inventory Items Table Section -->
+  <h3 class="mt-4">Inventory Items</h3>
+  <form class="search-bar">
+    <input type="text" id="search"  placeholder="Search in inventory items" />
+</form>
+  <table class="inventory-items-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Medicament</th>
+        <% if (!inventory.serviceABV) { %>
+        <th>Service</th>
+        <% } %>
+        <% if (!inventory.storageName) { %>
+        <th>Storage</th>
+        <% } %>
+        <th>Batch Number</th>
+        <th>Serial Number</th>
+        <th>Qte (en Unité)</th>
+        <th>Purchase Price</th>
+        <th>Vente Price</th>
+        <th>Remarks</th>
+        <% if(inventory.status == 'Draft'){ %>
+        <th>Actions</th>
+        <% } %>
+      </tr>
+    </thead>
+    <tbody  id="tablebody">
+      <% if (inventoryItems.length > 0) { %>
+        <% inventoryItems.forEach((item, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= item.medicamentId.designation %></td>
+            <% if (!inventory.serviceABV) { %>
+            <td><%= item.serviceABV || 'N/A' %></td>
+            <% } %>
+            <% if (!inventory.storageName) { %>
+            <td><%= item.storageName || 'N/A' %></td>
+            <% } %>
+            <td><%= item.batchNumber %></td>
+            <td><%= item.serialNumber || 'N/A' %></td>
+            <td><%= item.physicalQuantity %></td>
+            <td><%= item.purchasePrice %></td>
+            <% if(item.serviceABV == 'URG'){%>
+            <td><%=(parseInt(item.purchasePrice) * 1.4).toFixed(2) %> DA</td>
+            <% } else {%>
+            <td><%= (parseInt(item.purchasePrice) * 1.36).toFixed(2) %> DA</td>
+            <% } %>
+            <td><%= item.remarks || 'None' %></td>
+            <% if(inventory.status == 'Draft'){ %>
+            <td>
+              <div class="d-flex">
+                <%- include("./edit-item", { item,inventory }) %>
+             
+            </div>
+            </td>
+            <% } %>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="11" class="inventory-empty-row">No items found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+

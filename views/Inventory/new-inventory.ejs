@@ -1,0 +1,67 @@
+<% layout('layouts/boilerplate') %>
+<div class="new-inventory-container">
+    <h1>Create a New Inventory</h1>
+    
+    <!-- Form to create a new inventory -->
+    <form action="/inventory/new" method="POST">
+      <!-- Title Input -->
+      <div class="form-group">
+        <label for="title">Inventory Title:</label>
+        <input type="text" id="title" name="title" class="form-control" placeholder="Enter title" required>
+      </div>
+
+      <!-- Description Input -->
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" class="form-control" placeholder="Enter description"></textarea>
+      </div>
+
+ <div class="workflow-section">
+      <!-- Workflow Selection -->
+<div>
+  <label>
+      <input type="radio" name="workflowType" value="allInOne" onchange="showFields()"> All in one inventory
+  </label><br>
+  <label>
+      <input type="radio" name="workflowType" value="specificService" onchange="showFields()"> Inventory by service
+  </label><br>
+  <label>
+      <input type="radio" name="workflowType" value="serviceStorage" onchange="showFields()"> Inventory by service and storage
+  </label>
+</div>
+
+<!-- Service Select (grouped by serviceABV) -->
+<div id="serviceSelect" style="display:none;">
+  <label for="service">Select Service:</label>
+  <select id="service" name="serviceABV" class="form-control" onchange="filterStorages(this.value)">
+    <option value="">-- Select a service --</option>
+    <% groupedStorages.forEach(group => { %>
+      <% if (group.storages.length > 0) { %>
+        <option value="<%= group._id %>">
+          <%= group.storages[0].service %>
+        </option>
+      <% } %>
+    <% }) %>
+  </select>
+</div>
+
+<!-- Storage Select -->
+<div id="storageSelect" style="display:none;">
+  <label for="storage">Select Storage:</label>
+  <select id="storage" name="storageName" class="form-control">
+    <option value="">-- Select a storage --</option>
+    <% groupedStorages.forEach(group => { %>
+      <% group.storages.forEach(storage => { %>
+        <option data-service="<%= group._id %>" value="<%= storage.storageName %>">
+          <%= storage.storageName %> - <%= storage.endroitDescription %>
+        </option>
+      <% }) %>
+    <% }) %>
+  </select>
+</div>
+</div>
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+
+</div>

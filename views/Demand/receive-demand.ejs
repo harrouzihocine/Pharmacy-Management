@@ -1,0 +1,51 @@
+<% layout('layouts/boilerplate') %>
+<div class="receive-demand-page-container">
+  <div class="receive-demand-header">
+    <h1>Receive Demand N° <%= demand.demandNumber %></h1>
+    <h2>From <%= demand.source %> To <%= demand.destination %></h2>
+  </div>
+
+  <!-- Begin form for submitting received quantities -->
+  <form id="receivedDemandForm" action="/demand/<%= demand._id %>" method="POST">
+    <table class="receive-demand-table">
+      <thead>
+        <tr>
+          <th>Designation</th>
+          <th>Batch Number</th>
+          <th>Serial Number</th>
+          <th>Expiry Date</th>
+          <th>Quantity Transferred</th>
+          <th>Quantity Received</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% receivedstock.forEach(stock => { %>
+          <tr class="receive-demand-row" data-medicament-id="<%= stock.medicamentId %>">
+            <td><%= stock.designation %></td>
+            <td class="batch-number"><%= stock.batchNumber %></td>
+            <td class="serial-number"><%= stock.serialNumber ? stock.serialNumber : 'N/A' %></td>
+            <td class="expiry-date"><%= stock.expiryDate ? new Date(stock.expiryDate).toLocaleDateString() : 'N/A' %></td>
+            <td class="transferredQuantity"><%= stock.quantityTransferred %></td>
+            <td>
+                <input type="hidden" name="transferredQuantity[<%= stock.virtualStockID %>]" value="<%= stock.quantityTransferred %>">
+                <input type="hidden" name="virtualStockID[<%= stock.virtualStockID%>]" value="<%= stock.virtualStockID%>">
+              <input 
+                type="number" 
+                class="form-control receive-quantity-input" 
+                name="receivedQuantity[<%= stock.virtualStockID %>]" 
+                id="receivedQuantity_<%= stock.virtualStockID %>" 
+                min="0"
+               
+                value="<%= stock.receivedQuantity? stock.receivedQuantity : "0" %>"
+                required
+              >
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <div class="receive-action-buttons">
+      <button type="submit" class="btn receive-save-btn">Save</button>
+    </div>
+  </form>
+</div>

@@ -9,8 +9,8 @@ const demandSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["En attente", "Approuvé", "Rejeté", "Terminé"], // Status options
-      default: "En attente",
+      enum: ["Pending", "In transfer", "Approved", "Rejected", "Non completed"], // Status options
+      default: "Pending",
     },
     source: {
       type: String,
@@ -22,12 +22,14 @@ const demandSchema = new mongoose.Schema(
     },
     comment: {
       type: String,
-      
+      trim: true,
+    },
+    rejectioncomment: {
+      type: String,
       trim: true,
     },
     otherMedicaments: {
       type: String,
-      
       trim: true,
     },
     medicaments: [
@@ -42,17 +44,25 @@ const demandSchema = new mongoose.Schema(
           required: true,
           min: 1, // Quantity must be at least 1
         },
-       priority: {
+        quantityExist: {
+          type: Number,
+          trim: true,
+        },
+       
+        priority: {
           type: String,
           trim: true,
         },
       },
     ],
+    virtualStockIDs: [ // Correct the typo here from VitrualStockIDs to virtualStockIDs
+      { type: mongoose.Schema.Types.ObjectId, ref: "VirtualInStock" },
+    ],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
+
 // Pre-save middleware for generating demandNumber
 demandSchema.pre("save", async function (next) {
   if (!this.isNew) return next(); // Skip if not a new document

@@ -1,91 +1,164 @@
 <% layout('layouts/boilerplate') %>
 <div class="demand-details-page-container">
-    <div class="demand-details-header">
-        <h1>Demand Details</h1>
-        <% if (demand ) { %>
-    </div>
+  <div class="demand-details-header">
+    <h1>Demand Details</h1>
+    <% if (demand) { %>
+  </div>
 
-    <div class="demand-info-section">
-        <h2>General Information</h2>
-        <table class="demand-info-table">
-            <tr>
-                <th>Demand Number</th>
-                <td><%= demand.demandNumber %></td>
-            </tr>
-            <tr>
-                <th>Source</th>
-                <td><%= demand.source %></td>
-            </tr>
-            <tr>
-                <th>Destination</th>
-                <td><%= demand.destination %></td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td><%= demand.status %></td>
-            </tr>
-            <tr>
-                <th>Comment</th>
-                <td><%= demand.comment || 'N/A' %></td>
-            </tr>
-            <tr>
-                <th>Created By</th>
-                <td><%= demand.createdBy.username %></td>
-            </tr>
-            <tr>
-                <th>Created Date</th>
-                <td><%= new Date(demand.createdAt).toLocaleString() %></td>
-            </tr>
-        </table>
-    </div>
+  <div class="demand-info-section">
+    <h2>General Information</h2>
+    <table class="demand-info-table">
+      <tr data-demand-id="<% demand._id %>">
+        <th>Demand Number</th>
+        <td><%= demand.demandNumber %></td>
+      </tr>
+      <tr>
+        <th>Source</th>
+        <td class="source-info"><%= demand.source %></td>
+      </tr>
+      <tr>
+        <th>Destination</th>
+        <td class="destination-info"><%= demand.destination %></td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td><%= demand.status %></td>
+      </tr>
+      <tr>
+        <th>Comment</th>
+        <td><%= demand.comment || 'N/A' %></td>
+      </tr>
+      <tr>
+        <th>Created By</th>
+        <td><%= demand.createdBy.username %></td>
+      </tr>
+      <tr>
+        <th>Created Date</th>
+        <td><%= new Date(demand.createdAt).toLocaleString() %></td>
+      </tr>
+    </table>
+  </div>
 
-    <!-- Medicaments Section -->
-    <div class="medicaments-section">
-        <h2>Medicaments</h2>
-        <table class="medicaments-table">
-            <thead>
-                <tr>
-                    <th>Designation</th>
-                    <th>Dosage</th>
-                    <th>Form</th>
-                    <th>Priority</th>
-                    <th>Quantity</th>
-                    <th>Quantity to Transfer</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% demand.medicaments.forEach(medicament => { %>
-                <tr  data-medicament-id="<%= medicament.medicamentId._id %>">
-                    <td><%= medicament.medicamentId.designation %></td>
-                    <td><%= medicament.medicamentId.dosage %></td>
-                    <td><%= medicament.medicamentId.forme %></td>
-                    <td><%= medicament.priority %></td>
-                    <td><%= medicament.quantity %></td>
-                    <td class="quantity-to-transfer-cell">0</td>
-                    <td><%- include("./assign-medicements",{medicament}) %></td>
-                </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- New Section for Other Medicaments -->
-    <% if (demand.otherMedicaments) { %>
-    <div class="other-medicaments-section">
-        <h2>Other Medicaments (Not Listed in Pharmacy)</h2>
-        <p><%= demand.otherMedicaments %></p> <!-- If it's a string -->
-       
-    </div>
-    <% } %>
-
-    <div class="action-buttons-section mb-2">
-        <button class="btn trans-btn" onclick="initiateTransfer('<%= demand._id %>')">Initiate Transfer</button>
-    </div>
-
-    <% } else { %>
+  <!-- Medicaments Section -->
+  <div class="medicaments-section">
+    <h2>Medicaments</h2>
+    <table class="medicaments-table">
+      <thead>
         <tr>
-            <td colspan="8" class="demand-empty-row">No demands found</td>
+          <th>Designation</th>
+          <th>Priority</th>
+          <th>Quantity Exist</th>
+          <th>Quantity requested</th>
+          <th>Quantity to Transfer</th>
+          <% if (demand.status == 'Pending') { %>
+          <th>Action</th>
+          <% } %>
         </tr>
-    <% } %>
+      </thead>
+      <tbody>
+        <% demand.medicaments.forEach(medicament => { %>
+        <tr data-medicament-id="<%= medicament.medicamentId._id %>">
+          <td><%= medicament.medicamentId.designation %></td>
+          <td><%= medicament.priority %></td>
+          <td>
+            <%= medicament.quantityExist?medicament.quantityExist: 'N/A' %>
+          </td>
+          <td><%= medicament.quantity %></td>
+
+          <td class="quantity-to-transfer-cell">
+            <% // Find the corresponding transfer detail for the medicament
+            const transferDetail = transferDetails.find(detail =>
+            detail.medicamentId === medicament.medicamentId._id.toString());
+            const transferQuantity = transferDetail ?
+            transferDetail.transferQuantity : 0; %> <%= transferQuantity %>
+          </td>
+          <% if (demand.status == 'Pending') { %>
+          <td><%- include("./assign-medicements",{medicament}) %></td>
+
+          <% } %>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <!-- New Section for Other Medicaments -->
+  <% if (demand.otherMedicaments) { %>
+  <div class="other-medicaments-section">
+    <h2>Other Medicaments (Not Listed in Pharmacy)</h2>
+    <span><%= demand.otherMedicaments %></span>
+    <!-- If it's a string -->
+  </div>
+  <% } %>
+  <!-----table of received medicaments-->
+  <% if ((demand.status == 'Approved') || (demand.status =='Non completed')){ %>
+    <div class="received-medicaments-section">
+        <h2>Received Medicaments</h2>
+        <table class="receive-demand-table">
+          <thead>
+            <tr>
+              <th>Designation</th>
+              <th>Batch Number</th>
+              <th>Serial Number</th>
+              <th>Expiry Date</th>
+              <th>Quantity Transferred</th>
+              <th>Quantity Received</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% receivedstock.forEach(stock => { 
+              const isQuantityMatch = stock.receivedQuantity == stock.quantityTransferred;
+            %>
+            <tr 
+              class="received-demand-row" 
+              data-medicament-id="<%= stock.medicamentId %>"
+            >
+              <td><%= stock.designation %></td>
+              <td class="batchNumber"><%= stock.batchNumber %></td>
+              <td class="serialNumber">
+                <%= stock.serialNumber ? stock.serialNumber : 'N/A' %>
+              </td>
+              <td class="expired-date">
+                <%= stock.expiryDate ? new Date(stock.expiryDate).toLocaleDateString() : 'N/A' %>
+              </td>
+              <td 
+                class="transferedQuantity <%= isQuantityMatch ? 'quantity-match' : 'quantity-mismatch' %>"
+              >
+                <%= stock.quantityTransferred ? stock.quantityTransferred : "0" %>
+              </td>
+              <td 
+                class="receivedQuantity <%= isQuantityMatch ? 'quantity-match' : 'quantity-mismatch' %>"
+              >
+                <%= stock.receivedQuantity ? stock.receivedQuantity : "0" %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+  <% } %>
+  <!-- Reject Reason Section -->
+  <% if(demand.status == 'Rejected'){ %>
+  <div class="Reject-section">
+    <h2>Reject Reason</h2>
+    <span><%= demand.rejectioncomment %></span>
+  </div>
+  <% } %> <% if (demand.status == 'Pending') { %>
+  <div class="action-buttons-section mb-2">
+    <button class="btn trans-btn" onclick="initiateTransfer('<%= demand._id %>')">
+      Initiate Transfer
+    </button>
+    <button type="button" class="btn reject-btn" onclick="openRejectModal('<%= demand._id %>')">
+      Reject
+    </button>
+
+    <% } if(demand){ %>
+    <button type="button" class="btn trans-btn mt-2" onclick="window.location.href='/demand/<%= demand._id %>'">
+      Receive Command
+    </button>
+  </div>
+  <% }} else { %>
+  <tr>
+    <td colspan="8" class="demand-empty-row">No demands found</td>
+  </tr>
+  <% } %>
 </div>

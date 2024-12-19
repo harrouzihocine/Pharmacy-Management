@@ -12,6 +12,7 @@
         <th>Storage</th>
         <th>Location Code</th>
         <th>Quantity</th>
+        <th>Purchase price</th>
         <th>Batch Number</th>
         <th>Serial number</th>
         <th>Expiry Date</th>
@@ -29,6 +30,7 @@
         <!-- Existing Details -->
         <td><%= stock.locationCode ? stock.locationCode : 'Not Assigned' %></td>
         <td><%= stock.quantity %></td>
+        <td><%= stock.purchase_price %> DA</td>
         <td><%= stock.batchNumber %></td>
         <td><%= stock.serialNumber?stock.serialNumber:'N/A'  %> </td>
         <td><%= stock.expiryDate ? new Date(stock.expiryDate).toLocaleDateString() : 'N/A' %>

@@ -34,11 +34,12 @@
               <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= new Date(demand.createdAt).toLocaleString() %></td>
               <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= demand.createdBy?.username || "Unknown" %></td>
               <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;">
-                <span class="status-badge 
-                  <% if (demand.status === 'En attente') { %>status-pending<% } %>
-                  <% if (demand.status === 'Approuvé') { %>status-approved<% } %>
-                  <% if (demand.status === 'Rejeté') { %>status-rejected<% } %>
-                  <% if (demand.status === 'Terminé') { %>status-completed<% } %>">
+                <span class="tag status-badge 
+                  <% if (demand.status === 'Pending') { %>status-pending<% } %>
+                  <% if (demand.status === 'Approved') { %>status-approved<% } %>
+                  <% if (demand.status === 'Rejected') { %>status-rejected<% } %>
+                  <% if (demand.status === 'In transfer') { %>status-Intransfer<% } %>
+                  <% if (demand.status === 'Non completed') { %>status-Noncompleted<% } %>">
                   <%= demand.status %>
                 </span>
               </td>

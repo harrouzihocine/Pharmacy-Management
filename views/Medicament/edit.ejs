@@ -1,0 +1,63 @@
+<button type="button" class="btn edit-btn" data-bs-toggle="modal" data-bs-target="#edit-<%= medicament._id %>">
+  <i class="bi bi-pencil-fill"></i>
+</button>
+<div class="modal fade add-storage-modal" id="edit-<%= medicament._id %>" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content add-storage-page-container">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modify-<%= medicament._id %>">Edit Medicament</h5>
+        <h6><%= medicament.designation %></h6>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="modifyMedicamentForm" method="POST" class="add-storage-form row needs-validation" action="/medicament/<%= medicament._id %>" novalidate>
+         
+          <!-- Code PCH -->
+          <div class="form-group col-12">
+            <label for="code_pch" class="form-label">Code PCH:</label>
+            <input name="code_pch" id="code_pch" class="form-control" value="<%= medicament.code_pch %>" type="text" placeholder="Enter Code PCH" />
+          </div>
+           <!-- Code PCH -->
+           <div class="form-group col-12">
+            <label for="designation" class="form-label">Designation:</label>
+            <input name="designation" id="designation" class="form-control" value="<%= medicament.designation %>" type="text" placeholder="Enter Designation" />
+          </div>
+          <!-- Nom Commercial -->
+          <div class="form-group col-md-6">
+            <label for="nom_commercial" class="form-label">Nom Commercial:</label>
+            <input name="nom_commercial" id="nom_commercial" class="form-control" value="<%= medicament.nom_commercial %>" type="text" placeholder="Enter Nom Commercial" />
+          </div>
+          <!-- Type de Médicament -->
+          <div class="form-group col-6">
+            <label for="type_medicament" class="form-label">Type de Médicament:</label>
+            <input name="type_medicament" id="type_medicament" class="form-control" value="<%= medicament.type_medicament %>" type="text" placeholder="Enter Type" />
+          </div>
+
+
+          <!-- Forme -->
+          <div class="form-group col-md-6">
+            <label for="forme" class="form-label">Forme:</label>
+            <input name="forme" id="forme" class="form-control" value="<%= medicament.forme %>" type="text" placeholder="Enter Forme" />
+          </div>
+
+
+          <!-- Boite De -->
+          <div class="form-group col-md-6">
+            <label for="boite_de" class="form-label">Boite De:</label>
+            <input name="boite_de" id="boite_de" class="form-control" value="<%= medicament.boite_de %>" type="number" placeholder="Enter Boite De" />
+          </div>
+
+
+         
+
+          <!-- Submit Button -->
+          <div class="form-group mt-4">
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

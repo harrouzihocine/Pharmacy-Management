@@ -45,7 +45,8 @@
         <thead>
           <tr>
             <th>Medicament</th>
-            <th>Quantity</th>
+            <th>Quantity exist</th>
+            <th>Quantity requested</th>
             <th>Priority</th>
             <th>Actions</th>
           </tr>
@@ -62,6 +63,7 @@
                   <% }) %>
                 </select>
             </td>
+            <td><input type="number" class="form-control" name="Medicament[0][quantityExist]" required min="1" /></td>
             <td><input type="number" class="form-control" name="Medicament[0][quantity]" required min="1" /></td>
             <td><select class="form-select" name="Medicament[0][priority]" required>
               <option value="" disabled>Select Priority</option>
@@ -128,6 +130,7 @@ document.getElementById("addRowBtn").addEventListener("click", function() {
                 <% }) %>
               </select>
             </td>
+             <td><input type="number" class="form-control" name="Medicament[0][quantityExist]" required min="1" /></td>
             <td><input type="number" class="form-control" name="Medicament[0][quantity]" required min="1" /></td>
             <td><select class="form-select" name="Medicament[0][priority]" required>
               <option value="" disabled>Select Priority</option>
@@ -167,13 +170,11 @@ document.getElementById("demand-form").addEventListener("submit", function (even
   rows.forEach((row) => {
     const medicamentSelect = row.querySelector('select[name*="[medicamentId]"]');
     const quantityInput = row.querySelector('input[name*="[quantity]"]');
-    const prioritySelect = row.querySelector('select[name*="[priority]"]');
-
+    
     // Check if the row is empty
     if (
       !medicamentSelect.value || // Medicament not selected
-      !quantityInput.value || // Quantity not entered
-      !prioritySelect.value // Priority not selected
+      !quantityInput.value
     ) {
       row.remove(); // Remove empty row
     }

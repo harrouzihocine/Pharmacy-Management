@@ -1,43 +1,47 @@
 <% layout('layouts/boilerplate') %>
 <div class="medicament-table-container">
     <h1>List of Medications</h1>
-    <table class="medicament-table">
-      <thead>
-        <tr>
-          <th>Code Interne</th>
-          <th>Code PCH</th>
-          <th>DCI PCH</th>
-          <th>Designation</th>
-          <th>Type</th>
-          <th>Forme</th>
-          <th>Dosage</th>
-          <th>Nom Commercial</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% for (med of medicaments) { %>
-          <tr>
-            <td><%= med.code_interne %></td>
-            <td><%= med.code_pch %></td>
-            <td><%= med.dci_pch %></td>
-            <td><%= med.designation %></td>
-            <td><%= med.type_medicament %></td>
-            <td><%= med.forme %></td>
-            <td><%= med.dosage %></td>
-            <td><%= med.nom_commercial %></td> 
-            <td>
-              <button 
-              class="toggle-btn assign-btn" 
-              data-medicament-id="<%= med._id %>" 
-              data-selected="<%= med.isSelected ? 'true' : 'false' %>"
-            >
-              <%= med.isSelected ? 'Unselect' : 'Select' %>
-            </button>
-            </td>
-          </tr>
-        <% } %>
-      </tbody>
+
+    <%- include("./new") %>
+    <!-- Search Form -->
+    <form class="search-bar">
+        <input type="text" id="search"  placeholder="Search medicaments" />
+    </form>
+    <table class="medicament-table" >
+        <thead>
+            <tr>
+                <th>Code Interne</th>
+                <th>Code PCH</th>
+                <th>Designation</th>
+                <th>Type</th>
+                <th>Forme</th>
+                <th>Boite de</th>
+                <th>Nom Commercial</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody  id="tablebody">
+            <% for (med of medicaments) { %>
+            <tr>
+                <td><%= med.code_interne %></td>
+                <td><%= med.code_pch ? med.code_pch : 'N/A' %></td>
+                <td><%= med.designation %></td>
+                <td><%= med.type_medicament %></td>
+                <td><%= med.forme %></td>
+                <td><%= med.boite_de %></td>
+                <td><%= med.nom_commercial ? med.nom_commercial : 'N/A' %></td>
+                <td>
+                    <div class="d-flex">
+                        <button class="toggle-btn assign-btn me-2" data-medicament-id="<%= med._id %>" data-selected="<%= med.isSelected ? 'true' : 'false' %>">
+                            <%= med.isSelected ? 'Unselect' : 'Select' %>
+                        </button>
+                        <%- include("./edit", { medicament: med }) %>
+                    </div>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
     </table>
-  </div>
-  
+
+    
+</div>
