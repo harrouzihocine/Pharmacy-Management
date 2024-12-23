@@ -1,5 +1,5 @@
 const express = require('express');
-const { isLoggedIn, isAdmin, isTechnician } = require('../middleware/authMiddleware');
+const { isLoggedIn, isAdmin, PharmacienPrincipal } = require('../middleware/authMiddleware');
 const catchAsync = require("../utils/catchAsync");
 const router = express.Router();
 const {

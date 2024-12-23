@@ -4,10 +4,10 @@
 
     <%- include("./new") %>
     <!-- Search Form -->
-    <form class="search-bar">
+    <form class="search-bar mb-2">
         <input type="text" id="search"  placeholder="Search medicaments" />
     </form>
-    <table class="medicament-table" >
+    <table class="medicament-table sortable" >
         <thead>
             <tr>
                 <th>Code Interne</th>
@@ -23,19 +23,23 @@
         <tbody  id="tablebody">
             <% for (med of medicaments) { %>
             <tr>
-                <td><%= med.code_interne %></td>
-                <td><%= med.code_pch ? med.code_pch : 'N/A' %></td>
-                <td><%= med.designation %></td>
-                <td><%= med.type_medicament %></td>
-                <td><%= med.forme %></td>
-                <td><%= med.boite_de %></td>
-                <td><%= med.nom_commercial ? med.nom_commercial : 'N/A' %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.code_interne %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.code_pch ? med.code_pch : 'N/A' %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.designation %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.type_medicament %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.forme %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.boite_de %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.nom_commercial ? med.nom_commercial : 'N/A' %></td>
                 <td>
                     <div class="d-flex">
-                        <button class="toggle-btn assign-btn me-2" data-medicament-id="<%= med._id %>" data-selected="<%= med.isSelected ? 'true' : 'false' %>">
-                            <%= med.isSelected ? 'Unselect' : 'Select' %>
+                        <button class="toggle-btn assign-btn py-1 px-0" data-medicament-id="<%= med._id %>" data-selected="<%= med.isSelected ? 'true' : 'false' %>">
+                            <% if(med.isSelected){ %>
+                                <i class="fa-regular fa-square-minus fs-5"></i>
+                                 <% }else{ %> 
+                                    <i class="fa-regular fa-square-plus fs-5"></i>
+                                 <% } %>
                         </button>
-                        <%- include("./edit", { medicament: med }) %>
+                       
                     </div>
                 </td>
             </tr>

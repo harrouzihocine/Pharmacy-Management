@@ -1,0 +1,34 @@
+<% layout('layouts/boilerplate') %>
+<div class="medicament-details-container">
+  <button class="btn back-btn back-button " onclick="window.location.href='/medicament'"><i class="bi bi-arrow-left-circle"></i></button>
+  <!-- Title Section -->
+  <div class="title">
+      <h1>Medicament Details</h1>
+      <%- include("./edit", { medicament: medicament }) %>
+  </div>
+  <div class="medicament-details">
+    <div class="info-box">
+      <strong>Code Interne:</strong> <%= medicament.code_interne %>
+    </div>
+    <div class="info-box">
+      <strong>Code PCH:</strong> <%= medicament.code_pch ? medicament.code_pch : 'N/A' %>
+    </div>
+    <div class="info-box">
+      <strong>Designation:</strong> <%= medicament.designation %>
+    </div>
+    <div class="info-box">
+      <strong>Type:</strong> <%= medicament.type_medicament %>
+    </div>
+    <div class="info-box">
+      <strong>Forme:</strong> <%= medicament.forme %>
+    </div>
+    <div class="info-box">
+      <strong>Boite de:</strong> <%= medicament.boite_de %>
+    </div>
+    <div class="info-box">
+      <strong>Nom Commercial:</strong> <%= medicament.nom_commercial ? medicament.nom_commercial : 'N/A' %>
+    </div>
+    <!-- Add any other necessary details here -->
+  </div>
+
+</div>

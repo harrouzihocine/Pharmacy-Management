@@ -1,39 +1,71 @@
 <% layout('layouts/boilerplate') %>
 <div class="inventory-details-container">
+  <button class="btn back-btn back-button " onclick="window.location.href='/inventory/users/<%= inventory.id %>'"><i class="bi bi-arrow-left-circle"></i></button>
   <!-- Title Section -->
   <h2>Inventory Details: <%= inventory.title %></h2>
 
   <!-- Service and Storage Information -->
-   <div class="inventory-information-section">
-  <p>
+  <div class="inventory-information-section">
+    <!-- Inventory Title -->
+    <div class="info-box">
+      <strong>Inventory Title:</strong>
+      <span><%= inventory.title %></span>
+    </div>
+
+    <!-- Service and Storage -->
     <% if (inventory.serviceABV) { %>
-      <strong>Service:</strong> <%= inventory.serviceABV %>,
+      
+      <div class="info-box">
+      <strong>Service:</strong>
+      <span><%= inventory.serviceABV %></span>
+      </div>
       <% if (inventory.storageName) { %>
-        <strong>Storage:</strong> <%= inventory.storageName %>
+        <div class="info-box">
+      <strong>Storage:</strong>
+      <span><%= inventory.storageName %></span>
+    </div>
+ 
       <% } %>
-    <% } else { %>
-      <strong>Service:</strong> All Services
-    <% } %>
+      <% } else { %>
+       
+        <div class="info-box">
+      <strong>Service:</strong>
+      <span>All Services</span>
+    </div>
+    <div class="info-box">
+      <strong>Storage:</strong>
+      <span>All storages</span>
+    </div>
+    
+      <% } %>
+      
+      <!-- Description -->
+      <div class="info-box">
+        <strong>Description:</strong>
+        <span><%= inventory.description %></p></span>
+      </div>
+      <!-- Description -->
+      <div class="info-box">
+        <strong>Status:</strong>
+        <span class="tag status-badge <%= status === 'Draft' ? 'status-Draft' : 'status-Validated' %>">
+          <%=status%>
+        </span>
+      </div>
+    </div>
    
-  <p><strong>Description:</strong> <%= inventory.description %></p>
-  <% if(inventory.createdBy){ %>
-    <p> <strong>Created By:</strong> <%= inventory.createdBy %></p>
-  <% } %> 
-  <p><strong>Status:</strong> <%= inventory.status %></p>
-</div>
-<% if(inventory.status == 'Draft'){ %>
+  <% if(status == 'Draft'){ %>
   <!-- New Item Form Section -->
   <div class="new-item-form-section">
     <h3>Add New Item</h3>
     <%- include("./new-item", { medicaments, groupedStorages, inventory }) %>
   </div>
-<% } %>
-  <!-- Inventory Items Table Section -->
+  <% } %>
   <h3 class="mt-4">Inventory Items</h3>
+  <!-- Inventory Items Table Section -->
   <form class="search-bar">
-    <input type="text" id="search"  placeholder="Search in inventory items" />
-</form>
-  <table class="inventory-items-table">
+    <input type="text" id="search" placeholder="Search in inventory items" />
+  </form>
+  <table class="inventory-items-table sortable">
     <thead>
       <tr>
         <th>#</th>
@@ -48,51 +80,55 @@
         <th>Serial Number</th>
         <th>Qte (en Unité)</th>
         <th>Purchase Price</th>
+        <th>TVA</th>
         <th>Vente Price</th>
         <th>Remarks</th>
-        <% if(inventory.status == 'Draft'){ %>
+        <% if(status == 'Draft'){ %>
         <th>Actions</th>
         <% } %>
       </tr>
     </thead>
-    <tbody  id="tablebody">
+    <tbody id="tablebody">
       <% if (inventoryItems.length > 0) { %>
-        <% inventoryItems.forEach((item, index) => { %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <td><%= item.medicamentId.designation %></td>
-            <% if (!inventory.serviceABV) { %>
-            <td><%= item.serviceABV || 'N/A' %></td>
-            <% } %>
-            <% if (!inventory.storageName) { %>
-            <td><%= item.storageName || 'N/A' %></td>
-            <% } %>
-            <td><%= item.batchNumber %></td>
-            <td><%= item.serialNumber || 'N/A' %></td>
-            <td><%= item.physicalQuantity %></td>
-            <td><%= item.purchasePrice %></td>
-            <% if(item.serviceABV == 'URG'){%>
-            <td><%=(parseInt(item.purchasePrice) * 1.4).toFixed(2) %> DA</td>
-            <% } else {%>
-            <td><%= (parseInt(item.purchasePrice) * 1.36).toFixed(2) %> DA</td>
-            <% } %>
-            <td><%= item.remarks || 'None' %></td>
-            <% if(inventory.status == 'Draft'){ %>
-            <td>
-              <div class="d-flex">
-                <%- include("./edit-item", { item,inventory }) %>
-             
-            </div>
-            </td>
-            <% } %>
-          </tr>
-        <% }); %>
+      <% inventoryItems.forEach((item, index) => { %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= item.medicamentId.designation %></td>
+        <% if (!inventory.serviceABV) { %>
+        <td><%= item.serviceABV || 'N/A' %></td>
+        <% } %>
+        <% if (!inventory.storageName) { %>
+        <td><%= item.storageName || 'N/A' %></td>
+        <% } %>
+        <td><%= item.batchNumber %></td>
+        <td><%= item.serialNumber || 'N/A' %></td>
+        <td><%= item.physicalQuantity %></td>
+        <td><%= item.purchasePrice?item.purchasePrice.toFixed(2):parseInt(0).toFixed(2)%> DA</td>
+        <td><%= item.tva?item.tva:'N/A'%> %</td>
+        <% if(item.serviceABV == 'URG'){%>
+        <td><%=(parseInt(item.purchasePrice?item.purchasePrice:0) * 1.4).toFixed(2) %> DA</td>
+        <% } else {%>
+        <td><%= (parseInt(item.purchasePrice?item.purchasePrice:0) * 1.36).toFixed(2) %> DA</td>
+        <% } %>
+        <td><%= item.remarks || 'None' %></td>
+        <% if(status === 'Draft'){ %>
+        <td>
+          <div class="d-flex">
+            <%- include("./edit-item", { item,inventory }) %>
+            <button type="button" class="btn delete-btn delete-item-btn py-1 px-2" data-url="/inventory/item/<%= item._id %>?_method=DELETE">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+
+        </td>
+        <% } %>
+      </tr>
+      <% }); %>
       <% } else { %>
-        <tr>
-          <td colspan="11" class="inventory-empty-row">No items found.</td>
-        </tr>
+      <tr>
+        <td colspan="12" class="inventory-empty-row">No items found.</td>
+      </tr>
       <% } %>
     </tbody>
   </table>
 </div>
-

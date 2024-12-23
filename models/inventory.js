@@ -6,7 +6,7 @@ const InventorySchema = new mongoose.Schema({
   status: { type: String, enum: ['Draft', 'Validated'], default: 'Draft' }, // Draft or Validated
   serviceABV: { type: String},
   storageName:  { type: String},
-  createdBy: { type: String},
+  total: { type: String},
 
 },
  {

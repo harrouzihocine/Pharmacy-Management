@@ -8,7 +8,8 @@ const {
     showAllMedicaments,
     showUpLoadMedicamentsForm,
     addMedicament,
-    editMedicament
+    editMedicament,
+    medicamentDetails
     
   } = require("../controller/medicament");
 router.route("/").get(catchAsync(showAllMedicaments)).post(catchAsync(addMedicament));
@@ -19,7 +20,7 @@ router
 .route('/importMedicaments')
 .post(upload.single('file'), catchAsync(importMedicaments));
 router.route("/upload").get(catchAsync(showUpLoadMedicamentsForm));
-router.route("/:medicamentId").post(catchAsync(editMedicament));
+router.route("/:medicamentId").get(catchAsync(medicamentDetails)).post(catchAsync(editMedicament));
 
 router.get('/downloadTemplate', (req, res) => {
     const filePath = path.join(__dirname, '../public/templates/medicaments_template.xlsx');

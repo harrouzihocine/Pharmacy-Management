@@ -1,109 +1,170 @@
-const InStock = require("../models/inStock"); // Assuming you have an InStock model
+const User = require("../models/user");
 const Medicament = require("../models/medicament"); // Assuming you have a Medicament model
 const Storage = require("../models/storage"); // Assuming you have a Storage model
 const Inventory = require("../models/inventory");
-const InventoryItem = require('../models/InventoryItem');
+const InventoryItem = require("../models/InventoryItem");
+const UserInventory = require("../models/userInventory");
+const xlsx = require("xlsx");
 
 module.exports.getcreateInventoryPage = async (req, res, next) => {
-    const groupedStorages = await Storage.aggregate([
-        {
-          $group: {
-            _id: "$serviceABV", // Group by serviceABV
-            storages: {
-              $push: {
-                storageName: "$storageName",
-                endroitCode: "$endroitCode",
-                endroitDescription: "$endroitDescription",
-                service: "$service",
-              },
-            },
+  const groupedStorages = await Storage.aggregate([
+    {
+      $group: {
+        _id: "$serviceABV", // Group by serviceABV
+        storages: {
+          $push: {
+            storageName: "$storageName",
+            endroitCode: "$endroitCode",
+            endroitDescription: "$endroitDescription",
+            service: "$service",
           },
         },
-        { $sort: { _id: 1 } }, // Optional: Sort by serviceABV alphabetically
-      ]);
-  res.render("Inventory/new-inventory",{groupedStorages});
+      },
+    },
+    { $sort: { _id: 1 } }, // Optional: Sort by serviceABV alphabetically
+  ]);
+  res.render("Inventory/new-inventory", { groupedStorages });
 };
 
 module.exports.getinventoriespage = async (req, res, next) => {
-    try {
-      const inventories = await Inventory.find().sort({ createdAt: -1 }); // Newest first
-      res.render("Inventory/index", { inventories });
-    } catch (error) {
-      next(error); // Handle errors appropriately
-    }
-  };
+  try {
+    // Fetch all inventories
+    const inventories = await Inventory.find().sort({ createdAt: -1 });
 
-  
-  module.exports.getInventoryDetailsPage = async (req, res, next) => {
-    const inventoryId = req.params.inventoryId;
-  
-    try {
-      // Fetch inventory details
-      const inventory = await Inventory.findById(inventoryId);
-  
-      // Fetch all inventory items for this inventory
-      const inventoryItems = await InventoryItem.find({ inventoryId })
-        .populate('medicamentId', 'designation') // Populate medicament details (e.g., name or designation)
-        .lean(); // Convert Mongoose documents to plain objects for rendering
-  
-      // Fetch all medicaments for adding new items
-      const medicaments = await Medicament.find();
-  
-      // Fetch grouped storages for dropdown or information
-      const groupedStorages = await Storage.aggregate([
-        {
-          $group: {
-            _id: "$serviceABV", // Group by serviceABV
-            storages: {
-              $push: {
-                storageName: "$storageName",
-                endroitCode: "$endroitCode",
-                endroitDescription: "$endroitDescription",
-                service: "$service",
-              },
+    // Check if the user is associated with any inventory
+    const userInventories = await UserInventory.find({}).select(
+      "inventoryTemplate status createdBy"
+    ); // Fetch inventoryTemplate and status fields only
+
+// Filter inventories based on the logged-in user
+const filteredUserInventories = userInventories.filter(
+  (item) => item.createdBy?.toString() === req.user._id.toString()
+);
+
+// Get an array of inventoryTemplate IDs as strings
+const userInventoryIds = filteredUserInventories.map((item) =>
+  item.inventoryTemplate.toString()
+);
+
+
+    // Update status for inventories based on UserInventory statuses
+    for (const inventory of inventories) {
+      const associatedUserInventories = userInventories.filter(
+        (userInventory) =>
+          userInventory.inventoryTemplate.toString() ===
+          inventory._id.toString()
+      );
+
+      // If no associated user inventories, set inventory status to 'Draft'
+      if (associatedUserInventories.length === 0) {
+        inventory.status = "Draft";
+      } else {
+        // Check if all associated user inventories are 'Validated'
+        const allValidated = associatedUserInventories.every(
+          (userInventory) => userInventory.status === "Validated"
+        );
+
+        // If all associated user inventories are validated, update inventory status to 'Validated', else 'Draft'
+        inventory.status = allValidated ? "Validated" : "Draft";
+      }
+
+      // Save the updated inventory status
+      await inventory.save();
+    }
+
+    // Pass both inventories and the userInventoryIds to the view
+    res.render("Inventory/index", { inventories, userInventoryIds });
+  } catch (error) {
+    next(error); // Handle errors appropriately
+  }
+};
+
+module.exports.getInventoryDetailsPage = async (req, res, next) => {
+  const inventoryId = req.params.inventoryId;
+  const userId = req.params.userId;
+
+  try {
+    // Fetch inventory details
+    const inventory = await Inventory.findById(inventoryId);
+
+    // Check the status of the UserInventory for the given inventoryId and userId
+    const userInventory = await UserInventory.findOne({
+      inventoryTemplate: inventoryId,
+      createdBy: userId,
+    }); // Fetch only the status field
+
+    // Fetch all inventory items for this inventory
+    const inventoryItems = await InventoryItem.find({
+      inventoryId,
+      createdBy: userId,
+    })
+      .populate("medicamentId", "designation") // Populate medicament details (e.g., name or designation)
+      .lean(); // Convert Mongoose documents to plain objects for rendering
+
+    // Fetch all medicaments for adding new items
+    const medicaments = await Medicament.find();
+
+    // Fetch user details
+    const user = await User.findById(userId);
+
+    // Fetch grouped storages for dropdown or information
+    const groupedStorages = await Storage.aggregate([
+      {
+        $group: {
+          _id: "$serviceABV", // Group by serviceABV
+          storages: {
+            $push: {
+              storageName: "$storageName",
+              endroitCode: "$endroitCode",
+              endroitDescription: "$endroitDescription",
+              service: "$service",
             },
           },
         },
-        { $sort: { _id: 1 } }, // Optional: Sort by serviceABV alphabetically
-      ]);
-  
-      // Render page with data
-      res.render('Inventory/inventory-details', {
-        inventory,
-        inventoryItems,
-        medicaments,
-        groupedStorages,
-      });
-    } catch (error) {
-      console.error('Error fetching inventory details:', error);
-      next(error); // Handle errors appropriately
-    }
-  };
-  
-  
+      },
+      { $sort: { _id: 1 } }, // Optional: Sort by serviceABV alphabetically
+    ]);
+
+    const status = userInventory.status;
+
+    // Render page with data
+    res.render("Inventory/inventory-details", {
+      user,
+      inventory,
+      inventoryItems,
+      medicaments,
+      groupedStorages,
+      status, // Include status in the response
+    });
+  } catch (error) {
+    console.error("Error fetching inventory details:", error);
+    next(error); // Handle errors appropriately
+  }
+};
+
 module.exports.createInventory = async (req, res, next) => {
   try {
     const { title, description, serviceABV, storageName } = req.body;
 
-// Create a new object and add properties conditionally
-const newInventoryData = {
-  title,
-  description,
-  createdBy: req.user.username,
-};
+    // Create a new object and add properties conditionally
+    const newInventoryData = {
+      title,
+      description,
+      createdBy: req.user.username,
+    };
 
-if (serviceABV) {
-  newInventoryData.serviceABV = serviceABV;
-}
+    if (serviceABV) {
+      newInventoryData.serviceABV = serviceABV;
+    }
 
-if (storageName) {
-  newInventoryData.storageName = storageName;
-}
+    if (storageName) {
+      newInventoryData.storageName = storageName;
+    }
 
-// Create a new Inventory instance with the filtered data
-const newInventory = new Inventory(newInventoryData);
+    // Create a new Inventory instance with the filtered data
+    const newInventory = new Inventory(newInventoryData);
 
-await newInventory.save();
+    await newInventory.save();
 
     // Redirect to the workflow selection page
     res.redirect(`/inventory`);
@@ -115,21 +176,24 @@ await newInventory.save();
 
 exports.addInventoryItem = async (req, res) => {
   try {
-   const inventoryId = req.params.inventoryId
+    const inventoryId = req.params.inventoryId;
     const {
-      
       medicamentId,
       serviceABV,
       storageName,
       batchNumber,
       serialNumber,
+      expiryDate,
+      tva,
       physicalQuantity,
       purchasePrice,
-      remarks
+      remarks,
     } = req.body;
     // Validate required fields (if not already handled by form validation)
-    if (!inventoryId || !medicamentId || !batchNumber || !physicalQuantity ) {
-      return res.status(400).json({ error: 'All required fields must be filled!' });
+    if (!inventoryId || !medicamentId || !batchNumber || !physicalQuantity) {
+      return res
+        .status(400)
+        .json({ error: "All required fields must be filled!" });
     }
 
     // Create a new inventory item
@@ -139,50 +203,305 @@ exports.addInventoryItem = async (req, res) => {
       serviceABV,
       storageName,
       batchNumber,
+      expiryDate,
+      tva,
       serialNumber, // Optional
       physicalQuantity,
       purchasePrice,
-      remarks
+      remarks,
+      createdBy: req.user._id,
     });
 
     // Save to the database
     await inventoryItem.save();
 
     // Respond with success
-   res.redirect(`/inventory/${inventoryId}`);
-
+    res.redirect(`back`);
   } catch (error) {
-    console.error('Error adding inventory item:', error);
-    res.status(500).json({ error: 'Server error. Please try again later.' });
+    console.error("Error adding inventory item:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+};
+exports.updateInventoryItem = async (req, res) => {
+  try {
+    const inventoryItemId = req.params.itemId; // Assuming the item ID is passed in the URL
+
+    const {
+      medicamentId,
+      serviceABV,
+      storageName,
+      batchNumber,
+      serialNumber,
+      expiryDate,
+      tva,
+      physicalQuantity,
+      purchasePrice,
+      remarks,
+    } = req.body;
+
+    // Validate required fields (if not already handled by form validation)
+    if (
+      !inventoryItemId ||
+      !medicamentId ||
+      !batchNumber ||
+      !physicalQuantity
+    ) {
+      return res
+        .status(400)
+        .json({ error: "All required fields must be filled!" });
+    }
+
+    // Find the inventory item by its ID and inventory ID
+    const inventoryItem = await InventoryItem.findOne({ _id: inventoryItemId });
+
+    if (!inventoryItem) {
+      return res.status(404).json({ error: "Inventory item not found!" });
+    }
+
+    // Update the fields of the inventory item
+    inventoryItem.medicamentId = medicamentId ;
+    inventoryItem.serviceABV = serviceABV;
+    inventoryItem.storageName = storageName;
+    inventoryItem.batchNumber = batchNumber;
+    inventoryItem.serialNumber = serialNumber || inventoryItem.serialNumber; // Keep the original if not provided
+    inventoryItem.expiryDate = expiryDate || inventoryItem.expiryDate; // Keep the original if not provided
+    inventoryItem.physicalQuantity = physicalQuantity;
+    inventoryItem.tva = tva ; 
+    inventoryItem.purchasePrice = purchasePrice || inventoryItem.purchasePrice; // Keep the original if not provided
+    inventoryItem.remarks = remarks || inventoryItem.remarks; // Keep the original if not provided
+    inventoryItem.updatedBy = req.user._id;
+
+    // Save the updated inventory item
+    await inventoryItem.save();
+
+    // Respond with success
+    res.redirect(`back`);
+  } catch (error) {
+    console.error("Error updating inventory item:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
   }
 };
 
-module.exports.validateInventory = async (req, res, next) => {
-  const inventoryId = req.params.inventoryID;
-  const { status } = req.body; // Expect status ('Draft' or 'Validated') in the request body
- 
-  
+module.exports.addUserToInventory = async (req, res, next) => {
   try {
-    // Find and update the inventory status dynamically based on the request body
-    const updatedInventory = await Inventory.findOneAndUpdate(
-      { _id: inventoryId }, // MongoDB uses `_id` for the primary key
-      { status }, // Use the dynamic status from the request
-      { new: true } // Return the updated document
+    const inventoryId = req.params.inventoryID;
+
+    const newUserInventory = new UserInventory({
+      inventoryTemplate: inventoryId,
+      createdBy: req.user._id,
+    });
+
+    await newUserInventory.save();
+    res.redirect(`/inventory`);
+  } catch (error) {
+    res.status(500).json({ message: "Error creating user inventory", error });
+  }
+};
+module.exports.removeUserFromInventory = async (req, res, next) => {
+  try {
+    const inventoryId = req.params.inventoryId;
+    const userId = req.params.userId;
+
+    // Check if the user has created any items in the specified inventory
+    const itemsCreatedByUser = await InventoryItem.find({
+      inventoryId: inventoryId,
+      createdBy: userId
+    });
+    // If the user has created items in the inventory, do not remove them
+    if (itemsCreatedByUser.length > 0) {
+      return res.status(400).json({ message: "User has created items in this inventory, cannot remove" });
+    }
+
+    // If no items are created by the user in the inventory, proceed to remove the user
+    const userInventory = await UserInventory.findOneAndDelete({
+      inventoryTemplate: inventoryId,
+      createdBy: userId
+    });
+
+    if (!userInventory) {
+      return res.status(404).json({ message: "User not found in the inventory" });
+    }
+
+    res.redirect(`/inventory/users/${inventoryId}`);
+
+
+  } catch (error) {
+    res.status(500).json({ message: "Error removing user from inventory", error });
+  }
+};
+module.exports.getInventoryUsers = async (req, res, next) => {
+  try {
+    const inventoryId = req.params.inventoryID;
+    const inventory = await Inventory.findById(inventoryId);
+    const usersInventory = await UserInventory.find({
+      inventoryTemplate: inventoryId,
+    }).populate("createdBy");
+   
+
+    res.render("Inventory/inventory-users", {
+      usersInventory,
+      inventory,
+      userId: req.user._id,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user inventory", error });
+  }
+};
+module.exports.validateUserInventory = async (req, res, next) => {
+  const inventoryId = req.params.inventoryId;
+  const userId = req.params.userId;
+  const { status } = req.body;
+
+  try {
+    const updatedUserInventory = await UserInventory.findOneAndUpdate(
+      { inventoryTemplate: inventoryId, createdBy: userId },
+      { status },
+      { new: true }
     );
 
-    console.log('Updated Inventory:', updatedInventory);
-
-    if (!updatedInventory) {
-      return res.status(404).send({ message: 'Inventory not found.' });
+    if (!updatedUserInventory) {
+      console.error("Inventory not found:", { inventoryId, userId });
+      return res.status(404).send({ message: "Inventory not found." });
     }
 
     res.status(200).send({
       message: `Inventory status updated to ${status} successfully.`,
-      inventory: updatedInventory
+      inventory: updatedUserInventory,
     });
   } catch (error) {
-    console.error('Error updating inventory status:', error); // Log the error for debugging
-    res.status(500).send({ message: 'Error updating inventory status.' });
+    console.error("Error updating inventory status:", error);
+    res.status(500).send({ message: "Error updating inventory status." });
+  }
+};
+module.exports.getUsersInventories = async (req, res, next) => {
+  try {
+    const inventoryId = req.params.inventoryId;
+
+    // Validate the inventoryId
+    if (!inventoryId) {
+      return res.status(400).json({ message: "Inventory ID is required." });
+    }
+
+    // Fetch inventory details
+    const inventory = await Inventory.findById(inventoryId);
+    if (!inventory) {
+      return res.status(404).json({ message: "Inventory not found." });
+    }
+
+    // Fetch inventory items for the given inventoryId and sort them
+    const inventoryItems = await InventoryItem.find({ inventoryId })
+      .populate("medicamentId") // Populates medicament details
+      .populate("createdBy") // Populates user details (optional)
+      .sort({
+        "medicamentId.designation": 1, // Sorts alphabetically by medicament name (ascending)
+        batchNumber: 1, // Sorts by batch number (ascending)
+        serialNumber: 1, // Sorts by serial number (ascending)
+      })
+      .exec();
+
+    // Calculate the total of purchasePrice of all inventory items
+    const total = inventoryItems.reduce((sum, item) => sum + item.purchasePrice, 0);
+    const itemCount = inventoryItems.length;
+
+    // Update the total in the Inventory model
+    inventory.total = total;
+    await inventory.save();
+
+    // Fetch users related to the inventory
+    const users = await UserInventory.find({ inventoryTemplate: inventoryId })
+      .select("createdBy")
+      .populate("createdBy", "username");
+
+    // Render the view with the fetched data, including the updated total
+    res.render("Inventory/users-inventory", {
+      inventory,
+      inventoryItems,
+      users,
+      total,
+      itemCount
+    });
+  } catch (error) {
+    console.error("Error fetching inventory details:", error);
+    res.status(500).json({ message: "Internal server error." });
   }
 };
 
+
+module.exports.deleteInventoryItem = async (req, res, next) => {
+  try {
+    const itemId = req.params.itemId;
+   
+    // Attempt to find and delete the item
+    const deletedItem = await InventoryItem.findOneAndDelete({ _id: itemId });
+
+    if (deletedItem) {
+      // If the item was deleted successfully, respond with a success message
+      res.json({ success: true, message: "Item deleted successfully." });
+    } else {
+      // If the item was not found, respond with an error message
+      res.json({ success: false, message: "Item not found." });
+    }
+  } catch (error) {
+    // Handle any potential errors
+    console.error(error);
+    res.json({
+      success: false,
+      message: "An error occurred while deleting the item.",
+    });
+  }
+};
+module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
+  const inventoryId = req.params.inventoryId;
+  try {
+    // Fetch data from InventoryItem collection. Use find() to get an array.
+    const inventoryItems = await InventoryItem.find({
+      inventoryId: inventoryId,
+    }).populate("inventoryId medicamentId createdBy");
+
+    // Check if no items are found
+    if (!inventoryItems || inventoryItems.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No inventory items found for this inventoryId." });
+    }
+
+    // Map data to a format suitable for Excel
+    const data = inventoryItems.map((item) => ({
+      MedicamentId: item.medicamentId ? item.medicamentId.designation : "N/A", // Assuming medicamentId has a name field
+      Forme: item.medicamentId ? item.medicamentId.forme : "N/A", // Assuming medicamentId has a name field
+      Boite_de: item.medicamentId ? item.medicamentId.boite_de : "N/A", // Assuming medicamentId has a name field
+      ServiceABV: item.serviceABV ? item.serviceABV : "All Services",
+      StorageName: item.storageName ? item.storageName : "All Strorages",
+      BatchNumber: item.batchNumber,
+      SerialNumber: item.serialNumber ? item.serialNumber : "N/A",
+      ExpiryDate: item.expiryDate
+        ? item.expiryDate.toLocaleDateString()
+        : "N/A",
+      Quantity: item.physicalQuantity,
+      PurchasePrice: item.purchasePrice ? item.purchasePrice : 0,
+      TVA: item.tva ? item.tva : "N/A",
+      Remarks: item.remarks ? item.remarks : "N/A",
+      CreatedBy: item.createdBy ? item.createdBy.username : "N/A", // Assuming createdBy has a username field
+    }));
+
+    // Create a worksheet from the data
+    const ws = xlsx.utils.json_to_sheet(data);
+
+    // Create a new workbook and append the worksheet
+    const wb = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, ws, "InventoryItems");
+
+    // Write the workbook to a file
+    const date = new Date().toISOString().slice(0, 10);
+    xlsx.writeFile(wb, "inventory_items-" + date + ".xlsx");
+    console.log("Excel file created successfully");
+
+    // Optionally, send the file as a response
+    res.download("inventory_items-" + date + ".xlsx"); // This will send the Excel file to the client
+  } catch (err) {
+    console.error("Error exporting data to Excel:", err);
+    res
+      .status(500)
+      .json({ message: "Error exporting data to Excel.", error: err.message });
+  }
+};

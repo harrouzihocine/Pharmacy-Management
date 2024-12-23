@@ -40,3 +40,53 @@
           placeholderValue: 'Select an Item', // Custom placeholder text
         });
       });
+/*----------------------------------------------------delete item--------------------------------*/
+      // Define the function for handling the delete action
+function handleDelete(button) {
+  const url = button.getAttribute('data-url');  // Get the URL from the button's data attribute
+  console.log(url);
+  Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won’t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+  }).then((result) => {
+      if (result.isConfirmed) {
+          // Send the DELETE request using fetch
+          fetch(url, {
+              method: 'POST',  // Use POST with the _method=DELETE query param
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+              },
+          })
+          .then(response => response.json()) // Assuming the response is JSON
+          .then(data => {
+              if (data.success) {
+                  // Optionally show a success message
+                  Swal.fire('Deleted!', 'The item has been deleted.', 'success');
+
+                  // Remove the row from the table
+                  const row = button.closest('tr');  // Get the row of the clicked button
+                  if (row) {
+                      row.remove();  // Remove the row from the DOM
+                  }
+              } else {
+                  Swal.fire('Error!', 'There was an issue deleting the item.', 'error');
+              }
+          })
+          .catch(error => {
+              Swal.fire('Error!', 'There was an issue with the request.', 'error');
+          });
+      }
+  });
+}
+
+// Attach event listeners to all delete buttons
+document.querySelectorAll('.delete-item-btn').forEach(button => {
+  button.addEventListener('click', function() {
+      handleDelete(this);  // Pass the clicked button to the function
+  });
+});

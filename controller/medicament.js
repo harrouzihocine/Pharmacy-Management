@@ -90,7 +90,7 @@ exports.editMedicament = async (req, res) => {
     }
 
     // Redirect to a success page or reload current page
-    res.redirect("/medicament"); // Adjust the redirection path as needed
+    res.redirect(`/medicament/${medicamentId}`); // Adjust the redirection path as needed
   } catch (error) {
     console.error("Error updating Medicament:", error);
     res.status(500).send("Internal Server Error");
@@ -133,4 +133,17 @@ exports.addMedicament = async (req, res) => {
     console.error("Error adding Medicament:", error);
     res.status(500).send("Internal Server Error");
   }
+};
+exports.medicamentDetails = async (req, res) => {
+  try {
+    const medicament = await Medicament.findById(req.params.medicamentId);
+    if (!medicament) {
+        return res.status(404).send('Medicament not found');
+    }
+    res.render('Medicament/medicament-details', { medicament });
+} catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+}
+  
 };

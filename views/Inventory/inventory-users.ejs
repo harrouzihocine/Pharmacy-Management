@@ -1,0 +1,140 @@
+<% layout('layouts/boilerplate') %>
+<div class="inventories-container">
+  <button class="btn back-btn back-button " onclick="window.location.href='/inventory'"><i class="bi bi-arrow-left-circle"></i></button>
+  <h1>Users inventory</h1>
+  <!-- Title Section -->
+
+ 
+    <!-- Inventory Title -->
+    <div class="info-box">
+      <strong>Inventory Title:</strong>
+      <span><%= inventory.title %></span>
+    </div>
+
+    <!-- Service and Storage -->
+    <% if (inventory.serviceABV) { %>
+    <div class="info-box">
+      <strong>Service:</strong>
+      <span><%= inventory.serviceABV %></span>
+    </div>
+    <% if (inventory.storageName) { %>
+    <div class="info-box">
+      <strong>Storage:</strong>
+      <span><%= inventory.storageName %></span>
+    </div>
+    <% } %>
+    <% } else { %>
+    <div class="info-box">
+      <strong>Service:</strong>
+      <span>All Services</span>
+    </div>
+    <div class="info-box">
+      <strong>Storage:</strong>
+      <span>All storages</span>
+    </div>
+    <% } %>
+  
+      <!-- Description -->
+      <div class="info-box">
+        <strong>Description:</strong>
+        <span><%= inventory.description %></p></span>
+      </div>
+
+  <form class="search-bar">
+    <input type="text" id="search" placeholder="Search in users" />
+  </form>
+  <table class="inventories-table sortable">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Created At</th>
+        <th>Status</th>
+        <th>Actions</th>
+
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% if (usersInventory.length > 0) { %>
+      <% usersInventory.forEach(user => { %>
+      <% if(user.createdBy.id === userId){ %>
+      <tr>
+
+        <td onclick="window.location.href='/inventory/<%= inventory.id %>/user/<%= user.createdBy.id %>'">
+          <%= user.createdBy.username %>
+
+        </td>
+        <td onclick="window.location.href='/inventory/<%= inventory.id %>/user/<%= user.createdBy.id %>'"><%= user.createdAt.toLocaleString() %></td>
+        <td>
+          <span class="tag status-badge <%= user.status === 'Draft' ? 'status-Draft' : 'status-Validated' %>">
+            <%= user.status%>
+          </span>
+          <% if (user.status === 'Draft') { %>
+          <button class="btn valider validated-btn validated-btn-success " data-id="<%= inventory.id %>" data-user-id="<%= user.createdBy.id %>"><i class="bi bi-check-circle"></i></button>
+          <% }else{ %>
+          <button class="btn valider back-to-draft validated-btn validated-btn-back" data-id="<%= inventory.id %>" data-user-id="<%= user.createdBy.id %>"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <% } %>
+        </td>
+        <td>
+          <% if (user.status === 'Draft') { %>
+          <button class="btn delete-btn" onclick="window.location.href='/inventory/<%= inventory.id %>/remove-user/<%= user.createdBy.id %>'"><i class="bi bi-trash"></i>
+          </button>
+          <% } %>
+        </td>
+      </tr>
+      <% }}); %>
+      <% } else { %>
+      <tr>
+        <td colspan="4">No inventories found.</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<script>
+  document.querySelectorAll('.valider').forEach(button => {
+    button.addEventListener('click', async (event) => {
+      const inventoryId = event.currentTarget.dataset.id; // Use event.currentTarget
+      const userId = event.currentTarget.dataset.userId; // Use event.currentTarget
+      const isBackToDraft = event.currentTarget.classList.contains('back-to-draft'); // Check class of clicked button
+
+      const result = await Swal.fire({
+        title: isBackToDraft ? 'Revert to Draft?' : 'Validate Inventory?',
+        text: isBackToDraft ?
+          "You are about to revert this inventory to draft mode!" :
+          "You are about to validate this inventory!",
+        icon: isBackToDraft ? 'warning' : 'success',
+        showCancelButton: true,
+        confirmButtonText: isBackToDraft ? 'Yes, revert it!' : 'Yes, validate it!',
+        cancelButtonText: 'Cancel'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`/inventory/${inventoryId}/user/${userId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              status: isBackToDraft ? 'Draft' : 'Validated'
+            }),
+          });
+
+          if (response.ok) {
+            Swal.fire(
+              isBackToDraft ? 'Reverted!' : 'Validated!',
+              isBackToDraft ?
+              'The inventory has been reverted to draft mode.' :
+              'The inventory has been validated.',
+              'success'
+            ).then(() => location.reload());
+          } else {
+            throw new Error('Status update failed.');
+          }
+        } catch (error) {
+          Swal.fire('Error!', 'There was an issue updating the inventory status.', 'error');
+        }
+      }
+    });
+  });
+</script>

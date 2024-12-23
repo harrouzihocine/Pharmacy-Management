@@ -1,20 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 .body {
   background-color: #143030; /* Dark background */
-  font-family: 'Kanit', Arial, sans-serif;
+  font-family: "Kanit", Arial, sans-serif;
   padding: 0;
   display: flex;
- margin-left: 40px;
+  margin-left: 40px;
   justify-content: center;
 
   overflow-y: auto; /* Allow vertical scrolling */
   height: 100%;
   color: #ffffff; /* Light grey text */
-
 }
-
 
 /*----------------------------------------------------------------tags--------------------------------------------*/
 .tag {
@@ -34,20 +32,26 @@
 .tag.low-stock {
   background: #ff9500a3; /* Cool muted blue tone for low stock */
   color: #ffffff; /* Soft pastel blue for text */
-  border: 0px ; /* Complementary border for subtle separation */
+  border: 0px; /* Complementary border for subtle separation */
 }
 
 .tag.out-of-stock {
   background: #ff000093; /* Neutral dark gray for out of stock */
   color: #ffffff; /* Light gray for contrast */
-  border: 0px ; /* Slightly lighter gray border */
+  border: 0px; /* Slightly lighter gray border */
 }
 
 .tag:hover {
   transform: translateY(-2px); /* Slight lift effect on hover */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow */
 }
-
+/* Style for the label with required star */
+.label-required::after {
+  content: " *";
+  color: red;
+  font-weight: bold;
+  margin-left: 4px;
+}
 /*----------------------------------------------------------------navbar style-----------------------------------*/
 /* Toggle Button */
 .sidebar-toggle-btn {
@@ -72,7 +76,7 @@
 /* Hover Effect for the Button */
 .sidebar-toggle-btn:hover {
   background-color: #acacac;
-  top:5px;
+  top: 5px;
   border-color: #ffffff;
   transform: scale(1.1); /* Slight scale effect on hover */
 }
@@ -154,7 +158,7 @@
 .sidebar-link {
   display: flex;
   align-items: center;
-   color: #fff;
+  color: #fff;
   text-decoration: none;
   border-radius: 5px;
   transition: background-color 0.3s;
@@ -195,14 +199,12 @@
   margin-left: 450px;
 }
 
-
 /*---------------------------------------------------Ticket Detail Page-----------------------------------------*/
 /* Container for the Ticket Detail Page */
 .ticket-detail-container {
-  
   width: 70rem; /* Maximum width for large screens */
   margin: 10px auto; /* Center-align the container */
-  padding: 20px ;
+  padding: 20px;
   background-color: #0201281d; /* Lighter background for the container */
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -210,7 +212,7 @@
 
 /* Title and Header Styling */
 .ticket-detail-container h2 {
-  color: #A3D4FF; /* Modern mint green color for the main heading */
+  color: #a3d4ff; /* Modern mint green color for the main heading */
   font-size: 2.5rem;
   margin-bottom: 10px;
   font-weight: bolder;
@@ -219,7 +221,7 @@
 }
 
 .ticket-detail-container h3 {
-  color: #A3D4FF; /* Modern mint green color */
+  color: #a3d4ff; /* Modern mint green color */
   font-size: 2.5rem;
   margin-bottom: 20px;
   font-weight: bold;
@@ -230,12 +232,12 @@
 .ticket-detail-container p {
   font-size: 1.1rem;
   line-height: 1.6;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 .ticket-detail-container strong {
   font-size: 1.1rem;
   line-height: 1.6;
-color: #A3D4FF;
+  color: #a3d4ff;
 }
 /* Section for Ticket Details */
 .ticket-detail-info {
@@ -270,7 +272,7 @@ color: #A3D4FF;
 
 /* Comment Metadata (Name and Date) */
 .ticket-comment strong {
-  color: #A3D4FF; /* Use mint green for the commenter's name */
+  color: #a3d4ff; /* Use mint green for the commenter's name */
 }
 
 .ticket-comment em {
@@ -303,9 +305,9 @@ color: #A3D4FF;
 
 .ticket-comment-form textarea[name="commentText"]:focus {
   background-color: #333; /* Keep background dark */
-  color: #ffffff;        /* Keep text white */
+  color: #ffffff; /* Keep text white */
   border-color: #00bfae; /* Mint green for border when focused */
-  outline: none;         /* Remove default blue outline */
+  outline: none; /* Remove default blue outline */
 }
 
 /* Buttons */
@@ -351,17 +353,16 @@ color: #A3D4FF;
 }
 
 /*-----------------------------------login page---------------------------------------*/
- /* Login Container Styles */
+/* Login Container Styles */
 .login-container {
   width: 50rem; /* width for large screens */
   margin: 10% auto; /* Center-align the container */
-  padding: 20px ;
+  padding: 20px;
   background-color: #0201281d; /* Lighter background for the container */
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
- 
 }
-.login-container h1{
+.login-container h1 {
   text-align: center;
 }
 
@@ -407,7 +408,6 @@ color: #A3D4FF;
 
 .custom-btn:hover {
   background-color: #55104d;
-
 }
 
 /* Footer Text */
@@ -424,13 +424,13 @@ color: #A3D4FF;
 .footer-text a:hover {
   text-decoration: underline; /* Underline link on hover */
 }
- 
+
 /*--------------------------------- Register styles--------------------------------*/
 /* Register Container Styles */
 .register-container {
   width: 50rem; /* Maximum width for large screens */
   margin: 10% auto; /* Center-align the container */
-  padding: 20px ;
+  padding: 20px;
   background-color: #0201281d; /* Lighter background for the container */
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -505,138 +505,6 @@ color: #A3D4FF;
   text-decoration: underline; /* Underline link on hover */
 }
 
-/*--------------------------------- create ticket styles--------------------------------*/
-/* Create Ticket Container Styles */
-.create-ticket-container {
-  width: 70rem; /* Maximum width for large screens */
-  margin: 10px auto; /* Center-align the container */
-  padding: 20px ;
-  background-color: #0201281d; /* Lighter background for the container */
-  border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-/* Heading Style */
-.text-ticket {
-  font-size: 2.2rem;
-  margin-bottom: 25px;
-  color: #fff;
-  text-align: center;
-  font-weight: 600; /* Added bold for premium feel */
-}
-
-/* Form Inputs */
-.custom-input-ticket {
-  background-color: #3e3e3e; /* Darker background for inputs */
-  color: #fff; /* White text in inputs */
-  border: 1px solid #444; /* Slightly lighter border for inputs */
-  border-radius: 8px; /* Rounded corners for inputs */
-  padding: 12px;
-  margin-bottom: 18px;
-  width: 100%;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-.custom-input-ticket:focus {
-  border-color: #0073e6; /* Blue border on focus */
-  background-color: #333; /* Slightly darker background on focus */
-}
-
-/* Select Inputs */
-.custom-select-ticket {
-  background-color: #3e3e3e; /* Darker background for select */
-  color: #fff; /* White text */
-  border: 1px solid #444; /* Slightly lighter border */
-  border-radius: 8px; /* Rounded corners */
-  padding: 12px;
-  margin-bottom: 18px;
-  width: 100%;
-  transition: border-color 0.3s ease;
-}
-
-.custom-select-ticket:focus {
-  border-color: #0073e6; /* Blue border on focus */
-}
-
-.required {
-  color: red;
-  font-weight: bold;
-}
-
-/* Textarea Inputs */
-.custom-textarea-ticket {
-  background-color: #3e3e3e; /* Darker background for textarea */
-  color: #fff; /* White text */
-  border: 1px solid #444; /* Slightly lighter border */
-  border-radius: 8px; /* Rounded corners */
-  padding: 12px;
-  margin-bottom: 18px;
-  width: 100%;
-  resize: vertical;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-.custom-textarea-ticket:focus {
-  border-color: #0073e6; /* Blue border on focus */
-  background-color: #333; /* Slightly darker background on focus */
-}
-
-/* File Upload Button (Stylish) */
-.custom-file-upload {
-  background-color: #726c7a; /* Stylish blue background */
-  color: #fff;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: inline-block;
-  text-align: center;
-  font-size: 1rem;
-  margin-top: 15px;
-  transition: background-color 0.3s ease;
-}
-
-.custom-file-upload:hover {
-  background-color:  #55104d; /* Darker blue on hover */
-}
-
-.custom-file-upload input[type="file"] {
-  display: none; /* Hide default file input */
-}
-
-/* Submit Button Style */
-.custom-btn-ticket {
-  background-color: #726c7a; /* Blue button */
-  color: #fff;
-  padding: 14px;
-  border: none;
-  border-radius: 8px; /* Rounded corners */
-  cursor: pointer;
-  width: 100%;
-  font-size: 1.1rem;
-  transition: background-color 0.3s ease;
-}
-
-.custom-btn-ticket:hover {
-  background-color: #55104d; /* Darker blue on hover */
-}
-
-/* Footer Text */
-.footer-text-ticket {
-  margin-top: 20px;
-  font-size: 1rem;
-  text-align: center;
-}
-
-.footer-text-ticket a {
-  color: #0dc4dd; /* Blue link color */
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.footer-text-ticket a:hover {
-  text-decoration: underline; /* Underline link on hover */
-}
 /*-------------------------------Add Location Page---------------------------------*/
 /* Container for the add location form */
 .add-location-page-container {
@@ -854,9 +722,51 @@ color: #A3D4FF;
   color: #aaa;
 }
 
+/*------------------------------------- medicament detail (in Nomenclature)-----------------------------------------*/
+.medicament-details-container {
+  width: 90rem;
+  background-color: #0201281d;
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+}
+.medicament-details-container .title {
+  display: flex;
+   align-items: center;
+   justify-content: center;
+  margin-bottom: 10px;
+}
+/* Individual Info Box Styling */
+.medicament-details .info-box {
+  background-color: #02012811;
+  margin: 5px;
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.medicament-details .info-box:hover {
+  transform: scale(1.01); /* Slight hover zoom */
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.2); /* Intense shadow on hover */
+}
 
+.medicament-details .info-box strong {
+  color: #00bcd4; /* Bright teal for emphasis */
+  font-weight: 600;
+  font-size: 1.1rem;
+}
 
+.medicament-details .info-box span {
+  color: #e0e0e0; /* Light gray for details */
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
 
 /*------------------------------------- medicament detail (in service)-----------------------------------------*/
 .medicament-service-details-container {
@@ -915,7 +825,6 @@ color: #A3D4FF;
   transition: background-color 0.3s ease;
 }
 
-
 /* Empty Table Row Styling */
 .medicament-service-details-table td[colspan="6"] {
   text-align: center;
@@ -952,7 +861,6 @@ color: #A3D4FF;
   outline: none;
   border-color: #007bff; /* Blue border on focus */
 }
-
 
 /*------------------------------------ medicament detail (stock info) Page-------------------------------------*/
 .stock-details-container {
@@ -1024,7 +932,6 @@ color: #A3D4FF;
 
 /*------------------------------- location details (inside each location) Page---------------------------------*/
 .medicaments-table-container {
-  
   background-color: #0201281d;
   color: #fff;
   padding: 40px;
@@ -1082,11 +989,9 @@ color: #A3D4FF;
   background-color: #555;
 }
 
-
 /*-------------------------------Medicaments Page---------------------------------*/
 /* Container for the medicament table */
 .medicament-table-container {
-  
   background-color: #0201281d; /* Dark background for the container */
   color: #fff; /* White text for contrast */
   padding: 40px;
@@ -1150,7 +1055,7 @@ color: #A3D4FF;
   align-items: center;
   justify-content: space-between; /* Spread out input and button */
   gap: 10px;
-  width: 100%;  /* Make form take full width */
+  width: 100%; /* Make form take full width */
   margin-top: 20px; /* Add margin for spacing */
 }
 
@@ -1159,16 +1064,16 @@ color: #A3D4FF;
   padding: 12px;
   font-size: 1rem;
   border-radius: 5px;
-  border: 1px solid #444;  /* Dark border for input */
-  background-color: #222;  /* Dark background for input */
-  color: #fff;  /* White text for contrast */
-  width: 100%;  /* Make input take 80% of the width */
+  border: 1px solid #444; /* Dark border for input */
+  background-color: #222; /* Dark background for input */
+  color: #fff; /* White text for contrast */
+  width: 100%; /* Make input take 80% of the width */
   transition: border-color 0.3s ease;
 }
 
 .search-bar input[type="text"]:focus {
-  border-color: #55104d;  /* Highlight border on focus */
-  outline: none;  /* Remove default focus outline */
+  border-color: #55104d; /* Highlight border on focus */
+  outline: none; /* Remove default focus outline */
 }
 
 /*-------------------------------Pharmacy Page---------------------------------*/
@@ -1251,8 +1156,6 @@ color: #A3D4FF;
   background-color: #dc3545; /* Red for danger */
 }
 
-
-
 /*-------------------------------Storage Page---------------------------------*/
 /* Container for the storage table */
 .storage-table-container {
@@ -1329,7 +1232,6 @@ color: #A3D4FF;
 }
 
 .view-btn {
-  
   background-color: #007bff; /* Blue for view */
 }
 .gear-btn {
@@ -1341,16 +1243,50 @@ color: #A3D4FF;
   color: rgb(0, 0, 0);
   background-color: #ffffff; /* Blue for view */
 }
-.scan-btn{
+.scan-btn {
   background-color: #ffffff;
   color: #000000;
 }
-.back-btn{
-  font-size: 20px;
-  padding: 0px 5px;
-  border-radius: 100%;
-  background-color: #f67979;
-  color: #ffffff;
+.back-btn {
+  font-size: 16px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    #1a1a1a,
+    #333333
+  ); /* Dark charcoal gradient */
+  color: #049aa4; /* Icy blue accent for the icon */
+  border: 1px solid #2c2c2c; /* Subtle border to blend with dark mode */
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8),
+    -2px -2px 6px rgba(255, 255, 255, 0.05); /* Soft shadow */
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: linear-gradient(
+    135deg,
+    #333333,
+    #4a4a4a
+  ); /* Slightly lighter gradient on hover */
+  color: #81d4fa; /* Lighter icy blue for hover */
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.9),
+    -3px -3px 10px rgba(255, 255, 255, 0.1); /* Enhanced hover shadow */
+  transform: translateY(-2px);
+}
+
+.back-btn:active {
+  transform: translateY(0); /* Reset movement on click */
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); /* Press-down effect */
+}
+
+.back-btn i {
+  font-size: 20px; /* Proportional icon size */
 }
 
 .edit-btn {
@@ -1360,15 +1296,11 @@ color: #A3D4FF;
 .delete-btn {
   background-color: #dc3545; /* Red for delete */
 }
-.back-btn:hover{
-  background-color: #000000;
-  color: #ffffff;
-}
-.archive-btn:hover{
+.archive-btn:hover {
   background-color: #474747;
   color: #ffffff;
 }
-.scan-btn:hover{
+.scan-btn:hover {
   background-color: #000000a9;
   color: #ffffff;
 }
@@ -1376,7 +1308,7 @@ color: #A3D4FF;
   background-color: #0056b3;
 }
 .gear-btn:hover {
-  color:#000000;
+  color: #000000;
   background-color: #fffbfb; /* Blue for view */
 }
 
@@ -1581,7 +1513,6 @@ color: #A3D4FF;
 }
 /*------------------------------------ in stock medicaments----------------------*/
 .storages-table-container {
- 
   background-color: #0201281d;
   color: #fff;
   padding: 40px;
@@ -1748,7 +1679,9 @@ color: #A3D4FF;
   font-size: 16px;
   box-shadow: none;
 }
-.select2-container--default .select2-selection--multiple .select2-selection__rendered{
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__rendered {
   max-width: 50rem;
 }
 
@@ -1795,17 +1728,18 @@ color: #A3D4FF;
   background-color: #726c7a;
   color: white;
 }
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__choice {
   background-color: #55104d;
   color: white;
-
 }
 
 .select2-container--default .select2-selection__choice__remove {
   color: white;
 }
 
-.select2-container--default .select2-results__option[aria-selected=true] {
+.select2-container--default .select2-results__option[aria-selected="true"] {
   background-color: #444;
   color: #fff;
 }
@@ -1851,7 +1785,7 @@ color: #A3D4FF;
 }
 
 /* Title Style */
-.storage-location-page-container h2{
+.storage-location-page-container h2 {
   font-size: 2rem;
   margin-bottom: 30px;
   font-weight: 400;
@@ -1907,9 +1841,6 @@ color: #A3D4FF;
   background-color: #444; /* Hover effect for cells */
 }
 
-
-
-
 /*---------------------------------------close ticket button------------------------------------------------*/
 .close-ticket-btn {
   background-color: #b7ffc9;
@@ -1923,7 +1854,7 @@ color: #A3D4FF;
 .close-ticket-btn:hover {
   background-color: #5f8167;
 }
-.confirmed{
+.confirmed {
   background-color: #01320d;
   color: #ffffff;
   font-weight: bold;
@@ -1931,14 +1862,13 @@ color: #A3D4FF;
 }
 
 /*-------------------------------remove button---------------------------------*/
-.remove-btn{
+.remove-btn {
   background-color: #c12828;
   color: #0c0000;
   border: none;
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
-  
 }
 .remove-btn:hover {
   background-color: #720000;
@@ -1964,7 +1894,6 @@ color: #A3D4FF;
 
 /* Form Styling */
 .demand-form {
-  
   padding: 20px;
   border-radius: 8px;
 }
@@ -2026,24 +1955,23 @@ color: #A3D4FF;
 }
 
 /* Button Styles */
-.add-command{
+.add-command {
   margin: 10px;
   background-color: #55104d;
   color: #fff;
 }
-.add-command:hover{
+.add-command:hover {
   margin-top: 10px;
   background-color: #726c7a;
   color: #fff;
 }
 
-.cancel-btn{
-   margin: 10px;
+.cancel-btn {
+  margin: 10px;
   background-color: #797979;
   color: #fff;
 }
-.cancel-btn:hover{
-
+.cancel-btn:hover {
   background-color: #4d4a4a;
   color: #fff;
 }
@@ -2118,7 +2046,7 @@ color: #A3D4FF;
   font-weight: bold;
   border: none;
   border-radius: 5px;
-  
+
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -2188,7 +2116,7 @@ color: #A3D4FF;
 .status-pending {
   background: #f6ff00; /* Cool muted blue tone for low stock */
   color: #000000; /* Soft pastel blue for text */
-  border: 0px ; /* Complementary border for subtle separation */
+  border: 0px; /* Complementary border for subtle separation */
 }
 
 .status-approved {
@@ -2198,18 +2126,18 @@ color: #A3D4FF;
 .status-rejected {
   background: #ff000093; /* Neutral dark gray for out of stock */
   color: #ffffff; /* Light gray for contrast */
-  border: 0px ; /* Slightly lighter gray border */
+  border: 0px; /* Slightly lighter gray border */
 }
 
 .status-Intransfer {
   background-color: #023fc4; /* Blue for "Terminé" */
   color: #ffffff; /* Soft pastel blue for text */
-  border: 0px ; /* Complementary border for subtle separation */
+  border: 0px; /* Complementary border for subtle separation */
 }
 .status-Noncompleted {
   background-color: #ff9500a3; /* Blue for "Terminé" */
   color: #ffffff; /* Soft pastel blue for text */
-  border: 0px ; /* Complementary border for subtle separation */
+  border: 0px; /* Complementary border for subtle separation */
 }
 /*-------------------------------Demand Details Page---------------------------------*/
 /* Container for the Demand Details Page */
@@ -2239,7 +2167,7 @@ color: #A3D4FF;
   font-weight: 400;
   color: #fff;
 }
-.received-medicaments-section h2{
+.received-medicaments-section h2 {
   font-size: 2rem;
   margin: 10px;
   font-weight: 400;
@@ -2273,31 +2201,28 @@ color: #A3D4FF;
   font-weight: 400;
   color: #fff;
 }
-.Reject-section{
+.Reject-section {
   margin-top: 30px;
   padding: 20px;
   background-color: #3e3e3e;
   border-radius: 8px;
-  
 }
-.Reject-section h2{
+.Reject-section h2 {
   font-size: 1.6rem;
-  
+
   font-weight: 400;
   color: #fff;
-
 }
-.Reject-section span{
+.Reject-section span {
   font-size: 1.6rem;
   color: #ff000093;
- 
 }
-.reject-btn{
+.reject-btn {
   background-color: #ff000093;
   color: white;
   cursor: pointer;
 }
-.reject-btn:hover{
+.reject-btn:hover {
   background-color: #ff8888;
   color: white;
   cursor: pointer;
@@ -2346,8 +2271,6 @@ color: #A3D4FF;
   border: none;
 }
 
-
-
 /* Empty Row Styling */
 .demand-empty-row {
   text-align: center;
@@ -2360,7 +2283,6 @@ color: #A3D4FF;
   padding: 20px;
   background-color: #3e3e3e;
   border-radius: 8px;
- 
 }
 
 .other-medicaments-section h2 {
@@ -2401,7 +2323,6 @@ color: #A3D4FF;
   font-weight: bold;
 }
 
-
 /*-------------------------------Batch Selection Modal (Inspired by Demand Details)---------------------------------*/
 
 /* Table Styling */
@@ -2427,11 +2348,10 @@ color: #A3D4FF;
   color: #fff !important;
   font-weight: 500 !important;
 }
-#assignementMedicamants-tr td{
-  background-color: #444 !important; 
+#assignementMedicamants-tr td {
+  background-color: #444 !important;
   color: #ffffff;
 }
-
 
 #assignementMedicamants-tr td:nth-child(even) {
   background-color: #3e3e3e !important; /* Dark alternating row color */
@@ -2476,14 +2396,14 @@ color: #A3D4FF;
 }
 
 /* Header Styling */
-.receive-demand-header h1{
+.receive-demand-header h1 {
   font-size: 2.5rem;
   margin-bottom: 30px;
   text-align: center;
   font-weight: 600;
   color: #fff;
 }
-.receive-demand-header h2{
+.receive-demand-header h2 {
   font-size: 1.5rem;
   margin-bottom: 30px;
   text-align: center;
@@ -2639,6 +2559,28 @@ color: #A3D4FF;
 .inventories-table td:hover {
   background-color: #444; /* Hover effect for cells */
 }
+table.dataTable tbody tr {
+  background-color: inherit;
+}
+.dataTables_paginate {
+  margin: 5px;
+  background-color: #0000007e;
+  border-radius: 10px;
+  padding: 5px;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  color: #000000;
+  background-color: #fff;
+  border-radius: 15px;
+}
+.paginate_button:hover {
+  color: #000000;
+  background-color: #fff;
+}
+.paginate_button.current:hover {
+  color: #ffffff;
+  background-color: #440000;
+}
 /*---------------------------------- New Inventory Page Styling ------------------------------*/
 /* Style the container for the new inventory page */
 .new-inventory-container {
@@ -2745,22 +2687,20 @@ color: #A3D4FF;
 .status-Draft {
   background: #ffffff; /* Cool muted blue tone for low stock */
   color: #000000; /* Soft pastel blue for text */
-  border: 0px ; /* Complementary border for subtle separation */
+  border: 0px; /* Complementary border for subtle separation */
 }
 .status-Validated {
   background: #28a745; /* Cool muted blue tone for low stock */
   color: #ffffff; /* Soft pastel blue for text */
-  border: 0px ; /* Complementary border for subtle separation */
+  border: 0px; /* Complementary border for subtle separation */
 }
 
 /* Style the workflow section to match the container */
 .workflow-section {
- 
   color: #fff;
   padding: 20px;
   margin-top: 20px;
   border-radius: 10px;
-
 }
 
 /* Label Styling for Workflow Section */
@@ -2803,16 +2743,19 @@ color: #A3D4FF;
 }
 
 /* Service and Storage Select Dropdowns */
-#serviceSelect, #storageSelect {
+#serviceSelect,
+#storageSelect {
   margin-top: 15px;
 }
 
-#serviceSelect label, #storageSelect label {
+#serviceSelect label,
+#storageSelect label {
   font-size: 1rem;
   color: #ccc;
 }
 
-#serviceSelect select, #storageSelect select {
+#serviceSelect select,
+#storageSelect select {
   padding: 12px;
   font-size: 1rem;
   border-radius: 5px;
@@ -2821,22 +2764,75 @@ color: #A3D4FF;
   color: #fff;
 }
 
-#serviceSelect select:focus, #storageSelect select:focus {
+#serviceSelect select:focus,
+#storageSelect select:focus {
   border-color: #726c7a;
   background-color: #333;
   outline: none;
 }
+/*--------------------------users inventory page-----------------------------*/
+
+/* Individual Info Box Styling */
+.info-box {
+  background-color: #02012811;
+  margin: 5px;
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: row;
+  
+  justify-content: start;
+  flex-shrink:inherit;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-box:hover {
+  transform: scale(1.01); /* Slight hover zoom */
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.2); /* Intense shadow on hover */
+}
+
+.info-box strong {
+  color: #00bcd4; /* Bright teal for emphasis */
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-right: 10px;
+}
+
+.info-box span {
+  color: #e0e0e0; /* Light gray for details */
+  font-size: 1.1rem;
+  margin-top: 1px;
+  margin-right: 10px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.users-inventory-information-section {
+  animation: fadeIn 0.6s ease-out; /* Smooth fade-in animation */
+}
+
 /*--------------------style for  inventory details page ------------------------*/
 .inventory-details-container {
-  width: 80%;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #1e313ef5; /* Dark background */
+  width: 90rem;
+  background-color: #0201281d; /* Dark background for the container */
   color: #fff;
+  padding: 40px;
   border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Shadow effect */
-  margin-top: 20px;
-  margin-bottom: 50px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin: 20px;
+}
+.inventory-information-section {
   text-align: center;
 }
 .validated-btn {
@@ -2854,46 +2850,47 @@ color: #A3D4FF;
   background-color: #28a745; /* Green for success */
 }
 .validated-btn-back {
-  background-color:  #fff; /* Green for success */
+  background-color: #fff; /* Green for success */
   color: #000000;
+}
+.add-btn {
+  padding: 5px 10px;
+  font-size: 15px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: #28a745; /* Green for success */
 }
 
 /*--------------------------- new item in inventory ----------------------------*/
-.choices__inner{
+.choices__inner {
   background-color: #222;
   border: 1px solid #444;
   border-radius: 5px;
 }
-.choices__list{
+.choices__list {
   background-color: #222;
 }
-.choices[data-type*=select-one] .choices__input{
+.choices[data-type*="select-one"] .choices__input {
   background-color: #222;
   border: 1px solid #444;
   color: #ffffff;
- 
 }
 .choices__item {
-background-color:  #222; /* Highlight color */
+  background-color: #222; /* Highlight color */
 
-color: rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
 }
-.choices__list--dropdown .choices__item--selectable.is-highlighted, .choices__list[aria-expanded] .choices__item--selectable.is-highlighted{
-background-color:#55104d; /* Highlight color */
-color: rgb(255, 255, 255);
+.choices__list--dropdown .choices__item--selectable.is-highlighted,
+.choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
+  background-color: #55104d; /* Highlight color */
+  color: rgb(255, 255, 255);
 }
 
 /*-------------------------------Inventory Details Page---------------------------------*/
-/* Container for the Inventory Details Page */
-.inventory-details-container {
-  width: 90rem;
-  background-color: #0201281d; /* Dark background for the container */
-  color: #fff;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
-  margin: 20px;
-}
 
 /* Title Style */
 .inventory-details-container h2 {
@@ -2903,21 +2900,106 @@ color: rgb(255, 255, 255);
   font-weight: 600;
   color: #fff;
 }
-.inventory-information-section{
-  text-align:left;
-  margin-top: 30px;
-  background-color: #3e3e3e;
-  padding: 20px;
-  border-radius: 8px;
+/* General Styling */
+.inventory-dashboard {
+  color: #ffffff;
+
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 15px 10px rgba(0, 0, 0, 0.3);
+  max-width: 90%;
+  margin: auto;
 }
-/* Service and Storage Info */
-.inventory-dinventory-information-section p {
-  font-size: 1.2rem;
+
+/* Header */
+.inventory-header h3 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ecf0f1;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 15px;
+}
+
+/* Row Styling */
+.dashboard-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.dashboard-card {
+  background-color: linear-gradient(
+    135deg,
+    #2d3436,
+    #1e272e
+  ); /* Slightly lighter for separation */
+  border-radius: 12px;
+  padding: 20px;
+  width: 48%;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-card .card-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dashboard-card .card-title i {
+  font-size: 20px;
+  color: #3498db;
+  margin-right: 10px;
+}
+
+.dashboard-card h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ecf0f1;
+}
+
+.dashboard-card p,
+.dashboard-card ul {
+  font-size: 18px;
   color: #fff;
 }
 
-.inventory-information-section strong {
-  font-weight: 600;
+.dashboard-card ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.dashboard-card li {
+  margin: 5px 0;
+}
+
+/* Icons */
+.fas {
+  font-size: 22px;
+  color: #3498db;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dashboard-card {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .stats-section {
+    margin-top: 40px;
+  }
 }
 
 /* New Item Form Section */
@@ -2926,6 +3008,14 @@ color: rgb(255, 255, 255);
   background-color: #3e3e3e;
   padding: 20px;
   border-radius: 8px;
+  text-align: center;
+}
+.inventory-details-container h3 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ecf0f1;
+  padding-bottom: 15px;
+  text-align: center;
 }
 
 .new-item-form-section h3 {
@@ -3030,5 +3120,4 @@ color: rgb(255, 255, 255);
   border-bottom: none;
 }
 
-
-
+/*--------------------------- all inventory users------------------------*/

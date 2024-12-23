@@ -1,21 +1,44 @@
-const express = require('express');
+const express = require("express");
+const { isLoggedIn, isAdmin, PharmacienPrincipal } = require('../middleware/authMiddleware');
 const router = express.Router({ mergeParams: true });
 const catchAsync = require("../utils/catchAsync");
 const {
-   
-    getcreateInventoryPage,
-    createInventory,
-    chooseWorkflow,
-    getinventoriespage,
-    getInventoryDetailsPage,
-    addInventoryItem,
-    validateInventory
-   
-  } = require("../controller/inventory");
-router.route("/new").get(catchAsync(getcreateInventoryPage)).post(catchAsync(createInventory));
-router.route("/:inventoryId").get(catchAsync(getInventoryDetailsPage )).post(catchAsync(addInventoryItem  ));
+  getcreateInventoryPage,
+  createInventory,
+  getinventoriespage,
+  getInventoryDetailsPage,
+  addInventoryItem,
+  addUserToInventory,
+  removeUserFromInventory,
+  getInventoryUsers,
+  validateUserInventory,
+  getUsersInventories,
+  deleteInventoryItem,
+  updateInventoryItem,
+  exportInventoryItemsToExcel
+} = require("../controller/inventory");
 router.route("/").get(catchAsync(getinventoriespage));
-router.route("/validate/:inventoryID").post(catchAsync(validateInventory));
+router
+  .route("/new")
+  .get(catchAsync(getcreateInventoryPage))
+  .post(catchAsync(createInventory));
+router
+  .route("/:inventoryId")
+  .get(catchAsync(getUsersInventories))
+  .post(catchAsync(addInventoryItem));
+  
+router
+.route("/item/:itemId")
+.put(catchAsync(updateInventoryItem))
+.delete(catchAsync(deleteInventoryItem));
 
-
+router.route("/add-user/:inventoryID").get(catchAsync(addUserToInventory));
+router.route("/:inventoryId/remove-user/:userId").get(catchAsync(removeUserFromInventory));
+router.route("/users/:inventoryID").get(catchAsync(getInventoryUsers));
+router
+  .route("/:inventoryId/user/:userId")
+  .get(catchAsync(getInventoryDetailsPage))
+  .post(catchAsync(validateUserInventory));
+  router
+  .route("/export/:inventoryId").get(catchAsync(exportInventoryItemsToExcel))
 module.exports = router;

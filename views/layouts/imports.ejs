@@ -33,16 +33,40 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <!-- Add Select2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-
+  <script src="https://unpkg.com/tablesort@5.0.0/dist/tablesort.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script>
-  $(document).ready(function () {
-    $("#search").on("keyup", function () {
-      var value = $(this).val().toLowerCase();
-      $("#tablebody tr").filter(function () {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-      });
+ $(document).ready(function () {
+  $("#search").on("keyup", function () {
+    var value = $(this).val().toLowerCase();
+    $("#tablebody tr").filter(function () {
+      // Filter rows by matching text from all cells except the last one
+      var match = $(this)
+        .find("td:not(:last-child)")
+        .toArray()
+        .some(function (cell) {
+          return $(cell).text().toLowerCase().indexOf(value) > -1;
+        });
+      $(this).toggle(match);
     });
   });
+});
+
+</script>
+<script>
+ $(document).ready(function() {
+    $('.sortable').DataTable({
+        searching: false,  // Disables the search bar
+        paging: false,     // Disables pagination
+        responsive: true,  // Keeps table responsive (optional)
+        info: false,       // Disables the "Showing X of Y entries" text (optional)
+        dom: '<"top"i>rt<"bottom"p>',  // Removes the search bar (pagination controls are not rendered due to paging: false)
+        order: [],         // Disables any initial sorting order
+        "ordering": true,  // Enables column ordering
+        "lengthChange": true, // Enables option to change page length (not relevant without pagination)
+    });
+});
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/pdfmake.min.js"
   integrity="sha512-axXaF5grZBaYl7qiM6OMHgsgVXdSLxqq0w7F4CQxuFyrcPmn0JfnqsOtYHUun80g6mRRdvJDrTCyL8LQqBOt/Q=="

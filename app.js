@@ -32,6 +32,7 @@ app.use('/public', express.static(path.join(__dirname, 'node_modules/mdb-ui-kit/
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 app.use(mongoSanitize({ replaceWith: "_" }));

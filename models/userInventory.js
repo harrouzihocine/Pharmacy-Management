@@ -6,9 +6,10 @@ const UserInventorySchema = new mongoose.Schema({
     ref: 'Inventory',  // Reference to the Inventory template
     required: true 
   },
+  status: { type: String, enum: ['Draft', 'Validated'], default: 'Draft' }, // Draft or Validated
   createdBy: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', // Reference to the User model
+    ref: 'User',
     required: true 
   },
  

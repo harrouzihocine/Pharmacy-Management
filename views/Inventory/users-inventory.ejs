@@ -1,0 +1,166 @@
+<% layout('layouts/boilerplate') %>
+<div class="inventory-details-container">
+  <button class="btn back-btn back-button " onclick="window.location.href='/inventory'"><i class="bi bi-arrow-left-circle"></i></button>
+  <!-- Title Section -->
+  <h2>Inventory Details: <%= inventory.title %></h2>
+
+  <div class="inventory-dashboard">
+    <div class="inventory-header">
+      <h3>Inventory Dashboard</h3>
+    </div>
+
+    <div class="inventory-info">
+      <!-- Row 1: Service and Storage -->
+      <div class="dashboard-row">
+        <div class="dashboard-card service-storage me-2">
+          <div class="card-title">
+            <i class="fas fa-cogs"></i>
+            <h4>Service</h4>
+          </div>
+          <p><%= inventory.serviceABV || 'All Services' %></p>
+        </div>
+        <div class="dashboard-card service-storage me-2">
+          <div class="card-title">
+            <i class="fas fa-box"></i>
+            <h4>Storage</h4>
+          </div>
+          <p><%= inventory.storageName || 'All storages' %></p>
+        </div>
+        <div class="dashboard-card status">
+          <div class="card-title">
+            <i class="fas fa-check-circle"></i>
+            <h4>Status</h4>
+          </div>
+          <span class="status-badge <%= inventory.status === 'Draft' ? 'status-Draft' : 'status-Validated' %>">
+            <%= inventory.status %>
+          </span>
+        </div>
+       
+      </div>
+
+      <!-- Row 2: Users Linked -->
+      <div class="dashboard-row">
+        <div class="dashboard-card">
+          <div class="card-title">
+            <i class="fas fa-users"></i>
+            <h4>Users Linked</h4>
+          </div>
+          <% if (users.length > 0) { %>
+          <ul>
+            <% users.forEach(user => { %>
+            <li><%= user.createdBy.username %></li>
+            <% }) %>
+          </ul>
+          <% } else { %>
+          <p>No users linked.</p>
+          <% } %>
+        </div>
+        <div class="dashboard-card description">
+          <div class="card-title">
+            <i class="fas fa-file-alt"></i>
+            <h4>Description</h4>
+          </div>
+          <p><%= inventory.description %></p>
+        </div>
+      </div>
+
+      <!-- Row 3: Description and Status -->
+      <div class="dashboard-row">
+        <div class="dashboard-card">
+          <div class="card-title">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <h4>Total purchase Price</h4>
+          </div>
+          <p><%= parseInt(total).toFixed(2) || '0,00' %> DA</p>
+        </div>
+        <div class="dashboard-card">
+          <div class="card-title">
+            <i class="fa-solid fa-arrow-down-1-9"></i>
+            <h4>Number Rows</h4>
+          </div>
+          <p><%= itemCount || '0' %></p>
+        </div>
+       
+      </div>
+    </div>
+
+
+  </div>
+
+
+  <!-- Inventory Items Table Section -->
+  <h3 class="mt-4">Inventory Items</h3>
+  <button class="demand-new-button" onclick="window.location.href='/inventory/export/<%= inventory.id %>'">Export to Excel</button>
+  <form class="search-bar">
+    <input type="text" id="search" placeholder="Search in inventory items" />
+  </form>
+
+  <table class="inventory-items-table sortable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Medicament</th>
+        <% if (!inventory.serviceABV) { %>
+        <th>Service</th>
+        <% } %>
+        <% if (!inventory.storageName) { %>
+        <th>Storage</th>
+        <% } %>
+        <th>Batch Number</th>
+        <th>Serial Number</th>
+        <th>Quantity</th>
+        <th>Purchase Price</th>
+        <th>TVA</th>
+        <th>Sale Price</th>
+        <th>Remarks</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% if (inventoryItems.length > 0) { %>
+      <% let rowNumberMap = {}; %>
+      <!-- Initialize an object to track combinations -->
+      <% inventoryItems.forEach((item, index) => { %>
+      <% // Create a unique key based on designation, batchNumber, and serialNumber %>
+      <% let uniqueKey = item.medicamentId.designation + '-' + item.batchNumber + '-' + (item.serialNumber || ''); %>
+      <% let rowNumber = rowNumberMap[uniqueKey]; %>
+      <!-- Check if we've already assigned a number for this combination -->
+
+      <% if (!rowNumber) { %>
+      <!-- If no number has been assigned, give it a new one and store it in the map -->
+      <% rowNumber = Object.keys(rowNumberMap).length + 1; %>
+      <% rowNumberMap[uniqueKey] = rowNumber; %>
+      <% } %>
+
+      <tr>
+        <td><%= rowNumber %></td> <!-- Use the assigned or reused row number -->
+        <td><%= item.medicamentId.designation %></td>
+        <% if (!inventory.serviceABV) { %>
+        <td><%= item.serviceABV || 'N/A' %></td>
+        <% } %>
+        <% if (!inventory.storageName) { %>
+        <td><%= item.storageName || 'N/A' %></td>
+        <% } %>
+        <td><%= item.batchNumber %></td>
+        <td><%= item.serialNumber || 'N/A' %></td>
+        <td><%= item.physicalQuantity %></td>
+        <td><%= parseInt(item.purchasePrice).toFixed(2) %> DA</td>
+        <td><%= item.tva?item.tva:'N/A'%> %</td>
+        <td><%= (item.purchasePrice * (item.serviceABV === 'URG' ? 1.4 : 1.36)).toFixed(2) %> DA</td>
+        <td><%= item.remarks || 'None' %></td>
+        <td>
+          <button type="button" class="btn delete-btn delete-item-btn py-1 px-2" data-url="/inventory/item/<%= item.id %>?_method=DELETE">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <% }); %>
+      <% } else { %>
+      <tr>
+        <td colspan="11" class="inventory-empty-row">No items found.</td>
+      </tr>
+      <% } %>
+    </tbody>
+
+  </table>
+</div>
