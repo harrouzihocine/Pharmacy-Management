@@ -450,10 +450,13 @@ module.exports.deleteInventoryItem = async (req, res, next) => {
     });
   }
 };
+
 module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
-  const inventoryId = req.params.inventoryId;
+  const { inventoryId } = req.params;
+  const { template } = req.query; // Extract the template from the query parameters
+
   try {
-    // Fetch data from InventoryItem collection. Use find() to get an array.
+    // Fetch data from InventoryItem collection
     const inventoryItems = await InventoryItem.find({
       inventoryId: inventoryId,
     }).populate("inventoryId medicamentId createdBy");
@@ -465,24 +468,67 @@ module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
         .json({ message: "No inventory items found for this inventoryId." });
     }
 
-    // Map data to a format suitable for Excel
-    const data = inventoryItems.map((item) => ({
-      MedicamentId: item.medicamentId ? item.medicamentId.designation : "N/A", // Assuming medicamentId has a name field
-      Forme: item.medicamentId ? item.medicamentId.forme : "N/A", // Assuming medicamentId has a name field
-      Boite_de: item.medicamentId ? item.medicamentId.boite_de : "N/A", // Assuming medicamentId has a name field
-      ServiceABV: item.serviceABV ? item.serviceABV : "All Services",
-      StorageName: item.storageName ? item.storageName : "All Strorages",
-      BatchNumber: item.batchNumber,
-      SerialNumber: item.serialNumber ? item.serialNumber : "N/A",
-      ExpiryDate: item.expiryDate
-        ? item.expiryDate.toLocaleDateString()
-        : "N/A",
-      Quantity: item.physicalQuantity,
-      PurchasePrice: item.purchasePrice ? item.purchasePrice : 0,
-      TVA: item.tva ? item.tva : "N/A",
-      Remarks: item.remarks ? item.remarks : "N/A",
-      CreatedBy: item.createdBy ? item.createdBy.username : "N/A", // Assuming createdBy has a username field
-    }));
+    let data = [];
+
+    // Template-specific processing
+    if (template === "bigtable") {
+      // Original "Big Table" logic
+      data = inventoryItems.map((item) => ({
+        MedicamentId: item.medicamentId ? item.medicamentId.designation : "N/A",
+        Forme: item.medicamentId ? item.medicamentId.forme : "N/A",
+        Boite_de: item.medicamentId ? item.medicamentId.boite_de : "N/A",
+        ServiceABV: item.serviceABV || "All Services",
+        StorageName: item.storageName || "All Storages",
+        BatchNumber: item.batchNumber,
+        SerialNumber: item.serialNumber || "N/A",
+        ExpiryDate: item.expiryDate
+          ? item.expiryDate.toLocaleDateString()
+          : "N/A",
+        Quantity: item.physicalQuantity,
+        PurchasePrice: item.purchasePrice || 0,
+        TVA: item.tva || "N/A",
+        Remarks: item.remarks || "N/A",
+        CreatedBy: item.createdBy ? item.createdBy.username : "N/A",
+      }));
+    } else if (template === "byservices" || template === "byservicesandstorages") {
+      // Group inventory items by medicamentId
+      const groupedItems = inventoryItems.reduce((acc, item) => {
+        const key = item.medicamentId ? item.medicamentId.designation : "Unknown";
+        if (!acc[key]) {
+          acc[key] = {};
+        }
+
+        const serviceKey = item.serviceABV || "All Services";
+        if (!acc[key][serviceKey]) {
+          acc[key][serviceKey] = 0;
+        }
+
+        acc[key][serviceKey] += item.physicalQuantity;
+
+        if (template === "byservicesandstorages") {
+          const storageKey = item.storageName || "All Storages";
+          if (!acc[key][`${serviceKey}:${storageKey}`]) {
+            acc[key][`${serviceKey}:${storageKey}`] = 0;
+          }
+          acc[key][`${serviceKey}:${storageKey}`] += item.physicalQuantity;
+        }
+
+        return acc;
+      }, {});
+
+      // Transform grouped data into rows
+      data = Object.entries(groupedItems).map(([medicament, services]) => {
+        const row = { Medicament: medicament };
+
+        Object.entries(services).forEach(([key, quantity]) => {
+          row[key] = quantity;
+        });
+
+        return row;
+      });
+    } else {
+      return res.status(400).json({ message: "Invalid template specified." });
+    }
 
     // Create a worksheet from the data
     const ws = xlsx.utils.json_to_sheet(data);
@@ -493,15 +539,13 @@ module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
 
     // Write the workbook to a file
     const date = new Date().toISOString().slice(0, 10);
-    xlsx.writeFile(wb, "inventory_items-" + date + ".xlsx");
-    console.log("Excel file created successfully");
+    const fileName = `inventory_items-${template}-${date}.xlsx`;
+    xlsx.writeFile(wb, fileName);
 
-    // Optionally, send the file as a response
-    res.download("inventory_items-" + date + ".xlsx"); // This will send the Excel file to the client
+    // Send the file as a response
+    res.download(fileName); // This will send the Excel file to the client
   } catch (err) {
     console.error("Error exporting data to Excel:", err);
-    res
-      .status(500)
-      .json({ message: "Error exporting data to Excel.", error: err.message });
+    res.status(500).json({ message: "Error exporting data to Excel.", error: err.message });
   }
 };

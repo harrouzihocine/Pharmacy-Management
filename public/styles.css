@@ -2821,6 +2821,16 @@ table.dataTable tbody tr {
 .users-inventory-information-section {
   animation: fadeIn 0.6s ease-out; /* Smooth fade-in animation */
 }
+  /* Style for the dropdown */
+  .template-selector {
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #222;
+    color: #fff;
+    outline: none;
+  }
 
 /*--------------------style for  inventory details page ------------------------*/
 .inventory-details-container {

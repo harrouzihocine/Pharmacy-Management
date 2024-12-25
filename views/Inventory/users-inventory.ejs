@@ -90,7 +90,17 @@
 
   <!-- Inventory Items Table Section -->
   <h3 class="mt-4">Inventory Items</h3>
-  <button class="demand-new-button" onclick="window.location.href='/inventory/export/<%= inventory.id %>'">Export to Excel</button>
+  <div class="export-container">
+    <select id="template-selector" class="template-selector">
+      <option value="" disabled selected>Select a template</option>
+      <option value="bigtable">Big table</option>
+      <option value="byservices">by services</option>
+      <option value="byservicesandstorages">by services and storages</option>
+    </select>
+  
+    <button class="demand-new-button" onclick="exportToExcel()">Export to Excel</button>
+  </div>
+  
   <form class="search-bar">
     <input type="text" id="search" placeholder="Search in inventory items" />
   </form>
@@ -164,3 +174,17 @@
 
   </table>
 </div>
+<script>
+  function exportToExcel() {
+    // Get the selected template
+    const selectedTemplate = document.getElementById("template-selector").value;
+   
+
+    // Redirect or send the data to the backend
+    const inventoryId = "<%= inventory.id %>"; // Replace with your dynamic inventory ID logic
+    const exportUrl = `/inventory/export/${inventoryId}?template=${selectedTemplate}`;
+
+    // Redirect to the backend endpoint for export
+    window.location.href = exportUrl;
+  }
+</script>
