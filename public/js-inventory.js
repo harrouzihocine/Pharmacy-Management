@@ -1,5 +1,30 @@
-
-    function showFields() {
+   /*----------------------export to excel ------------------------------ */
+   function exportToExcel(inventoryId) {
+    // Get the selected template element
+    const templateSelector = document.getElementById("template-selector");
+  
+    if (!templateSelector) {
+      alert("Template selector not found. Please ensure it is included in the page.");
+      return;
+    }
+  
+    // Get the selected template value
+    const selectedTemplate = templateSelector.value;
+  
+    if (!selectedTemplate) {
+      alert("Please select a template before exporting.");
+      return;
+    }
+  
+    // Construct the export URL
+    const exportUrl = `/inventory/export/${inventoryId}?template=${encodeURIComponent(selectedTemplate)}`;
+  
+    // Redirect to the backend endpoint for export
+    window.location.href = exportUrl;
+  }
+  
+/*------------------------------ show feilds server and storage ------------------------------ */
+   function showFields() {
       const workflowType = document.querySelector('input[name="workflowType"]:checked').value;
 
       // Input field containers
@@ -90,3 +115,76 @@ document.querySelectorAll('.delete-item-btn').forEach(button => {
       handleDelete(this);  // Pass the clicked button to the function
   });
 });
+/*-----------------------toggleVisibility--------------------*/
+function toggleVisibility(button) {
+  const url = button.getAttribute('data-url');
+  const visibility = button.getAttribute('data-visibility');
+  const user = button.getAttribute('data-user')
+  console.log('! oppo visibility: ' + !visibility);
+ let newVisibility ;
+  if (visibility ==='true') {
+   
+    newVisibility = "false";
+ }else{
+    newVisibility = "true";
+ }
+  // Show SweetAlert2 confirmation dialog
+  Swal.fire({
+  title: 'Are you sure?',
+  html: `Do you want to ${visibility === 'false' ? 'unhide' : 'hide'} this item? 
+  ${visibility === 'true' ? `<br><span style="color: red;">Note: If you refresh the page, you will need to go to ${user}'s inventory and unhide this item.</span>` : ''}`,
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonText: 'Yes, proceed!',
+  cancelButtonText: 'No, keep it visible',
+}).then((result) => {
+    if (result.isConfirmed) {
+      // Proceed with the visibility toggle request
+      fetch(url, {
+        method: 'PATCH', // Use PATCH for partial updates
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ visibility: newVisibility })
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          // Update the button text dynamically based on the new visibility
+          if (visibility === 'false') {
+            console.log('Update 1 to true');
+            button.setAttribute('data-visibility', 'true');
+            button.innerHTML = '<i class="fa-regular fa-eye-slash"></i>'; // Icon for "Unhide"
+          } else {
+            console.log('Update 2 to false');
+            button.setAttribute('data-visibility', 'false');
+            button.innerHTML = '<i class="fa-regular fa-eye"></i>'; // Icon for "Hide"
+          }
+
+          // Show success message
+          Swal.fire({
+            title: 'Success!',
+            text: 'Visibility has been toggled.',
+            icon: 'success',
+          });
+        } else {
+          // Show error message
+          Swal.fire({
+            title: 'Error!',
+            text: result.message,
+            icon: 'error',
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // Show error message
+        Swal.fire({
+          title: 'Error!',
+          text: 'An error occurred. Please try again.',
+          icon: 'error',
+        });
+      });
+    }
+  });
+}

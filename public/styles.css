@@ -505,6 +505,104 @@
   text-decoration: underline; /* Underline link on hover */
 }
 
+/* Style for the select box */
+.choices__inner {
+  background-color: #3e3e3e !important; /* Darker background for select */
+  color: #fff !important; /* White text */
+  border: 1px solid #444 !important; /* Slightly lighter border */
+  border-radius: 5px !important;
+  padding: 10px !important;
+  width: 100% !important;
+}
+
+/* Custom style for options */
+.choices__item {
+  background-color: #3e3e3e !important;
+  color: #fff !important;
+  border: 1px solid #444 !important;
+  border-radius: 5px !important;
+}
+
+.choices__input {
+  background-color: #3e3e3e !important;
+  color: #fff !important;
+}
+
+/* Hover effect for options */
+.choices__list--dropdown .choices__item--selectable.is-highlighted,
+.choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
+  background-color: #55104d !important; /* Background color on hover */
+}
+
+.choices__list--multiple .choices__item {
+  background-color: #55104d !important;
+  border: 1px solid #fff !important;
+}
+/*--------------------------------- Profile Page Styles ---------------------------------*/
+/* Profile Container Styles */
+.profile-container {
+  width: 50rem; /* Maximum width for large screens */
+  margin: 10% auto; /* Center-align the container */
+  padding: 20px;
+  background-color: #0201281d; /* Lighter background for the container */
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading Style */
+.text-profile-page {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.text-profile-page i {
+  margin-right: 10px;
+}
+
+/* Form Inputs */
+.custom-input-profile {
+  background-color: #3e3e3e; /* Darker background for inputs */
+  color: #fff; /* White text in inputs */
+  border: 1px solid #444; /* Slightly lighter border for inputs */
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.custom-input-profile:focus {
+  border-color: #0073e6; /* Blue focus border */
+  background-color: #333; /* Darker background on focus */
+}
+
+/* Select Inputs */
+.custom-select-profile {
+  background-color: #3e3e3e; /* Darker background for select */
+  color: #fff; /* White text */
+  border: 1px solid #444; /* Slightly lighter border */
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+/* Button Style */
+.custom-btn-profile {
+  background-color: #726c7a; /* Blue button for dark mode */
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.custom-btn-profile:hover {
+  background-color: #55104d; /* Darker blue on hover */
+}
 /*-------------------------------Add Location Page---------------------------------*/
 /* Container for the add location form */
 .add-location-page-container {
@@ -2800,7 +2898,7 @@ table.dataTable tbody tr {
 }
 
 .info-box span {
-  color: #e0e0e0; /* Light gray for details */
+ 
   font-size: 1.1rem;
   margin-top: 1px;
   margin-right: 10px;
@@ -3130,4 +3228,31 @@ table.dataTable tbody tr {
   border-bottom: none;
 }
 
-/*--------------------------- all inventory users------------------------*/
+/*--------------------------- users inventory item details ------------------------*/
+.medicament-details .info-boite {
+  background-color: #02012811;
+  margin: 5px;
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.medicament-details .info-boite:hover {
+  transform: scale(1.01); /* Slight hover zoom */
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.2); /* Intense shadow on hover */
+}
+
+.medicament-details .info-boite strong {
+  color: #00bcd4; /* Bright teal for emphasis */
+  font-weight: 600;
+  font-size: 1.1rem;
+
+}
+.visibility-btn {
+  background-color: #7E99A3; /* Blue background for both states */
+  color: #ffffff ;
+}

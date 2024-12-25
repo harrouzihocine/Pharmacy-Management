@@ -1,0 +1,63 @@
+<button type="button" class="btn view-btn py-1 px-3" data-bs-toggle="modal" data-bs-target="#edit-<%= item._id %>">
+          <i class="fa-solid fa-info fs-5"></i>
+          </button>
+          <!-- Modal for Editing Item -->
+          <div class="modal fade add-storage-modal" id="edit-<%= item._id %>" data-bs-keyboard="true" tabindex="-1" aria-labelledby="edit-item-label-<%= item._id %>" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+              <div class="modal-content add-storage-page-container">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="edit-item-label-<%= item._id %>"><%= item.medicamentId.designation  %> </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                  <div class="medicament-details">
+                    <div class="info-boite">
+                      <strong class="me-2">Nom commerial:</strong> <span><%=item.medicamentId.nom_commercial%></span>
+                    </div>
+                    <div class="info-boite">
+                      <strong class="me-2">Code Interne:</strong> <span><%=item.medicamentId.code_interne%></span>
+                    </div>
+                    <div class="info-boite">
+                      <strong class="me-2">Code PCH:</strong> <%= item.medicamentId.code_pch ? item.medicamentId.code_pch : 'N/A' %>
+                    </div>
+                    <div class="info-boite">
+                      <strong class="me-2">Type:</strong> <%= item.medicamentId.type_medicament %>
+                    </div>
+                    <div class="info-boite">
+                      <strong class="me-2">Forme:</strong> <%= item.medicamentId.forme %>
+                    </div>
+                    <div class="info-boite">
+                      <strong class="me-2">Boite de:</strong> <%= item.medicamentId.boite_de %>
+                    </div>
+                    <% if (!inventory.storageName) { %>
+                    <div class="info-boite">
+                        
+                      <strong class="me-2">Storage:</strong> <%= item.storageName %>
+                    </div>
+                    <% } %>
+                    <div class="info-boite">
+                      <strong class="me-2">Serial Number:</strong> <%= item.serialNumber || 'N/A' %>
+                    </div>
+                    <div class="info-boite">
+                      <strong class="me-2">TVA:</strong> <%= item.tva ? item.tva : 'N/A' %> %
+                    </div>
+                    <div class="info-boite">
+                      <strong class="me-2">Montant HT:</strong> <%= (parseInt(item.purchasePrice?item.purchasePrice:0) * item.physicalQuantity).toFixed(2)%> DA
+                    </div>
+                    <div class="info-boite">
+                      <strong class="me-2">Sale Price:</strong> <%=(item.purchasePrice * (item.serviceABV === 'URG' ? 1.4 : 1.36)).toFixed(2) %> DA
+                    </div>
+                   
+                    <div class="info-boite">
+                      <strong class="me-2">Remarks:</strong> <%= item.remarks || 'N/A' %>
+                    </div>
+                 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+     
+     

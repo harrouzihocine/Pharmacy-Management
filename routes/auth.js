@@ -8,6 +8,8 @@ const {
   register,
   showLoginForm,
   showRegisterForm,
+  getProfile,
+  updateProfile
 } = require("../controller/auth");
 const catchAsync = require("../utils/catchAsync");
 
@@ -33,5 +35,6 @@ router.route("/logout").get(logout);
 
 // Dashboard route
 router.route("/").get(dashboard);
+router.route("/profile") .get(catchAsync(getProfile)).post(catchAsync(updateProfile));
 
 module.exports = router;

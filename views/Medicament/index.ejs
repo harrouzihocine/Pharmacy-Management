@@ -32,11 +32,11 @@
                 <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.nom_commercial ? med.nom_commercial : 'N/A' %></td>
                 <td>
                     <div class="d-flex">
-                        <button class="toggle-btn assign-btn py-1 px-0" data-medicament-id="<%= med._id %>" data-selected="<%= med.isSelected ? 'true' : 'false' %>">
+                        <button class=" btn selectmedicament assign-btn py-1 px-1" data-medicament-id="<%= med._id %>" data-selected="<%= med.isSelected ? 'true' : 'false' %>">
                             <% if(med.isSelected){ %>
-                                <i class="fa-regular fa-square-minus fs-5"></i>
+                               Unselect
                                  <% }else{ %> 
-                                    <i class="fa-regular fa-square-plus fs-5"></i>
+                                    Select
                                  <% } %>
                         </button>
                        

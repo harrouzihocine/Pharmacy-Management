@@ -1,6 +1,7 @@
 const Location = require("../models/location");
 const Storage = require("../models/storage");
 const InStock = require("../models/inStock");
+const User = require("../models/user");
 const endroits = [
   "Local-1_G : Côté gauche du couloir sous-sol",
   "Local-2_D : Côté gauche du couloir sous-sol",
@@ -64,24 +65,44 @@ exports.addStorage = async (req, res, next) => {
   // Get all depots
   exports.getStorage = async (req, res, next) => {
     try {
-        const services = await Storage.aggregate([
-            {
-                $group: {
-                    _id: "$service",  // Group by the service name (or code)
-                    storageCount: { $sum: 1 },  // Count the number of storages for each service
-                    serviceABV: { $first: "$serviceABV" },  // Get the abbreviation of the service
-                    locationType: { $first: "$locationType" },  // Get the abbreviation of the service
-                    serviceId: { $first: "$_id" }  // Capture the actual MongoDB _id of the service
-                }
-            }
-        ]);
-
-        res.render('Storage', { services });  // Send the result to the front-end
+      // Assuming user.services contains service abbreviations or IDs
+      const userServices = req.user.services.map(service => service.serviceABV); // Get service abbreviations from the user's services
+  
+      // Fetch services that the user has access to from the Storage collection
+      const storageData = await Storage.aggregate([
+        {
+          $match: { serviceABV: { $in: userServices } }  // Filter the Storage records by the user's accessible services
+        },
+        {
+          $group: {
+            _id: "$service",  // Group by the service name (or code)
+            storageCount: { $sum: 1 },  // Count the number of storages for each service
+            serviceABV: { $first: "$serviceABV" },  // Get the abbreviation of the service
+            locationType: { $first: "$locationType" },  // Get the location type for each service
+            serviceId: { $first: "$_id" }  // Capture the actual MongoDB _id of the service
+          }
+        }
+      ]);
+  
+      // Map the aggregated storage data to the full service names from your `services` array
+      const fullServiceData = storageData.map(service => {
+        const fullService = services.find(s => s._id === service.serviceABV);  // Find the full service data from your array
+        return {
+          ...service,
+          serviceName: fullService ? fullService.name : 'Unknown Service'  // Attach the full service name
+        };
+      });
+  
+      // Render the services to the Storage view
+      res.render('Storage/index', { services: fullServiceData });
+  
     } catch (error) {
-        console.error("Error fetching storage data:", error);
-        next(error);
+      console.error("Error fetching storage data:", error);
+      next(error);  // Pass errors to the error handler middleware
     }
-};
+  };
+  
+  
 
     // Get add form
 exports.showAddStorageForm = async (req, res, next) => {

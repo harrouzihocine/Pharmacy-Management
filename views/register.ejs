@@ -28,8 +28,30 @@
       </select>
     </div>
 
+  <!-- Multi-Select for Services -->
+  <div class="form-group mb-3">
+    <label for="services">Services:</label>
+    <select id="services" name="services[]" class="custom-select-register" multiple>
+      <% services.forEach(service => { %>
+        <option value="<%= service._id %>"><%= service.name %></option>
+      <% }) %>
+    </select>
+  </div>
+
     <button type="submit" class="custom-btn-register">Register</button>
   </form>
 
   <p class="footer-text-register">Already have an account? <a href="/login">Login here</a></p>
 </div>
+
+<!-- Choices.js Integration -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const multiSelect = new Choices('#services', {
+      removeItemButton: true, // Allow removing selected options
+      placeholder: true,
+      placeholderValue: 'Select services...',
+    });
+  });
+</script>

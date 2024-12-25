@@ -15,7 +15,8 @@ const {
   getUsersInventories,
   deleteInventoryItem,
   updateInventoryItem,
-  exportInventoryItemsToExcel
+  exportInventoryItemsToExcel,
+  hideInventoryItem
 } = require("../controller/inventory");
 router.route("/").get(catchAsync(getinventoriespage));
 router
@@ -30,7 +31,8 @@ router
 router
 .route("/item/:itemId")
 .put(catchAsync(updateInventoryItem))
-.delete(catchAsync(deleteInventoryItem));
+.delete(catchAsync(deleteInventoryItem))
+.patch(catchAsync(hideInventoryItem));
 
 router.route("/add-user/:inventoryID").get(catchAsync(addUserToInventory));
 router.route("/:inventoryId/remove-user/:userId").get(catchAsync(removeUserFromInventory));

@@ -12,7 +12,8 @@ const InventoryItemSchema = new mongoose.Schema(
     tva: { type: Number}, // tva
     physicalQuantity: { type: Number, required: true }, // Physical quantity
     purchasePrice: { type: Number }, // Purchase price
-    systemQuantity: { type: Number, default: 0 }, // Default system quantity
+    systemQuantity: { type: Number, default: 0 },
+    visibility: { type:Boolean, default: true}, // Visibility
     remarks: { type: String }, // Additional remarks
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   

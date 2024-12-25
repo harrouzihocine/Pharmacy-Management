@@ -30,6 +30,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "user",
     },
+    services: [
+      {
+        serviceName: {
+          type: String,
+          required: true, 
+        },
+        serviceABV: {
+          type: String,
+        },
+      },
+    ],
+
     loggedIn: {
       type: Date,
       default: Date.now,
@@ -47,10 +59,12 @@ userSchema.virtual("fullname").get(function () {
 });
 // Hash the password before saving the user
 userSchema.pre("save", async function (next) {
-  const salt = await bcrypt.genSalt(10);
-  this.salt = salt;
-  this.hash = await bcrypt.hash(this.hash, salt);
-
+  if (this.isModified("hash")) {
+    console.log("Hashing password...");
+    const salt = await bcrypt.genSalt(10);
+    this.salt = salt;
+    this.hash = await bcrypt.hash(this.hash, salt);
+  }
   next();
 });
 

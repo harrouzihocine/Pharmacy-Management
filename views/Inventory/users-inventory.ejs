@@ -1,6 +1,8 @@
 <% layout('layouts/boilerplate') %>
 <div class="inventory-details-container">
-  <button class="btn back-btn back-button " onclick="window.location.href='/inventory'"><i class="bi bi-arrow-left-circle"></i></button>
+  <button class="btn back-btn back-button" onclick="window.location.href='/inventory'">
+    <i class="bi bi-arrow-left-circle"></i>
+  </button>
   <!-- Title Section -->
   <h2>Inventory Details: <%= inventory.title %></h2>
 
@@ -35,7 +37,6 @@
             <%= inventory.status %>
           </span>
         </div>
-       
       </div>
 
       <!-- Row 2: Users Linked -->
@@ -80,28 +81,27 @@
           </div>
           <p><%= itemCount || '0' %></p>
         </div>
-       
       </div>
     </div>
-
-
   </div>
-
 
   <!-- Inventory Items Table Section -->
   <h3 class="mt-4">Inventory Items</h3>
   <div class="export-container">
-    <select id="template-selector" class="template-selector">
-      <option value="" disabled selected>Select a template</option>
+    <select  class="template-selector" id="template-selector">
+      <option value="bigtable" disabled selected>Select a template</option>
       <option value="bigtable">Big table</option>
       <option value="byservices">by services</option>
       <option value="byservicesandstorages">by services and storages</option>
     </select>
-  
-    <button class="demand-new-button" onclick="exportToExcel()">Export to Excel</button>
+
+    <button class="demand-new-button" onclick="exportToExcel('<%= inventory._id %>')">
+      Export to Excel
+  </button> 
+    
   </div>
-  
-  <form class="search-bar">
+
+  <form class="search-bar mb-2">
     <input type="text" id="search" placeholder="Search in inventory items" />
   </form>
 
@@ -113,78 +113,52 @@
         <% if (!inventory.serviceABV) { %>
         <th>Service</th>
         <% } %>
-        <% if (!inventory.storageName) { %>
-        <th>Storage</th>
-        <% } %>
         <th>Batch Number</th>
-        <th>Serial Number</th>
         <th>Quantity</th>
         <th>Purchase Price</th>
-        <th>TVA</th>
-        <th>Sale Price</th>
-        <th>Remarks</th>
+        <th>Created By</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody id="tablebody">
-      <% if (inventoryItems.length > 0) { %>
-      <% let rowNumberMap = {}; %>
-      <!-- Initialize an object to track combinations -->
-      <% inventoryItems.forEach((item, index) => { %>
-      <% // Create a unique key based on designation, batchNumber, and serialNumber %>
-      <% let uniqueKey = item.medicamentId.designation + '-' + item.batchNumber + '-' + (item.serialNumber || ''); %>
-      <% let rowNumber = rowNumberMap[uniqueKey]; %>
-      <!-- Check if we've already assigned a number for this combination -->
-
-      <% if (!rowNumber) { %>
-      <!-- If no number has been assigned, give it a new one and store it in the map -->
-      <% rowNumber = Object.keys(rowNumberMap).length + 1; %>
-      <% rowNumberMap[uniqueKey] = rowNumber; %>
-      <% } %>
+      <% if (inventoryItems.length >0) { %> <% let rowNumberMap = {}; %> <% let
+      colorMap = {}; %> <% const generateReadableColor = () => { %> <% const
+      letters = '0123456789ABCDEF'; %> <% let color = '#'; %> <% for (let i = 0;
+      i < 6; i++) { %> <% color += letters[Math.floor(Math.random() * 12)]; %>
+      <!-- Use only darker values -->
+      <% } %> <% return color; %> <% }; %> <% inventoryItems.forEach((item,
+      index) => { if (item.visibility){%> <% let uniqueKey = item.medicamentId.designation + '-' +
+      item.batchNumber + '-' + (item.serialNumber || ''); %> <% let rowNumber =
+      rowNumberMap[uniqueKey]; %> <% let rowColor = colorMap[uniqueKey]; %> <%
+      if (!rowNumber) { %> <% rowNumber = Object.keys(rowNumberMap).length + 1;
+      %> <% rowNumberMap[uniqueKey] = rowNumber; %> <% rowColor =
+      generateReadableColor(); %> <% colorMap[uniqueKey] = rowColor; %> <% } %>
 
       <tr>
-        <td><%= rowNumber %></td> <!-- Use the assigned or reused row number -->
+        <!-- Apply dynamic colors -->
+        <td style="background-color: <%= rowColor %>"><%= rowNumber %></td>
         <td><%= item.medicamentId.designation %></td>
         <% if (!inventory.serviceABV) { %>
         <td><%= item.serviceABV || 'N/A' %></td>
         <% } %>
-        <% if (!inventory.storageName) { %>
-        <td><%= item.storageName || 'N/A' %></td>
-        <% } %>
+
         <td><%= item.batchNumber %></td>
-        <td><%= item.serialNumber || 'N/A' %></td>
+
         <td><%= item.physicalQuantity %></td>
         <td><%= parseInt(item.purchasePrice).toFixed(2) %> DA</td>
-        <td><%= item.tva?item.tva:'N/A'%> %</td>
-        <td><%= (item.purchasePrice * (item.serviceABV === 'URG' ? 1.4 : 1.36)).toFixed(2) %> DA</td>
-        <td><%= item.remarks || 'None' %></td>
-        <td>
-          <button type="button" class="btn delete-btn delete-item-btn py-1 px-2" data-url="/inventory/item/<%= item.id %>?_method=DELETE">
-            <i class="bi bi-trash"></i>
+        <td><%= item.createdBy.username || 'None' %></td>
+        <td class="d-flex">
+          <%- include("./item-details", { item,inventory }) %>
+          <button class="btn visibility-btn py-1 px-2" id="hide-item" data-user="<%= user.username || 'None' %>" data-url="/inventory/item/<%= item.id %>" data-visibility="<%= item.visibility ? 'true' : 'false' %>" onclick="toggleVisibility(this)">
+            <%- item.visibility ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>' %>
           </button>
         </td>
       </tr>
-      <% }); %>
-      <% } else { %>
+      <% }}); %> <% } else { %>
       <tr>
         <td colspan="11" class="inventory-empty-row">No items found.</td>
       </tr>
       <% } %>
     </tbody>
-
   </table>
 </div>
-<script>
-  function exportToExcel() {
-    // Get the selected template
-    const selectedTemplate = document.getElementById("template-selector").value;
-   
-
-    // Redirect or send the data to the backend
-    const inventoryId = "<%= inventory.id %>"; // Replace with your dynamic inventory ID logic
-    const exportUrl = `/inventory/export/${inventoryId}?template=${selectedTemplate}`;
-
-    // Redirect to the backend endpoint for export
-    window.location.href = exportUrl;
-  }
-</script>

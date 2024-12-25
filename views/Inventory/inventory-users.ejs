@@ -55,39 +55,47 @@
     </thead>
     <tbody id="tablebody">
       <% if (usersInventory.length > 0) { %>
-      <% usersInventory.forEach(user => { %>
-      <% if(user.createdBy.id === userId){ %>
-      <tr>
-
-        <td onclick="window.location.href='/inventory/<%= inventory.id %>/user/<%= user.createdBy.id %>'">
-          <%= user.createdBy.username %>
-
-        </td>
-        <td onclick="window.location.href='/inventory/<%= inventory.id %>/user/<%= user.createdBy.id %>'"><%= user.createdAt.toLocaleString() %></td>
-        <td>
-          <span class="tag status-badge <%= user.status === 'Draft' ? 'status-Draft' : 'status-Validated' %>">
-            <%= user.status%>
-          </span>
-          <% if (user.status === 'Draft') { %>
-          <button class="btn valider validated-btn validated-btn-success " data-id="<%= inventory.id %>" data-user-id="<%= user.createdBy.id %>"><i class="bi bi-check-circle"></i></button>
-          <% }else{ %>
-          <button class="btn valider back-to-draft validated-btn validated-btn-back" data-id="<%= inventory.id %>" data-user-id="<%= user.createdBy.id %>"><i class="bi bi-arrow-counterclockwise"></i></button>
+        <% usersInventory.forEach(user => { %>
+          <% if (currentUser._id === user.createdBy.id || currentUser.role === 'Admin') { %>
+            <tr>
+              <td onclick="window.location.href='/inventory/<%= inventory.id %>/user/<%= user.createdBy.id %>'">
+                <%= user.createdBy.username %>
+              </td>
+              <td onclick="window.location.href='/inventory/<%= inventory.id %>/user/<%= user.createdBy.id %>'">
+                <%= user.createdAt.toLocaleString() %>
+              </td>
+              <td>
+                <span class="tag status-badge <%= user.status === 'Draft' ? 'status-Draft' : 'status-Validated' %>">
+                  <%= user.status %>
+                </span>
+                <% if (user.status === 'Draft') { %>
+                  <button class="btn valider validated-btn validated-btn-success" data-id="<%= inventory.id %>" data-user-id="<%= user.createdBy.id %>">
+                    <i class="bi bi-check-circle"></i>
+                  </button>
+                <% } else { %>
+                  <button class="btn valider back-to-draft validated-btn validated-btn-back" data-id="<%= inventory.id %>" data-user-id="<%= user.createdBy.id %>">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                  </button>
+                <% } %>
+              </td>
+              <td>
+                <% if (user.status === 'Draft') { %>
+                  <button class="btn delete-btn" onclick="window.location.href='/inventory/<%= inventory.id %>/remove-user/<%= user.createdBy.id %>'">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                <% } %>
+              </td>
+            </tr>
           <% } %>
-        </td>
-        <td>
-          <% if (user.status === 'Draft') { %>
-          <button class="btn delete-btn" onclick="window.location.href='/inventory/<%= inventory.id %>/remove-user/<%= user.createdBy.id %>'"><i class="bi bi-trash"></i>
-          </button>
-          <% } %>
-        </td>
-      </tr>
-      <% }}); %>
+        <% }); %>
       <% } else { %>
-      <tr>
-        <td colspan="4">No inventories found.</td>
-      </tr>
+        <tr>
+          <td colspan="4">No inventories found.</td>
+        </tr>
       <% } %>
     </tbody>
+    
+    
   </table>
 </div>
 <script>

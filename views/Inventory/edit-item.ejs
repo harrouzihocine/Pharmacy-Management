@@ -42,18 +42,19 @@
             </select>
           </div>
 
-          <!-- Medicament Select -->
-          <div class="col-12 mb-3">
-            <label for="medicament" class="form-label label-required">Item</label>
-            <select class="form-select" id="medicament" name="medicamentId" required>
-              <option value="" disabled>Select an Item</option>
-              <% medicaments.forEach(function(medicament) { %>
-              <option value="<%= medicament._id %>" <%= medicament._id == item.medicamentId._id ? 'selected' : '' %>>
+         <!-- Medicament Select -->
+         <div class="col-12 mb-3">
+          <label for="medicament" class="form-label label-required">Item</label>
+          <select class="form-select" id="medicament" name="medicamentId" required>
+            <option value="" disabled selected>Select an Item</option>
+            <% medicaments.forEach(function(medicament) { %>
+              <option value="<%= medicament._id %>" <%= medicament._id.toString() === item.medicamentId._id.toString() ? 'selected' : '' %>>
+
                 <%= medicament.designation %>
               </option>
               <% }); %>
-            </select>
-          </div>
+          </select>
+        </div>
 
           <!-- Batch Number Input -->
           <div class="col-md-4 mb-3">

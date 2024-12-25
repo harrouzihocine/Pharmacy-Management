@@ -81,7 +81,7 @@ document.addEventListener("hide.bs.modal", (event) => {
 
 
 /*------------------------------------------------selected medicaments------------------------------------------------*/
-document.querySelectorAll('.toggle-btn').forEach(button => {
+document.querySelectorAll('.selectmedicament').forEach(button => {
   button.addEventListener('click', () => {
     const medicamentId = button.getAttribute('data-medicament-id');
     const isSelected = button.getAttribute('data-selected') === 'true';

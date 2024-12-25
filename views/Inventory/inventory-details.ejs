@@ -81,11 +81,10 @@
         <th>Qte (en Unité)</th>
         <th>Purchase Price</th>
         <th>TVA</th>
+        <th>Montant HT</th>
         <th>Vente Price</th>
         <th>Remarks</th>
-        <% if(status == 'Draft'){ %>
         <th>Actions</th>
-        <% } %>
       </tr>
     </thead>
     <tbody id="tablebody">
@@ -105,23 +104,28 @@
         <td><%= item.physicalQuantity %></td>
         <td><%= item.purchasePrice?item.purchasePrice.toFixed(2):parseInt(0).toFixed(2)%> DA</td>
         <td><%= item.tva?item.tva:'N/A'%> %</td>
+        <td><%= (parseInt(item.purchasePrice?item.purchasePrice:0) * item.physicalQuantity).toFixed(2)%> DA</td>
         <% if(item.serviceABV == 'URG'){%>
         <td><%=(parseInt(item.purchasePrice?item.purchasePrice:0) * 1.4).toFixed(2) %> DA</td>
         <% } else {%>
         <td><%= (parseInt(item.purchasePrice?item.purchasePrice:0) * 1.36).toFixed(2) %> DA</td>
         <% } %>
         <td><%= item.remarks || 'None' %></td>
-        <% if(status === 'Draft'){ %>
         <td>
           <div class="d-flex">
+            <button class="btn visibility-btn py-1 px-2 me-1" id="hide-item" data-user="<%= item.createdBy.username || 'None' %>" data-url="/inventory/item/<%= item._id %>" data-visibility="<%= item.visibility ? 'true' : 'false' %>" onclick="toggleVisibility(this)">
+              <%- item.visibility ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>' %>
+            </button>
+            <% if(status === 'Draft'){ %>
             <%- include("./edit-item", { item,inventory }) %>
             <button type="button" class="btn delete-btn delete-item-btn py-1 px-2" data-url="/inventory/item/<%= item._id %>?_method=DELETE">
               <i class="bi bi-trash"></i>
             </button>
+            <% } %>
           </div>
 
+         
         </td>
-        <% } %>
       </tr>
       <% }); %>
       <% } else { %>

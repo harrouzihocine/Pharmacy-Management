@@ -341,7 +341,7 @@ module.exports.getInventoryUsers = async (req, res, next) => {
     res.render("Inventory/inventory-users", {
       usersInventory,
       inventory,
-      userId: req.user._id,
+      currentuser: req.user,
     });
   } catch (error) {
     res.status(500).json({ message: "Error fetching user inventory", error });
@@ -459,7 +459,9 @@ module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
     // Fetch data from InventoryItem collection
     const inventoryItems = await InventoryItem.find({
       inventoryId: inventoryId,
+      visibility: true, 
     }).populate("inventoryId medicamentId createdBy");
+    
 
     // Check if no items are found
     if (!inventoryItems || inventoryItems.length === 0) {
@@ -487,6 +489,7 @@ module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
         Quantity: item.physicalQuantity,
         PurchasePrice: item.purchasePrice || 0,
         TVA: item.tva || "N/A",
+        MontantHT: (item.purchasePrice?item.purchasePrice:0) * item.physicalQuantity || 0,
         Remarks: item.remarks || "N/A",
         CreatedBy: item.createdBy ? item.createdBy.username : "N/A",
       }));
@@ -547,5 +550,42 @@ module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
   } catch (err) {
     console.error("Error exporting data to Excel:", err);
     res.status(500).json({ message: "Error exporting data to Excel.", error: err.message });
+  }
+};
+module.exports.hideInventoryItem = async (req, res, next) => {
+  try {
+    const itemId = req.params.itemId;
+    const { visibility } = req.body;
+
+    console.log("Controller reached");
+    console.log("itemId:", itemId);
+    console.log("visibility:", visibility);
+
+
+    // Update the visibility status of the item
+    const updatedItem = await InventoryItem.findByIdAndUpdate(
+      itemId,
+      { visibility },
+      { new: true } // Return the updated document
+    );
+
+  
+
+    if (updatedItem) {
+      res.json({
+        success: true,
+        message: visibility
+          ? "Item made visible successfully."
+          : "Item hidden successfully.",
+      });
+    } else {
+      res.json({ success: false, message: "Item not found." });
+    }
+  } catch (error) {
+    console.error("Error updating visibility:", error);
+    res.json({
+      success: false,
+      message: "An error occurred while updating the item's visibility.",
+    });
   }
 };
