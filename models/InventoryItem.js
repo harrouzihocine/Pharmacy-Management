@@ -4,6 +4,8 @@ const InventoryItemSchema = new mongoose.Schema(
   {
     inventoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Inventory', required: true },
     medicamentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Medicament', required: true },
+    fournisseurId: { type: mongoose.Schema.Types.ObjectId, ref: 'Fournisseur', default: null },
+
     serviceABV: { type: String }, // Service identifier
     storageName: { type: String }, // Storage name
     batchNumber: { type: String, required: true }, // Batch number
@@ -12,6 +14,7 @@ const InventoryItemSchema = new mongoose.Schema(
     tva: { type: Number}, // tva
     physicalQuantity: { type: Number, required: true }, // Physical quantity
     purchasePrice: { type: Number }, // Purchase price
+    NFacture: { type: String }, // NFacture
     systemQuantity: { type: Number, default: 0 },
     visibility: { type:Boolean, default: true}, // Visibility
     remarks: { type: String }, // Additional remarks

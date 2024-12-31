@@ -54,6 +54,17 @@
       });
       document.getElementById('storage').value = ""; // Reset storage select
     }
+    function filterStoragesEdit(selectedService) {
+      const storageOptions = document.querySelectorAll('#storage-edit option');
+      storageOptions.forEach(option => {
+        if (!option.dataset.service || option.dataset.service === selectedService || option.value === "") {
+          option.style.display = "block";
+        } else {
+          option.style.display = "none";
+        }
+      });
+     
+    }
     document.addEventListener('DOMContentLoaded', function () {
         // Initialize Choices.js on the select element
         const medicamentSelect = document.getElementById('medicament');

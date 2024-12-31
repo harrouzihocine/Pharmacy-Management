@@ -82,7 +82,7 @@ module.exports.showLoginForm = async (req, res) => {
 
 // ================================= Login POST (Authenticate User) =================================================
 module.exports.login = async (req, res) => {
-  req.flash("success", `Welcome Back ${req.user.firstname}`);
+  req.flash("success", `Welcome Back ${req.user.username}`);
   // update the recently logged in user
   await User.findByIdAndUpdate(req.user.id, { loggedIn: moment() });
   const redirectUrl = req.session.returnTo || "/";

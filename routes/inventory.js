@@ -1,5 +1,5 @@
 const express = require("express");
-const { isLoggedIn, isAdmin, PharmacienPrincipal } = require('../middleware/authMiddleware');
+const { isLoggedIn } = require('../middleware/authMiddleware');
 const router = express.Router({ mergeParams: true });
 const catchAsync = require("../utils/catchAsync");
 const {

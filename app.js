@@ -102,6 +102,8 @@ app.use("/demand", inDemandRoutes);
 
 const inInventoryRoutes = require("./routes/inventory"); 
 app.use("/inventory", inInventoryRoutes); 
+const fournisseurRoutes = require("./routes/fournisseur"); 
+app.use("/fournisseur",fournisseurRoutes); 
 
 const port = process.env.PORT;
 

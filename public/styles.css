@@ -138,7 +138,7 @@
 .sidebar-menu {
   list-style: none;
   padding: 0;
-  margin-top: 30px;
+  margin-top: 05px;
   width: 100%;
   display: none; /* Hide items when sidebar is closed */
 }
@@ -1257,7 +1257,7 @@
 /*-------------------------------Storage Page---------------------------------*/
 /* Container for the storage table */
 .storage-table-container {
-  width: 70rem;
+  width: 100%;
   background-color: #0120451d; /* Slightly different dark background for storages */
   color: #fff;
   padding: 40px;

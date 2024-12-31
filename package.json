@@ -35,6 +35,7 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0",
     "path": "^0.12.7",
+    "pdfmake": "^0.3.0-beta.14",
     "sanitize-html": "^2.13.1",
     "xlsx": "^0.18.5"
   },

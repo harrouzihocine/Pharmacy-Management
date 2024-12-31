@@ -57,7 +57,7 @@
   <!-- New Item Form Section -->
   <div class="new-item-form-section">
     <h3>Add New Item</h3>
-    <%- include("./new-item", { medicaments, groupedStorages, inventory }) %>
+    <%- include("./new-item", { medicaments, groupedStorages, inventory,fournisseurs }) %>
   </div>
   <% } %>
   <h3 class="mt-4">Inventory Items</h3>
@@ -117,7 +117,7 @@
               <%- item.visibility ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>' %>
             </button>
             <% if(status === 'Draft'){ %>
-            <%- include("./edit-item", { item,inventory }) %>
+            <%- include("./edit-item", { item,inventory, groupedStorages, fournisseurs }) %>
             <button type="button" class="btn delete-btn delete-item-btn py-1 px-2" data-url="/inventory/item/<%= item._id %>?_method=DELETE">
               <i class="bi bi-trash"></i>
             </button>

@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html>
-  <%- include("./head")%>
-  <body class="body">
-    <%- include("../partials/navbar")%>
-   <div id="main-content" class="main-content"> <%- body %></div>
-    <%- include("./imports")%>
-  </body>
+<%- include("./head")%>
+
+<body class="body">
+  <%- include("../partials/navbar")%>
+  <div id="main-content" class="main-content">
+    <%- include("../partials/flash")%>
+    <%- body %>
+  </div>
+  <%- include("./imports")%>
+</body>
+
 </html>

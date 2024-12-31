@@ -32,7 +32,7 @@
             <!-- Storage Select -->
             <div id="storageSelect">
               <label for="storage" class="label-required">Select Storage</label>
-              <select id="storage" name="storageName" class="form-control  mb-3">
+              <select id="storage" name="storageName" class="storage form-control  mb-3">
                 <option value="" disabled selected>-- Select a storage --</option>
                 <% groupedStorages.forEach(group => { %>
                   <% group.storages.forEach(storage => { %>
@@ -57,8 +57,8 @@
           
             <!-- Storage Select -->
             <div id="storageSelect">
-              <label for="storage" class="label-required">Select Storage</label>
-              <select id="storage" name="storageName" class="form-control mb-3">
+              <label for="storage" class=" storagelabel-required">Select Storage</label>
+              <select id="storage" name="storageName" class="storage form-control mb-3">
                 <option value="" disabled selected>-- Select a storage --</option>
                 <% groupedStorages.forEach(group => { %>
                   <% group.storages.forEach(storage => { %>
@@ -75,7 +75,7 @@
             <input type="text" value="<%= inventory.serviceABV %>" name="serviceABV" hidden>
             <input type="text" value="<%= inventory.storageName %>" name="storageName" hidden>
           <% } %>
-          
+          <hr>
           <!-- Medicament Select -->
           <div class="col-12 mb-3">
             <label for="medicament" class="form-label label-required">Item</label>
@@ -89,36 +89,57 @@
 
 
           <!-- Batch Number Input -->
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label for="batchNumber" class="form-label label-required">Batch Number</label>
             <input type="text" class="form-control" id="batchNumber" name="batchNumber" required>
           </div>
 
           <!-- Serial Number Input (conditionally rendered) -->
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label for="serialNumber" class="form-label">Serial Number</label>
             <input type="text" class="form-control" id="serialNumber" name="serialNumber">
           </div>
             <!-- expire date Input -->
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
               <label for="expiryDate" class="form-label label-required">Expiry date</label>
               <input type="date" class="form-control" id="expiryDate" name="expiryDate" required>
             </div>
-          <!-- Physical Quantity Input -->
+            <!-- Physical Quantity Input -->
+            <div class="col-md-6 mb-3">
+              <label for="physicalQuantity" class="form-label label-required">Quantity (in Unité)</label>
+              <input type="number" class="form-control" id="physicalQuantity" name="physicalQuantity" min="0" required>
+            </div>
+            <hr>
+            <div id="fournisseurId" class="mb-3">
+              <label for="fournisseurId">Select Fournisseur</label>
+              <select id="fournisseurId" name="fournisseurId" class="form-control">
+                <option value="" disabled selected>-- Select a fournisseur --</option>
+                <% fournisseurs.forEach(fournisseur => { %>
+                  <% if (fournisseurs.length > 0) { %>
+                    <option value="<%= fournisseur._id %>">
+                      <%= fournisseur.name %>, Wilaya: <%= fournisseur.wilaya %>, Mobile:  <%= fournisseur.mobile[0] %> 
+                    </option>
+                  <% } %>
+                <% }) %>
+              </select>
+            </div>
+            <!-- Purchase Price Input -->
           <div class="col-md-4 mb-3">
-            <label for="physicalQuantity" class="form-label label-required">Quantity (in Unité)</label>
-            <input type="number" class="form-control" id="physicalQuantity" name="physicalQuantity" min="0" required>
+            <label for="purchasePrice" class="form-label">Purchase Price</label>
+            <input type="number" class="form-control" id="purchasePrice" name="purchasePrice">
           </div>
           <!-- TVA Input -->
           <div class="col-md-4 mb-3">
             <label for="tva" class="form-label">TVA (%)</label>
             <input type="number" class="form-control" id="tva" name="tva" min="0">
           </div>
-          <!-- Purchase Price Input -->
+          <!-- N° Facture Input -->
           <div class="col-md-4 mb-3">
-            <label for="purchasePrice" class="form-label">Purchase Price</label>
-            <input type="number" class="form-control" id="purchasePrice" name="purchasePrice">
+            <label for="NFacture" class="form-label">N° Facture</label>
+            <input type="text" class="form-control" id="NFacture" name="NFacture">
           </div>
+          
+          <hr>
           <!-- remarks Input -->
           <div class="col-12 mb-3">
             <label for="remarks" class="form-label">Remarks</label>

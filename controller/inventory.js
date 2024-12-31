@@ -4,6 +4,7 @@ const Storage = require("../models/storage"); // Assuming you have a Storage mod
 const Inventory = require("../models/inventory");
 const InventoryItem = require("../models/InventoryItem");
 const UserInventory = require("../models/userInventory");
+const Fournisseur = require("../models/fournisseur");
 const xlsx = require("xlsx");
 
 module.exports.getcreateInventoryPage = async (req, res, next) => {
@@ -86,7 +87,7 @@ module.exports.getInventoryDetailsPage = async (req, res, next) => {
   try {
     // Fetch inventory details
     const inventory = await Inventory.findById(inventoryId);
-
+    const fournisseurs = await Fournisseur.find();
     // Check the status of the UserInventory for the given inventoryId and userId
     const userInventory = await UserInventory.findOne({
       inventoryTemplate: inventoryId,
@@ -134,6 +135,7 @@ module.exports.getInventoryDetailsPage = async (req, res, next) => {
       inventoryItems,
       medicaments,
       groupedStorages,
+      fournisseurs,
       status, // Include status in the response
     });
   } catch (error) {
@@ -188,6 +190,8 @@ exports.addInventoryItem = async (req, res) => {
       physicalQuantity,
       purchasePrice,
       remarks,
+      fournisseurId,
+      NFacture
     } = req.body;
     // Validate required fields (if not already handled by form validation)
     if (!inventoryId || !medicamentId || !batchNumber || !physicalQuantity) {
@@ -208,7 +212,9 @@ exports.addInventoryItem = async (req, res) => {
       serialNumber, // Optional
       physicalQuantity,
       purchasePrice,
+      fournisseurId,
       remarks,
+      NFacture,
       createdBy: req.user._id,
     });
 
@@ -236,6 +242,8 @@ exports.updateInventoryItem = async (req, res) => {
       tva,
       physicalQuantity,
       purchasePrice,
+      fournisseurId,
+      NFacture,
       remarks,
     } = req.body;
 
@@ -266,6 +274,8 @@ exports.updateInventoryItem = async (req, res) => {
     inventoryItem.serialNumber = serialNumber || inventoryItem.serialNumber; // Keep the original if not provided
     inventoryItem.expiryDate = expiryDate || inventoryItem.expiryDate; // Keep the original if not provided
     inventoryItem.physicalQuantity = physicalQuantity;
+    inventoryItem.fournisseurId = fournisseurId;
+    inventoryItem.NFacture = NFacture;
     inventoryItem.tva = tva ; 
     inventoryItem.purchasePrice = purchasePrice || inventoryItem.purchasePrice; // Keep the original if not provided
     inventoryItem.remarks = remarks || inventoryItem.remarks; // Keep the original if not provided

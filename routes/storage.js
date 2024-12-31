@@ -14,8 +14,6 @@ const {
     locationDetails
 } = require("../controller/storage");
 
-
-
 router.route("/").get(catchAsync(getStorage));
 router.route("/new").get(catchAsync(showAddStorageForm)).post(catchAsync(addStorage));
 router.route("/:storageId/add-locations").get(catchAsync(getaddLocationsForm)).post(catchAsync(assignLocationsToStorage ));
