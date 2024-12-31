@@ -105,22 +105,37 @@
           </div>
 
           <!-- Purchase Price Input -->
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label for="purchasePrice" class="form-label">Purchase Price</label>
             <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" value="<%= item.purchasePrice %>">
           </div>
 
           <!-- TVA Input -->
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label for="tva" class="form-label">TVA (%)</label>
             <input type="number" class="form-control" id="tva" name="tva" min="0" value="<%= item.tva %>">
           </div>
-
+          <hr>
           <!-- N° Facture Input -->
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label for="NFacture" class="form-label">N° Facture</label>
             <input type="text" class="form-control" id="NFacture" name="NFacture" value="<%= item.NFacture %>">
           </div>
+             <!--  Facture date Input -->
+             <div class="col-md-6 mb-3">
+              <label for="factureDate" class="form-label ">Facture date</label>
+              <input type="date" class="form-control" id="factureDate" name="factureDate" value="<%= item.factureDate ? item.factureDate.toISOString().split('T')[0] : '' %>">
+            </div>
+             <!-- N° BL Input -->
+             <div class="col-md-6 mb-3">
+              <label for="NBL" class="form-label">N° BL</label>
+              <input type="text" class="form-control" id="NBL" name="NBL" value="<%= item.NBL %>">
+            </div>
+            <!-- BL date Input -->
+            <div class="col-md-6 mb-3">
+              <label for="BLDate" class="form-label ">BL date</label>
+              <input type="date" class="form-control" id="BLDate" name="BLDate" value="<%= item.BLDate ? item.BLDate.toISOString().split('T')[0] : '' %>">
+            </div>
           <hr>
           <!-- Remarks Input -->
           <div class="col-12 mb-3">

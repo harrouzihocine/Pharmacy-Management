@@ -8,35 +8,50 @@
         <th>Service</th>
         <th>Location type</th>
         <th>N° of Storages</th>
-        <th>Filter</th>
+        <th>Actions</th>
+        <th>Prescriptions</th>
       </tr>
     </thead>
     <tbody>
       <% for (service of services) { %>
-        <tr>
-          <!-- Display service abbreviation, but use serviceId (MongoDB _id) for redirection -->
-          <td onclick="window.location.href='/storage/<%= service.serviceABV %>/storages'" style="cursor: pointer;">
-            <%= service.serviceABV %> <!-- Display the abbreviation -->
-          </td>
-          <!-- Display service name, but use serviceId (MongoDB _id) for redirection -->
-          <td onclick="window.location.href='/storage/<%= service.serviceABV %>/storages'" style="cursor: pointer;">
-            <%= service._id %> <!-- Display the service name -->
-          </td>
-          <td onclick="window.location.href='/storage/<%= service.serviceABV %>/storages'" style="cursor: pointer;">
-            <%= service.locationType %> <!-- Display the service name -->
-          </td>
-          <!-- Display storage count -->
-          <td onclick="window.location.href='/storage/<%= service.serviceABV %>/storages'" style="cursor: pointer;">
-            <%= service.storageCount %> <!-- Display the storage count -->
-          </td>
-          <td>
-            <div class="d-flex">
-            <button class="view-btn" style="background-color: green;" onclick="window.location.href='/inStock/service/stock-details/<%= service.serviceABV %>'">All Storages</button>
-            <button class="view-btn" style="background-color: rgba(0, 187, 255, 0.497);" onclick="window.location.href='/inStock/service/<%= service.serviceABV %>'">Medicaments</button>
-            <button class="view-btn" style="background-color: rgba(255, 153, 0, 0.497);" onclick="window.location.href='/demand/demands/<%= service.serviceABV %>'">Demandes internes</button>
-          </div>
-          </td>
-        </tr>
+      <tr>
+        <!-- Display service abbreviation, but use serviceId (MongoDB _id) for redirection -->
+        <td onclick="window.location.href='/storage/<%= service.serviceABV %>/storages'" style="cursor: pointer;">
+          <%= service.serviceABV %>
+          <!-- Display the abbreviation -->
+        </td>
+        <!-- Display service name, but use serviceId (MongoDB _id) for redirection -->
+        <td onclick="window.location.href='/storage/<%= service.serviceABV %>/storages'" style="cursor: pointer;">
+          <%= service._id %>
+          <!-- Display the service name -->
+        </td>
+        <td onclick="window.location.href='/storage/<%= service.serviceABV %>/storages'" style="cursor: pointer;">
+          <%= service.locationType %>
+          <!-- Display the service name -->
+        </td>
+        <!-- Display storage count -->
+        <td onclick="window.location.href='/storage/<%= service.serviceABV %>/storages'" style="cursor: pointer;">
+          <%= service.storageCount %>
+          <!-- Display the storage count -->
+        </td>
+        <td>
+          <div class="d-flex">
+            <button class="view-btn" style="background-color: rgba(187 168 103 / 0.79);" onclick="window.location.href='/inStock/service/stock-details/<%= service.serviceABV %>'"><img width="29" height="29" src="./assets/warehouse.png" alt=""></button>
+            <button class="view-btn" style="background-color: rgba(255 255 255 / 0.8);" onclick="window.location.href='/inStock/service/<%= service.serviceABV %>'"><img width="25" height="25" src="https://img.icons8.com/?size=100&id=66316&format=png&color=000000" alt="external-medicament-healthcare-and-medicine-filled-outline-perfect-kalash"></button>
+            <button class="view-btn" style="background-color: rgba(86 35 154 / 0.85);" onclick="window.location.href='/demand/demands/<%= service.serviceABV %>'"><i class="fa-solid fa-truck-medical"></i> <i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+            <% if(service.expiredCount > 0){ %>
+            <button class="btn view-btn position-relative py-0 px-2" style="background-color: rgba(255 0 0 / 0.5);" onclick="window.location.href='/inStock/service/expired/<%= service.serviceABV %>'">
+              
+              <span class="position-absolute top-0 start-100 translate-middle text-dark badge rounded-pill bg-white"><%= service.expiredCount %></span>
+              <i class="fa-solid fa-triangle-exclamation fs-4"></i></button>
+              <% } %>
+          
+            </div>
+        </td>
+        <td>
+          <button class="view-btn py-0 px-2" style="background-color: rgba(0 208 255 / 0.56);" onclick="window.location.href='/inStock/service/stock-details/<%= service.serviceABV %>'"><img width="37" height="37" src="https://img.icons8.com/color-glass/48/hand-with-a-pill.png" alt="hand-with-a-pill"/></button>
+        </td>
+      </tr>
       <% } %>
     </tbody>
   </table>

@@ -1,6 +1,7 @@
 <% layout('layouts/boilerplate') %>
 <div class="demand-details-page-container">
   <div class="demand-details-header">
+    <button class="btn back-btn back-button" onclick="window.location.href='/demand/demands/<%= serviceABV %>'"><i class="bi bi-arrow-left-circle"></i></button>
     <h1>Demand Details</h1>
     <% if (demand) { %>
   </div>

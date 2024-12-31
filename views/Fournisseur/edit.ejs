@@ -25,10 +25,19 @@
 
       <div class="modal-body">
         <form  class="add-storage-form row needs-validation" action="/fournisseur/<%= fournisseur.id %>/?_method=PUT" id="editForm" method="POST" novalidate>
-        
-        <div class="form-group col-md-6">
-          <label for="name" class="form-label">Nom</label>
+         <!-- Code client -->
+         <div class="form-group col-4">
+          <label for="codeClient" class="form-label">Code client</label>
+          <input id="codeClient" name="fournisseur[codeClient]" type="text" class="form-control" style="text-transform: capitalize" value="<%= fournisseur.codeClient %>"  autofocus />
+          <div class="valid-feedback">BIEN</div>
+        </div>
+        <div class="form-group col-8">
+          <label for="name" class="form-label">Raison sociale</label>
           <input id="name" name="fournisseur[name]" type="text" class="form-control" style="text-transform: capitalize" required value="<%= fournisseur.name %>" />
+        </div>
+        <div class="form-group">
+          <label for="website" class="form-label">Adresse</label>
+          <input type="text" class="form-control" id="website" name="fournisseur[adress]" value="<%= fournisseur.adress %>" />
         </div>
         <div class="form-group col-md-6">
           <label for="wilaya" class="form-label">Wilaya</label>
@@ -53,43 +62,28 @@
           <label for="phone1" class="form-label">Télephone</label>
           <input type="text" class="form-control" id="phone1" name="fournisseur[phone]" maxlength="20" value="<%= fournisseur.phone %>" />
         </div>
+          <!-- Postal Code -->
+          <div class="form-group col-md-6">
+            <label for="postalCode" class="form-label">Code postal</label>
+            <input type="text" class="form-control" id="postalCode" name="fournisseur[postalCode]" maxlength="10" required value="<%= fournisseur.postalCode %>"/>
+            <div class="valid-feedback">BIEN</div>
+          </div>
         <div class="form-group col-md-6">
           <label for="fax" class="form-label">Fax</label>
           <input type="text" class="form-control" id="fax" name="fournisseur[fax]" maxlength="20" value="<%= fournisseur.fax %>" />
         </div>
+        
+        
         <div class="form-group col-md-6">
           <label for="email" class="form-label">Email</label>
           <input type="email" class="form-control" id="email" name="fournisseur[email]" style="text-transform: lowercase" value="<%= fournisseur.email %>" />
         </div>
-        <div class="form-group col-md-6">
-          <label for="mobile-1" class="form-label">Mobile 1</label>
-          <input
-            type="text"
-            class="form-control"
-            id="mobile-1"
-            name="fournisseur[mobile][0]"
-            maxlength="20"
-            value="<%= fournisseur.mobile[0] %>"
-          />
-          <div class="valid-feedback">BIEN</div>
-        </div>
-
-        <div class="form-group col-md-6">
-          <label for="mobile-2" class="form-label">Mobile 2</label>
-          <input
-            type="text"
-            class="form-control"
-            id="mobile-2"
-            name="fournisseur[mobile][1]"
-            maxlength="20"
-            value="<%= fournisseur.mobile[1] %>"
-          />
-          <div class="valid-feedback">BIEN</div>
-        </div>
-        <div class="form-group">
-          <label for="website" class="form-label">Site Web</label>
-          <input type="text" class="form-control" id="website" name="fournisseur[website]" value="<%= fournisseur.website %>" />
-        </div>
+        
+          <!-- N° Accounts -->
+          <div class="col-12 mb-3">
+            <textarea class="form-control" name="fournisseur[Naccount]" id="description" rows="4" placeholder="N° Accounts" style="text-transform: capitalize"><%= fournisseur.Naccount %></textarea>
+          </div>
+       
         <span>Données de facturation</span>
         <hr>
         <div class="form-group col-md-6">

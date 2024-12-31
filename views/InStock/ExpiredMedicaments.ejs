@@ -1,0 +1,57 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="medicament-service-details-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/storage'"><i class="bi bi-arrow-left-circle"></i></button> 
+  <h1>Expired/Expiring Soon Medicaments in Service: <%= serviceName %></h1>
+  <form class="search-bar">
+    <input type="text" id="search" placeholder="Search in fournisseur liste" />
+  </form>
+
+  <table class="medicament-service-details-table">
+    <thead>
+      <tr>
+        <th>locationCode</th>
+        <th>Medicament Name</th>
+        <th>form</th>
+        <th>Batch Number</th>
+        <th>Expiry Date</th>
+        <th>Expiration Status</th>
+        <th>Quantity</th>
+        <th>Storage Location</th>
+        <th>Actions</th>
+        
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% if (medicaments.length > 0) { %>
+        <% medicaments.forEach((medicament) => { %>
+          <tr>
+            <td><%= medicament.locationCode|| 'Unassigned' %></td>
+            <td><%= medicament.designation|| 'Unknown Medicament' %></td>
+            <td><%= medicament.forme || 'N/A' %></td>
+            <td><%= medicament.batchNumber %></td>
+            <td><%= medicament.expiryDate ? medicament.expiryDate.toLocaleDateString() : 'N/A' %></td>
+            <td>
+              <% if (medicament.expirationStatus === "Expired") { %>
+                <span class="tag out-of-stock">Expired</span>
+              <% } else if (medicament.expirationStatus === "Expiring Soon") { %>
+                <span class="tag out-of-stock">Expiring Soon</span>
+              <% } %>
+            </td>
+            <td><%= medicament.quantity %></td>
+            <td><%= medicament.serviceABV || 'Unknown Location' %></td>
+            <td>
+              <button class="btn rounded-pill px-2 py-2" style="color: #FFFFFF; background-color: rgba(154 6 6 / 0.82);" onclick="window.location.href='/inStock/medicament-details/<%= medicament._id %>'"><i class="fa-solid fa-right-from-bracket fs-4"></i></button>
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="9" style="text-align: center;">No expired or expiring soon medicaments found for this service.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+

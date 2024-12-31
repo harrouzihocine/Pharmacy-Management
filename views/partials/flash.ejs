@@ -1,26 +1,30 @@
-<% if (success && success.length) {%>
-<div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-  <i class="bi bi-check-circle-fill"></i> <%= success %>
-  <button
-    type="button"
-    class="btn-close"
-    data-bs-dismiss="alert"
-    aria-label="Close"
-  ></button>
-</div>
-<% }%> <%if (error && error.length) { %>
-<div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+<% if (success && success.length) { %>
+  <div class="alert alert-success alert-dismissible fade show " role="alert">
+    <i class="bi bi-check-circle-fill"></i> <%= success %>
+    
+  </div>
+  <% } %>
+  <% if (error && error.length) { %>
+  <div class="alert alert-danger alert-dismissible fade show " role="alert">
     <i class="bi bi-exclamation-triangle-fill"></i> <%= error %>
-  <button
-    type="button"
-    class="btn-close"
-    data-bs-dismiss="alert"
-    aria-label="Close"
-  ></button>
-</div>
-<% } %>
-<script>
-  $(".alert").ready(function () {
-    $(".alert").delay(1500).fadeOut(800);
-  });
-</script>
+    
+  </div>
+  <% } %>
+  <script>
+    // Ensure the DOM is fully loaded before running the script
+    document.addEventListener("DOMContentLoaded", function () {
+      // Select all alerts
+      const alerts = document.querySelectorAll(".alert");
+      // Delay and fade out each alert
+      alerts.forEach((alert) => {
+        setTimeout(() => {
+          alert.style.transition = "opacity 0.8s ease-out";
+          alert.style.opacity = "0";
+          setTimeout(() => {
+            alert.remove(); // Remove the alert completely after fading out
+          }, 800); // Wait for fade-out to complete
+        }, 1500); // Initial delay before fade-out starts
+      });
+    });
+  </script>
+  

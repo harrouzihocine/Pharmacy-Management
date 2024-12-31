@@ -2,27 +2,26 @@
 
 <div class="stock-details-container">
   <div class="col m-auto">
-    <h3 class="mb-4 text-center text-greenSea">Liste des Foursnisseurs</h3>
+    <h3 class="mb-4 text-center ">Liste des Foursnisseurs</h3>
     <div class="mb-3">
       <%- include("./new")%>
-      
+
     </div>
 
     <form class="search-bar mb-2">
-      <input type="text" id="search"  placeholder="Search medicaments" />
-  </form>
+      <input type="text" id="search" placeholder="Search in fournisseur liste" />
+    </form>
 
-    <table  class="stock-details-table sortable">
-      <thead >
+    <table class="stock-details-table sortable">
+      <thead>
         <tr>
-          
+          <th scope="col">Code Client</th>
           <th scope="col">Raison sociale</th>
           <th scope="col">Wilaya</th>
           <th scope="col">Email</th>
-          <th scope="col">Fixe</th>
-          <th scope="col">Mobile1</th>
-          <th scope="col">Mobile2</th>
+          <th scope="col">Téléphone</th>
           <th scope="col">Fax</th>
+          <th scope="col">Nbr Contacts</th>
           <th id="item1" scope="col">Action</th>
         </tr>
       </thead>
@@ -30,17 +29,20 @@
         <% var i=1 %> <% for (fournisseur of fournisseurs){%>
 
         <tr>
-        
-          <td><%= fournisseur.name %></td>
-          <td><%= fournisseur.wilaya %></td>
-          <td><%=fournisseur.email%></td>
-          <td><%=fournisseur.phone%></td>
-          <td><%= fournisseur.mobile[0] || 'N/A' %></td>
-          <td><%= fournisseur.mobile[1] || 'N/A' %></td>
-          <td><%=fournisseur.fax %></td>
+
+          <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%= fournisseur.codeClient?fournisseur.codeClient: 'N/A' %></td>
+          <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%= fournisseur.name %></td>
+          <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%= fournisseur.wilaya %></td>
+          <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%=fournisseur.email%></td>
+          <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%=fournisseur.phone%></td>
+          <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%=fournisseur.fax %></td>
+          <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%= fournisseur.contactCount %></td>
           <td>
             <div class="d-flex justify-content-center align-items-center">
-              <%- include("./edit")%> 
+
+              <%- include("./new-contact", { fournisseur })%>
+              <%- include("./edit")%>
+              
               <button type="button" class="btn delete-btn delete-fournisseur-btn py-1 px-2" data-url="/fournisseur/<%=fournisseur.id %>?_method=DELETE">
                 <i class="bi bi-trash"></i>
               </button>
@@ -54,9 +56,9 @@
 </div>
 
 <script>
-  let states = <%- JSON.stringify(states) %>  
+  let states = <%- JSON.stringify(states) %>
 </script>
 <script>
-  
+
 
 </script>

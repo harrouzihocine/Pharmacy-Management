@@ -65,17 +65,43 @@
       });
      
     }
+
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialize Choices.js on the select element
-        const medicamentSelect = document.getElementById('medicament');
-        const choices = new Choices(medicamentSelect, {
+      // Initialize Choices.js on the select element
+      const medicamentSelect = document.getElementById('medicament');
+      
+      // Initialize Choices.js with custom configurations
+      const choices = new Choices(medicamentSelect, {
           searchEnabled: true,  // Enable search functionality
           itemSelectText: '',   // Prevent displaying 'Press to select' text
           noResultsText: 'No items found', // Custom message when no match is found
           placeholder: true,    // Enable placeholder
           placeholderValue: 'Select an Item', // Custom placeholder text
-        });
+          searchFloor: 1,       // Minimum number of characters to trigger search
+          searchResultLimit: 0, // No limit on search results
+          shouldSort: false,    // Disable sorting search results
+          position: 'bottom',   // Place the results dropdown below the input
+          fuseOptions: {
+              includeScore: true,
+              threshold: 0.3, // Controls how fuzzy the search is
+          },
       });
+  
+      // Case-insensitive search functionality (Choices.js handles this internally)
+      medicamentSelect.addEventListener('search', function(event) {
+          const searchTerm = event.target.value.toLowerCase();
+          const options = medicamentSelect.querySelectorAll('option');
+          
+          options.forEach(option => {
+              const optionText = option.textContent.toLowerCase();
+              if (optionText.includes(searchTerm)) {
+                  option.style.display = 'block';  // Show the matching options
+              } else {
+                  option.style.display = 'none';   // Hide the non-matching options
+              }
+          });
+      });
+  });
 /*----------------------------------------------------delete item--------------------------------*/
       // Define the function for handling the delete action
 function handleDelete(button) {

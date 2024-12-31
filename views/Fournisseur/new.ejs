@@ -1,83 +1,56 @@
-<button
-  type="button"
-  class="btn demand-new-button"
-  data-bs-toggle="modal"
-  data-bs-target="#newfournisseur"
->
- New Fournisseur
+<button type="button" class="btn demand-new-button" data-bs-toggle="modal" data-bs-target="#newfournisseur">
+  New Fournisseur
 </button>
 
-<div
-  class="modal fade add-storage-modal"
-  id="newfournisseur"
-  data-bs-keyboard="true"
-  tabindex="-1"
-  aria-labelledby="staticBackdropLabel"
-  aria-hidden="true"
->
+<div class="modal fade add-storage-modal" id="newfournisseur" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content add-storage-page-container">
       <div class="modal-header">
         <h5 class="modal-title" id="newfournisseurLabel">New Fournisseur</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
-        <form
-          id="addToStorageForm"
-          method="POST"
-          class="add-storage-form row needs-validation"
-          action="/fournisseur"
-          novalidate
-        >
-        
-          <!-- Raison Sociale -->
-          <div class="form-group col-12">
-            <label for="name" class="form-label">Raison sociale</label>
-            <input
-              id="name"
-              name="fournisseur[name]"
-              type="text"
-              class="form-control"
-              style="text-transform: capitalize"
-              autofocus
-              required
-            />
+        <form id="addToStorageForm" method="POST" class="add-storage-form row needs-validation" action="/fournisseur" novalidate>
+
+          <!-- Code client -->
+          <div class="form-group col-4">
+            <label for="codeClient" class="form-label">Code client</label>
+            <input id="codeClient" name="fournisseur[codeClient]" type="text" class="form-control" style="text-transform: capitalize" autofocus />
             <div class="valid-feedback">BIEN</div>
           </div>
-
+          <!-- Raison Sociale -->
+          <div class="form-group col-8">
+            <label for="name" class="form-label">Raison sociale</label>
+            <input id="name" name="fournisseur[name]" type="text" class="form-control" style="text-transform: capitalize" required />
+            <div class="valid-feedback">BIEN</div>
+          </div>
+          <!-- Adress -->
+          <div class="form-group ">
+            <label for="website" class="form-label">Adresse</label>
+            <input type="text" class="form-control" id="website" name="fournisseur[adress]" />
+            <div class="valid-feedback">BIEN</div>
+          </div>
           <!-- Wilaya -->
           <div class="form-group col-md-6">
             <label for="wilaya" class="form-label">Wilaya</label>
-            <input
-              class="form-control"
-              id="wilaya"
-              name="fournisseur[wilaya]"
-              list="cities"
-              onchange="makeSubmenu(this.value, '')"
-              required
-            />
+            <input class="form-control" id="wilaya" name="fournisseur[wilaya]" list="cities" onchange="makeSubmenu(this.value, '')" required />
             <datalist id="cities">
               <option class="option" value="">Ville</option>
               <% for (city of states) { %>
-                <option class="option" value="<%= city.name %>">
-                  <%= city.id + " - " + city.name %>
-                </option>
+              <option class="option" value="<%= city.name %>">
+                <%= city.id + " - " + city.name %>
+              </option>
               <% } %>
             </datalist>
-           
+
             <div class="valid-feedback">BIEN</div>
           </div>
 
           <!-- City -->
           <div class="form-group col-md-6">
             <label for="city" class="form-label">Ville</label>
-            <select id="city" name="fournisseur[city]" class="form-select" required>
+            <select id="city" name="fournisseur[city]" class="form-select">
               <option class="option" value="" disabled selected>Ville</option>
             </select>
             <div class="valid-feedback">BIEN</div>
@@ -86,150 +59,63 @@
           <!-- Postal Code -->
           <div class="form-group col-md-6">
             <label for="postalCode" class="form-label">Code postal</label>
-            <input
-              type="text"
-              class="form-control"
-              id="postalCode"
-              name="fournisseur[postalCode]"
-              maxlength="10"
-              required
-            />
+            <input type="text" class="form-control" id="postalCode" name="fournisseur[postalCode]" maxlength="10" />
             <div class="valid-feedback">BIEN</div>
           </div>
 
           <!-- Phone -->
           <div class="form-group col-md-6">
             <label for="phone" class="form-label">Téléphone</label>
-            <input
-              type="text"
-              class="form-control"
-              id="phone"
-              name="fournisseur[phone]"
-              maxlength="20"
-            />
+            <input type="text" class="form-control" id="phone" name="fournisseur[phone]" maxlength="20" />
             <div class="valid-feedback">BIEN</div>
           </div>
 
           <!-- Fax -->
           <div class="form-group col-md-6">
             <label for="fax" class="form-label">Fax</label>
-            <input
-              type="text"
-              class="form-control"
-              id="fax"
-              name="fournisseur[fax]"
-              maxlength="20"
-            />
+            <input type="text" class="form-control" id="fax" name="fournisseur[fax]" maxlength="20" />
             <div class="valid-feedback">BIEN</div>
           </div>
-            
-    
-              <div class="form-group col-md-6">
-                <label for="mobile-1" class="form-label">Mobile 1</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="mobile-1"
-                  name="fournisseur[mobile][1]"
-                  maxlength="20"
-                />
-                <div class="valid-feedback">BIEN</div>
-              </div>
 
-              <div class="form-group col-md-6">
-                <label for="mobile-2" class="form-label">Mobile 2</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="mobile-2"
-                  name="fournisseur[mobile][2]"
-                  maxlength="20"
-                />
-                <div class="valid-feedback">BIEN</div>
-              </div>
-             
+
           <!-- Email -->
           <div class="form-group col-md-6">
             <label for="email" class="form-label">Email</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              name="fournisseur[email]"
-              style="text-transform: lowercase"
-              required
-            />
+            <input type="email" class="form-control" id="email" name="fournisseur[email]" style="text-transform: lowercase" required />
             <div class="valid-feedback">BIEN</div>
           </div>
 
-          <!-- Website -->
-          <div class="form-group ">
-            <label for="website" class="form-label">Site Web</label>
-            <input
-              type="text"
-              class="form-control"
-              id="website"
-              name="fournisseur[website]"
-            />
-            <div class="valid-feedback">BIEN</div>
-          </div>
 
-          <!-- Description -->
+
+          <!-- N° Accounts -->
           <div class="col-12">
-            <textarea
-              class="form-control"
-              name="fournisseur[description]"
-              id="description"
-              rows="4"
-              placeholder="Description"
-              style="text-transform: capitalize"
-            ></textarea>
+            <textarea class="form-control" name="fournisseur[Naccount]" id="description" rows="4" placeholder="N° Accounts" style="text-transform: capitalize"></textarea>
           </div>
 
           <!-- Billing Data -->
           <span class="mt-3">Données de facturation</span>
-          <hr >
+          <hr>
           <div class="form-group col-md-6">
             <label for="nrc" class="form-label">N° RC</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nrc"
-              name="fournisseur[nrc]"
-            />
+            <input type="text" class="form-control" id="nrc" name="fournisseur[nrc]" />
             <div class="valid-feedback">BIEN</div>
           </div>
 
           <div class="form-group col-md-6">
             <label for="nif" class="form-label">NIF</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nif"
-              name="fournisseur[nif]"
-            />
+            <input type="text" class="form-control" id="nif" name="fournisseur[nif]" />
             <div class="valid-feedback">BIEN</div>
           </div>
 
           <div class="form-group col-md-6">
             <label for="narticle" class="form-label">N° Article</label>
-            <input
-              type="text"
-              class="form-control"
-              id="narticle"
-              name="fournisseur[narticle]"
-            />
+            <input type="text" class="form-control" id="narticle" name="fournisseur[narticle]" />
             <div class="valid-feedback">BIEN</div>
           </div>
 
           <div class="form-group col-md-6">
             <label for="nis" class="form-label">NIS</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nis"
-              name="fournisseur[nis]"
-            />
+            <input type="text" class="form-control" id="nis" name="fournisseur[nis]" />
             <div class="valid-feedback">BIEN</div>
           </div>
 
@@ -243,8 +129,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $("#newfournisseur").on("shown.bs.modal", function () {
+  $("#newfournisseur").on("shown.bs.modal", function() {
     $(this).find("[autofocus]").focus();
   });
- 
 </script>

@@ -65,40 +65,67 @@ exports.addStorage = async (req, res, next) => {
   // Get all depots
   exports.getStorage = async (req, res, next) => {
     try {
-      // Assuming user.services contains service abbreviations or IDs
-      const userServices = req.user.services.map(service => service.serviceABV); // Get service abbreviations from the user's services
+      const userServices = req.user.services.map(service => service.serviceABV); // Get user's accessible service abbreviations
   
-      // Fetch services that the user has access to from the Storage collection
+      // Step 1: Fetch storage data
       const storageData = await Storage.aggregate([
         {
-          $match: { serviceABV: { $in: userServices } }  // Filter the Storage records by the user's accessible services
+          $match: { serviceABV: { $in: userServices } } // Filter by user's services
         },
         {
           $group: {
-            _id: "$service",  // Group by the service name (or code)
-            storageCount: { $sum: 1 },  // Count the number of storages for each service
-            serviceABV: { $first: "$serviceABV" },  // Get the abbreviation of the service
-            locationType: { $first: "$locationType" },  // Get the location type for each service
-            serviceId: { $first: "$_id" }  // Capture the actual MongoDB _id of the service
+            _id: "$service", // Group by service name
+            storageCount: { $sum: 1 }, // Count storages per service
+            serviceABV: { $first: "$serviceABV" }, // Include serviceABV
+            locationType: { $first: "$locationType" }, // Include locationType
+            serviceId: { $first: "$_id" } // Include service ID
           }
         }
       ]);
   
-      // Map the aggregated storage data to the full service names from your `services` array
-      const fullServiceData = storageData.map(service => {
-        const fullService = services.find(s => s._id === service.serviceABV);  // Find the full service data from your array
-        return {
-          ...service,
-          serviceName: fullService ? fullService.name : 'Unknown Service'  // Attach the full service name
-        };
-      });
+      // Step 2: Find InStock data
+        const inStockData = await InStock.find()
+                .populate({
+                  path: "storageId",
+                  select: "serviceABV", // Only fetch serviceABV field
+                })
+                .exec(); // Populate storageId to get the associated serviceABV
+      console.log(inStockData)
+      // Initialize a map to store expired counts by serviceABV
+      const expiredMap = {};
   
-      // Render the services to the Storage view
-      res.render('Storage/index', { services: fullServiceData });
+      // Step 3: Check expiration status for each InStock item
+      for (const stock of inStockData) {
+        const expirationStatus = await stock.getExpirationStatus();
+        
+       
   
+        if (expirationStatus === "Expired" || expirationStatus === "Expiring Soon") {
+          const serviceABV = stock.storageId.serviceABV; // Get the serviceABV from populated storageId
+          
+         
+  
+          // Count expired/expiring soon items per serviceABV
+          if (!expiredMap[serviceABV]) {
+            expiredMap[serviceABV] = 0;
+          }
+          expiredMap[serviceABV]++;
+        }
+      }
+  
+      // Step 4: Combine storageData with expired medicament counts
+      const fullServiceData = storageData.map(storage => ({
+        ...storage,
+        expiredCount: expiredMap[storage.serviceABV] || 0 // Default to 0 if no expired medicaments
+      }));
+  
+  // Step 5: Sort the services by service name (or serviceABV)
+  fullServiceData.sort((a, b) => a._id.localeCompare(b._id)); // Sort by service name (_id), or use a.serviceABV if you want to sort by abbreviation
+      // Render the services with notification counts
+      res.render("Storage/index", { services: fullServiceData });
     } catch (error) {
       console.error("Error fetching storage data:", error);
-      next(error);  // Pass errors to the error handler middleware
+      next(error); // Pass errors to middleware
     }
   };
   

@@ -262,63 +262,77 @@ exports.unassignLocation = async (req, res) => {
   };
   
 
-    exports.getMedicamentsByService = async (req, res) => {
-      const { serviceABV } = req.params;
-    
-      try {
-        // Fetch all storages for the given service
-        const storages = await Storage.find({ serviceABV });
-        const storageIds = storages.map((storage) => storage._id);
-    
-        if (!storages.length) {
-          return res.render('InStock/serviceMedicaments', {
-            serviceName: serviceABV,
-            medicaments: [],
-          });
-        }
-    
-        // Aggregate quantities for each medicament
-        const medicaments = await InStock.aggregate([
-          { $match: { storageId: { $in: storageIds } } }, // Filter by storages of this service
-          {
-            $group: {
-              _id: '$medicamentId',
-              totalQuantity: { $sum: '$quantity' },
-            },
-          },
-          {
-            $lookup: {
-              from: 'medicaments', // Reference to medicaments collection
-              localField: '_id',
-              foreignField: '_id',
-              as: 'medicamentDetails',
-            },
-          },
-          { $unwind: '$medicamentDetails' }, // Flatten medicament details
-        ]);
-    
-        // Map medicament settings to their corresponding medicament
-        const medicamentSettings = await MedicamentSettings.find({ serviceABV });
-        const settingsMap = medicamentSettings.reduce((map, setting) => {
-          map[setting.medicamentId.toString()] = setting.minQuantity;
-          return map;
-        }, {});
-    
-        // Add minQuantity to each medicament
-        const medicamentsWithSettings = medicaments.map((medicament) => ({
-          ...medicament,
-          minQuantity: settingsMap[medicament._id.toString()] || 'N/A',
-        }));
-    
-        res.render('InStock/serviceMedicaments', { 
-          serviceName: serviceABV, 
-          medicaments: medicamentsWithSettings,
+  exports.getMedicamentsByService = async (req, res) => {
+    const { serviceABV } = req.params;
+  
+    try {
+      // Fetch all storages for the given service
+      const storages = await Storage.find({ serviceABV });
+      const storageIds = storages.map((storage) => storage._id);
+  
+      if (!storages.length) {
+        return res.render('InStock/serviceMedicaments', {
+          serviceName: serviceABV,
+          medicaments: [],
         });
-      } catch (err) {
-        console.error('Error fetching medicaments by service:', err);
-        res.status(500).send('Error fetching medicaments.');
       }
-    };
+  
+      // Aggregate quantities for each medicament
+      const medicaments = await InStock.aggregate([
+        { $match: { storageId: { $in: storageIds } } }, // Filter by storages of this service
+        {
+          $group: {
+            _id: '$medicamentId',
+            totalQuantity: { $sum: '$quantity' },
+          },
+        },
+        {
+          $lookup: {
+            from: 'medicaments', // Reference to medicaments collection
+            localField: '_id',
+            foreignField: '_id',
+            as: 'medicamentDetails',
+          },
+        },
+        { $unwind: '$medicamentDetails' }, // Flatten medicament details
+      ]);
+  
+      // Map medicament settings to their corresponding medicament
+      const medicamentSettings = await MedicamentSettings.find({ serviceABV });
+      const settingsMap = medicamentSettings.reduce((map, setting) => {
+        map[setting.medicamentId.toString()] = setting.minQuantity;
+        return map;
+      }, {});
+  
+      // Add minQuantity to each medicament
+      const medicamentsWithSettings = medicaments.map((medicament) => ({
+        ...medicament,
+        minQuantity: settingsMap[medicament._id.toString()] || 'N/A',
+      }));
+  
+      // Add expiration status to each medicament
+      const medicamentsWithExpiration = await Promise.all(
+        medicamentsWithSettings.map(async (medicament) => {
+          const expirationStatus = await InStock.findOne({ medicamentId: medicament._id })
+            .then((instock) => instock.getExpirationStatus());
+          
+          return {
+            ...medicament,
+            expirationStatus,
+          };
+        })
+      );
+  
+      res.render('InStock/serviceMedicaments', { 
+        serviceName: serviceABV, 
+        medicaments: medicamentsWithExpiration,
+      });
+    } catch (err) {
+      console.error('Error fetching medicaments by service:', err);
+      res.status(500).send('Error fetching medicaments.');
+    }
+  };
+  
     
     exports.getMedicamentsdetailsByService = async (req, res) => {
       const { medicamentId, serviceABV } = req.params;
@@ -426,6 +440,62 @@ exports.unassignLocation = async (req, res) => {
       } catch (err) {
         console.error('Error updating barcode:', err);
         res.status(500).send('Error updating barcode.');
+      }
+    };
+    exports.getExpiredMedicamentsByService = async (req, res) => {
+      try {
+        const { serviceABV } = req.params; // Input parameter from the request
+        if (!serviceABV) {
+          return res.status(400).json({
+            success: false,
+            message: "Missing required parameter: serviceABV.",
+          });
+        }
+    
+        // Fetch all InStock entries with storageId populated
+        const stockDetails = await InStock.find()
+          .populate({
+            path: "storageId",
+            match: { serviceABV }, // Filter by serviceABV during population
+            select: "serviceABV", // Only fetch serviceABV field
+          }).populate('medicamentId')
+          .exec();
+    
+        const result = [];
+        for (let stockItem of stockDetails) {
+          // Skip items where storageId did not match serviceABV or quantity <= 0
+          if (!stockItem.storageId || stockItem.quantity <= 0) {
+            continue;
+          }
+    
+          // Get expiration status
+          const expirationStatus = await stockItem.getExpirationStatus();
+    
+          // Only include "Expired" or "Expiring Soon" items
+          if (expirationStatus === "Expired" || expirationStatus === "Expiring Soon") {
+            result.push({
+              medicamentId: stockItem.medicamentId,
+              designation: stockItem.medicamentId.designation,
+              forme: stockItem.medicamentId.forme,
+              locationCode: stockItem.locationCode,
+              batchNumber: stockItem.batchNumber,
+              expiryDate: stockItem.expiryDate,
+              expirationStatus, // Either "Expired" or "Expiring Soon"
+              serviceABV: stockItem.storageId.serviceABV,
+              quantity: stockItem.quantity,
+            });
+          }
+        }
+    
+        // Render the result
+        res.render('Instock/ExpiredMedicaments', { medicaments: result, serviceName: serviceABV });
+      } catch (error) {
+        console.error("Error fetching medicaments:", error);
+        return res.status(500).json({
+          success: false,
+          message: "An error occurred while fetching medicaments.",
+          error: error.message,
+        });
       }
     };
     

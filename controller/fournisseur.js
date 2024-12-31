@@ -16,19 +16,12 @@ var fonts = {
 module.exports.listeFournisseur = async (req, res) => {
   const fournisseurs = await Fournisseur.find({});
   const algeria = await Country.find({});
+
   const states = algeria[0].states;
   res.render("Fournisseur/index", { fournisseurs, moment, states });
 };
 
-module.exports.showFournisseur = async (req, res) => {
-  // get the fournisseur id from the fournisseurs table
-  const { id } = req.params;
-  // find the fournisseur in the database
-  const fournisseur = await Fournisseur.findById(id);
-  // send it to the client
-  res.render("Fournisseur/show", { fournisseur, moment });
-  // res.send(fournisseur)
-};
+
 
 module.exports.createFournisseur = async (req, res) => {
   const { fournisseur } = req.body;
@@ -50,14 +43,15 @@ module.exports.createFournisseur = async (req, res) => {
       fournisseur.name.charAt(0).toUpperCase() +
       fournisseur.name.slice(1).toLowerCase(),
     wilaya: fournisseur.wilaya,
+    codeClient: fournisseur.codeClient,
     city:fournisseur.city,
     postalCode:fournisseur.postalCode,
     phone: phone,
     fax: fax,
     mobile:fournisseur.mobile,
     email: mail,
-    website: fournisseur.website,
-    description: fournisseur.description,
+    adress: fournisseur.adress,
+    Naccount: fournisseur.Naccount,
     nrc: fournisseur.nrc,
     nif: fournisseur.nif,
     narticle: fournisseur.narticle,
@@ -93,14 +87,15 @@ module.exports.updateFournisseur = async (req, res) => {
       fournisseur.name.charAt(0).toUpperCase() +
       fournisseur.name.slice(1).toLowerCase(),
     wilaya: fournisseur.wilaya,
+    codeClient: fournisseur.codeClient,
     city:fournisseur.city,
     postalCode:fournisseur.postalCode,
     phone: phone,
     fax: fax,
     mobile:fournisseur.mobile,
     email: mail,
-    website: fournisseur.website,
-    description: fournisseur.description,
+    Naccount: fournisseur.Naccount,
+    adress: fournisseur.adress,
     nrc: fournisseur.nrc,
     nif: fournisseur.nif,
     narticle: fournisseur.narticle,
@@ -124,6 +119,62 @@ module.exports.deleteFournisseur = async (req, res) => {
   } catch (error) {
     console.error('Error deleting fournisseur:', error);
     res.status(500).json({ success: false, message: 'There was an issue deleting the fournisseur.' });
+  }
+};
+module.exports.createContact = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { contact } = req.body;
+    
+    // Extract contact details from the form submission
+    const newContact = {
+      fullname: contact.fullname,
+      phone: contact.phone,
+      fax: contact.fax,
+      mobile: [contact.mobile[0], contact.mobile[1]],
+      email: contact.email,
+      description: contact.description,
+    };
+
+    // Find the fournisseur by ID and add the new contact
+    const fournisseur = await Fournisseur.findById(id);
+    if (!fournisseur) {
+      return res.status(404).send("Fournisseur not found");
+    }
+
+    if (!fournisseur.contacts) {
+      fournisseur.contacts = []; // Initialize if it doesn't exist
+    }
+    fournisseur.contacts.push(newContact);
+
+    // Save the updated Fournisseur
+    await fournisseur.save();
+
+    res.redirect(`/fournisseur/${id}`); // Redirect back or send success response
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+};
+module.exports.listeContacts = async (req, res) => {
+  const { id } = req.params;
+  const fournisseur = await Fournisseur.findById(id);
+ 
+  res.render("Fournisseur/fournisseur-details", { fournisseur, moment });
+};
+module.exports.deleteContact = async (req, res) => {
+  const { fournisseurId, contactId } = req.params;
+
+  try {
+    // Use $pull to remove the contact
+    await Fournisseur.findByIdAndUpdate(fournisseurId, {
+      $pull: { contacts: { _id: contactId } },
+    });
+    req.flash("success", "Contact a été supprimer avec succès");
+    res.redirect(`/fournisseur/${fournisseurId}`); 
+  } catch (err) {
+    console.error("Error deleting contact:", err);
+    res.status(500).send("Error deleting contact.");
   }
 };
 module.exports.generatepdf = async (req, res) => {

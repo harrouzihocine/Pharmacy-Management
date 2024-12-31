@@ -19,7 +19,6 @@
           <th>Created Date</th>
           <th>Created By</th>
           <th>Status</th>
-        
         </tr>
       </thead>
       <tbody>
@@ -27,13 +26,13 @@
           <% demands.forEach((demand, index) => { %>
           
             <tr>
-              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= index + 1 %></td>
-              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= demand.demandNumber %></td>
-              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= demand.source %></td>
-              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= demand.destination %></td>
-              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= new Date(demand.createdAt).toLocaleString() %></td>
-              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;"><%= demand.createdBy?.username || "Unknown" %></td>
-              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>'" style="cursor: pointer;">
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>?service=<%= serviceABV %>'" style="cursor: pointer;"><%= index + 1 %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>?service=<%= serviceABV %>'" style="cursor: pointer;"><%= demand.demandNumber %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>?service=<%= serviceABV %>'" style="cursor: pointer;"><%= demand.source %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>?service=<%= serviceABV %>'" style="cursor: pointer;"><%= demand.destination %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>?service=<%= serviceABV %>'" style="cursor: pointer;"><%= new Date(demand.createdAt).toLocaleString() %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>?service=<%= serviceABV %>'" style="cursor: pointer;"><%= demand.createdBy?.username || "Unknown" %></td>
+              <td onclick="window.location.href='/demand/demand-details/<%= demand._id %>?service=<%= serviceABV %>'" style="cursor: pointer;">
                 <span class="tag status-badge 
                   <% if (demand.status === 'Pending') { %>status-pending<% } %>
                   <% if (demand.status === 'Approved') { %>status-approved<% } %>

@@ -13,7 +13,26 @@
   height: 100%;
   color: #ffffff; /* Light grey text */
 }
+.main-content  {
+  display: block;
+  width: 95%;
+}
+.alert{
+  position: fixed; /* Ensure it's fixed and doesn't affect layout */
+  top: 0rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050; /* Ensure it stays above other elements */
+  width: auto; /* Adjust width as needed */
+  width: 100%; /* Responsive design */
+  margin: 0px 0px 5px 0px;
+  padding: 5px 10px;
+  border-radius: 0 0 10px 10px;
+}
 
+.alert-dismissible .btn-close{
+  top: -12px;
+}
 /*----------------------------------------------------------------tags--------------------------------------------*/
 .tag {
   display: inline-block;
@@ -93,7 +112,7 @@
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5);
   color: #fff;
   z-index: 1000;
-  transition: width 0.2s ease-in-out;
+  transition: width 0.3s ease-in-out;
   overflow: hidden; /* Prevent content overflow when collapsed */
   display: flex;
   flex-direction: column;
@@ -119,7 +138,7 @@
 /* Sidebar Title (When Sidebar is closed) */
 .sidebar-header .sidebar-title {
   display: none; /* Hide when sidebar is open */
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: #999d9a;
   font-weight: bolder;
 }
@@ -138,8 +157,8 @@
 .sidebar-menu {
   list-style: none;
   padding: 0;
-  margin-top: 05px;
-  width: 100%;
+
+  width: 95%;
   display: none; /* Hide items when sidebar is closed */
 }
 
@@ -150,8 +169,9 @@
 
 /* Sidebar Menu Item */
 .sidebar-menu li {
-  margin: 10px 0;
+  margin: 5px 0;
   width: 100%;
+  font-size: 0.9rem;
 }
 
 /* Sidebar Links */
@@ -191,12 +211,12 @@
 
 /* Apply smooth transition for all page content */
 .body {
-  transition: margin-left 0.3s ease-in-out;
+  transition: margin-left 0.5s ease-in-out;
 }
 
 /* When Sidebar is Active, Push Content */
 .body.shifted {
-  margin-left: 450px;
+  margin-left: 200px;
 }
 
 /*---------------------------------------------------Ticket Detail Page-----------------------------------------*/
@@ -3088,10 +3108,7 @@ table.dataTable tbody tr {
 }
 
 /* Icons */
-.fas {
-  font-size: 22px;
-  color: #3498db;
-}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -3256,3 +3273,89 @@ table.dataTable tbody tr {
   background-color: #7E99A3; /* Blue background for both states */
   color: #ffffff ;
 }
+/*--------------------------- fournisseur details ------------------------*/
+/***** Container Style *****/
+.contacts-container {
+  width: 90rem;
+  background-color: #0201281d; /* Dark background for the container */
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin: 20px;
+}
+
+/***** Title Style *****/
+.contacts-container h3 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+
+
+/***** Grid Style *****/
+.contacts-grid {
+  display: flex;
+  gap: 20px;
+  margin: 20px;
+}
+
+/***** Card Style *****/
+.contact-card {
+  background-color: #0201281d;
+  padding: 20px;
+  border-radius: 10px;
+ 
+  min-width: 300px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+/***** Header Style *****/
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.contact-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f5f5f5;
+}
+
+.badge {
+  background-color: #4ecdc4;
+  color: #1a1a2e;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/***** Body Style *****/
+.contact-body {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.contact-body p {
+  margin: 5px 0;
+}
+
+/***** Footer Style *****/
+.contact-footer {
+
+  margin-top: 10px;
+  text-align: right;
+}
+

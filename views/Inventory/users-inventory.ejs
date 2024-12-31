@@ -72,7 +72,7 @@
             <i class="fa-solid fa-cart-shopping"></i>
             <h4>Total purchase Price</h4>
           </div>
-          <p><%= parseInt(total).toFixed(2) || '0,00' %> DA</p>
+          <p><%= parseFloat(total).toFixed(2) || '0,00' %> DA</p>
         </div>
         <div class="dashboard-card">
           <div class="card-title">
@@ -145,7 +145,7 @@
         <td><%= item.batchNumber %></td>
 
         <td><%= item.physicalQuantity %></td>
-        <td><%= parseInt(item.purchasePrice).toFixed(2) %> DA</td>
+        <td><%= parseFloat(item.purchasePrice).toFixed(2) %> DA</td>
         <td><%= item.createdBy.username || 'None' %></td>
         <td class="d-flex">
           <%- include("./item-details", { item,inventory }) %>

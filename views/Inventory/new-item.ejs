@@ -80,13 +80,14 @@
           <div class="col-12 mb-3">
             <label for="medicament" class="form-label label-required">Item</label>
             <select class="form-select" id="medicament" name="medicamentId" required>
-              <option value="" disabled selected>Select an Item</option>
-              <% medicaments.forEach(function(medicament) { %>
-              <option value="<%= medicament._id %>"><%= medicament.designation %></option>
-              <% }); %>
+                <option value="" disabled selected>Select an Item</option>
+                <% medicaments.forEach(function(medicament) { %>
+                <option value="<%= medicament._id %>">
+                    <%= medicament.code_pch %>, <%= medicament.designation %>
+                </option>
+                <% }); %>
             </select>
-          </div>
-
+        </div>
 
           <!-- Batch Number Input -->
           <div class="col-md-6 mb-3">
@@ -124,21 +125,36 @@
               </select>
             </div>
             <!-- Purchase Price Input -->
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label for="purchasePrice" class="form-label">Purchase Price</label>
             <input type="number" class="form-control" id="purchasePrice" name="purchasePrice">
           </div>
           <!-- TVA Input -->
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label for="tva" class="form-label">TVA (%)</label>
             <input type="number" class="form-control" id="tva" name="tva" min="0">
           </div>
+          <hr>
           <!-- N° Facture Input -->
-          <div class="col-md-4 mb-3">
-            <label for="NFacture" class="form-label">N° Facture</label>
+          <div class="col-md-6 mb-3">
+            <label for="NFacture" >N° Facture</label>
             <input type="text" class="form-control" id="NFacture" name="NFacture">
           </div>
-          
+          <!--  Facture date Input -->
+          <div class="col-md-6 mb-3">
+            <label for="factureDate" class="form-label ">Facture date</label>
+            <input type="date" class="form-control" id="factureDate" name="factureDate" >
+          </div>
+           <!-- N° BL Input -->
+           <div class="col-md-6 mb-3">
+            <label for="NBL" class="form-label">N° BL</label>
+            <input type="text" class="form-control" id="NBL" name="NBL">
+          </div>
+          <!-- BL date Input -->
+          <div class="col-md-6 mb-3">
+            <label for="BLDate" class="form-label ">BL date</label>
+            <input type="date" class="form-control" id="BLDate" name="BLDate" >
+          </div>
           <hr>
           <!-- remarks Input -->
           <div class="col-12 mb-3">

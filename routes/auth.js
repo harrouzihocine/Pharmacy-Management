@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const { isLoggedIn } = require('../middleware/authMiddleware');
+const { isLoggedIn,isAdmin,isPharmacienPrincipal, isResponsableService, isAchteur  } = require('../middleware/authMiddleware');
 const passport = require("passport");
 const {
   dashboard,
@@ -36,6 +36,6 @@ router.route("/logout").get(logout);
 
 // Dashboard route
 router.route("/").get(dashboard);
-router.route("/profile") .get(isLoggedIn,catchAsync(getProfile)).post(isLoggedIn,catchAsync(updateProfile));
+router.route("/profile") .get(isLoggedIn,isAdmin,catchAsync(getProfile)).post(isLoggedIn,isAdmin,catchAsync(updateProfile));
 
 module.exports = router;

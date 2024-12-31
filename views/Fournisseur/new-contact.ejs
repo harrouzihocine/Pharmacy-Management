@@ -1,0 +1,147 @@
+<button
+  type="button"
+  class="btn add-btn px-2 py-1"
+  data-bs-toggle="modal"
+  data-bs-target="#newContact-<%=fournisseur.id %>"
+>
+<i class="bi bi-plus-lg"></i> <i class="fa-regular fa-address-book"></i>
+</button>
+
+<div
+  class="modal fade add-storage-modal"
+  id="newContact-<%=fournisseur.id %>"
+  data-bs-keyboard="true"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content add-storage-page-container">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newContactLabel-<%=fournisseur.id %>">New Contact for <%= fournisseur.name %></h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form
+          id="addToStorageForm"
+          method="POST"
+          class="add-storage-form row needs-validation"
+          action="/fournisseur/<%= fournisseur.id %>"
+          novalidate
+        >
+        
+          <!-- Raison Sociale -->
+          <div class="form-group col-12">
+            <label for="name" class="form-label">Fullname</label>
+            <input
+              id="name"
+              name="contact[fullname]"
+              type="text"
+              class="form-control"
+              style="text-transform: capitalize"
+              autofocus
+              required
+            />
+            <div class="valid-feedback">BIEN</div>
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group col-md-6">
+            <label for="phone" class="form-label">Téléphone</label>
+            <input
+              type="text"
+              class="form-control"
+              id="phone"
+              name="contact[phone]"
+              maxlength="20"
+            />
+            <div class="valid-feedback">BIEN</div>
+          </div>
+
+          <!-- Fax -->
+          <div class="form-group col-md-6">
+            <label for="fax" class="form-label">Fax</label>
+            <input
+              type="text"
+              class="form-control"
+              id="fax"
+              name="contact[fax]"
+              maxlength="20"
+            />
+            <div class="valid-feedback">BIEN</div>
+          </div>
+            
+              <div class="form-group col-md-6">
+                <label for="mobile-1" class="form-label">Mobile 1</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="mobile-1"
+                  name="contact[mobile][1]"
+                  maxlength="20"
+                />
+                <div class="valid-feedback">BIEN</div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="mobile-2" class="form-label">Mobile 2</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="mobile-2"
+                  name="contact[mobile][2]"
+                  maxlength="20"
+                />
+                <div class="valid-feedback">BIEN</div>
+              </div>
+             
+          <!-- Email -->
+          <div class="form-group ">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="contact[email]"
+              style="text-transform: lowercase"
+              required
+            />
+            <div class="valid-feedback">BIEN</div>
+          </div>
+
+
+          <!-- Description -->
+          <div class="col-12 mb-3">
+            <textarea
+              class="form-control"
+              name="contact[description]"
+              id="description"
+              rows="4"
+              placeholder="Description"
+              style="text-transform: capitalize"
+            ></textarea>
+          </div>
+
+        
+
+          <!-- Save Button -->
+          <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $("#newfournisseur").on("shown.bs.modal", function () {
+    $(this).find("[autofocus]").focus();
+  });
+ 
+</script>

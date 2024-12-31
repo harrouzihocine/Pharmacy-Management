@@ -80,9 +80,7 @@ inStockSchema.methods.getExpirationStatus = async function () {
   // Calculate the number of days until expiration
   const daysUntilExpiration = Math.ceil((expiryDate - Date.now()) / (1000 * 60 * 60 * 24));
   
-  console.log("Expiry Date:", expiryDate);
-  console.log("Days Until Expiration:", daysUntilExpiration);
-
+  
   if (daysUntilExpiration < 0) {
     return "Expired"; // Already expired
   } else if (daysUntilExpiration <= pharmacy.PreExpirationAlert) {

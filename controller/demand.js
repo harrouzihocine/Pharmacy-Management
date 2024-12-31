@@ -21,10 +21,25 @@ const services = [
 
 exports.getDemandsPage = async (req, res) => {
   const { serviceABV } = req.params;
+
+  // Find the service by ABV (serviceAbbreviation)
+  const service = services.find(s => s._id === serviceABV);
+
+  if (!service) {
+    return res.status(404).send({ message: "Service not found." });
+  }
+
   try {
-    const demands = await Demand.find()
-      .populate("createdBy", "username") // Populate `createdBy` with the `name` field
-      .select("-medicaments"); // Exclude `medicaments` from the response
+    // Use the service name (from serviceABV) to filter in both destination and source fields
+    const demands = await Demand.find({
+      $or: [
+        { destination: service.name },  // Match the destination field with the service name
+        { source: service.name }         // Match the source field with the service name
+      ]
+    })
+    .populate("createdBy", "username") // Populate `createdBy` with the `username` field
+    .select("-medicaments"); // Exclude `medicaments` from the response
+
     res.render("demand/index", { demands, serviceABV });
   } catch (err) {
     res.status(500).send({ message: err.message });
@@ -39,6 +54,7 @@ exports.getAddDemandPage = async (req, res) => {
       Medicaments,
       serviceABV,
       services: services,
+      user: req.user,
     });
   } catch (err) {
     res.status(500).send({ message: err.message });
@@ -93,6 +109,8 @@ exports.createDemand = async (req, res) => {
 
 exports.getDemandDetailsPage = async (req, res) => {
   const { demandId } = req.params;
+  const serviceABV  = req.query.service;
+  
   try {
     // Fetch the demand with necessary population
     const demand = await Demand.findById(demandId)
@@ -208,6 +226,8 @@ exports.getDemandDetailsPage = async (req, res) => {
       sourceStock: sourceStock,
       transferDetails: transferDetails,
       receivedstock: receivedstock,
+      serviceABV  : serviceABV
+
     });
   } catch (err) {
     res.status(500).send({ message: err.message });
@@ -327,7 +347,7 @@ exports.getReceivedDemandPage = async (req, res) => {
     const virtualStockDetails = await VirtualInStock.find({
       _id: { $in: demand.virtualStockIDs },
     })
-      .populate("medicamentId", "designation") // Populate with medicament designation
+      .populate("medicamentId") // Populate with medicament designation
       .exec();
 
     // Map through the virtual stock to gather the required data and add virtualStockID
@@ -335,6 +355,7 @@ exports.getReceivedDemandPage = async (req, res) => {
       virtualStockID: stock._id, // Adding the virtualStockID here
       medicamentId: stock.medicamentId._id,
       designation: stock.medicamentId.designation,
+      boite_de: stock.medicamentId.boite_de,
       batchNumber: stock.batchNumber,
       serialNumber: stock.serialNumber,
       expiryDate: stock.expiryDate,

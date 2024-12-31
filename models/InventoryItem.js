@@ -15,6 +15,9 @@ const InventoryItemSchema = new mongoose.Schema(
     physicalQuantity: { type: Number, required: true }, // Physical quantity
     purchasePrice: { type: Number }, // Purchase price
     NFacture: { type: String }, // NFacture
+    factureDate: { type: Date }, // factureDate
+    NBL: { type: String }, // NBL
+    BLDate: { type: Date}, // BLDate
     systemQuantity: { type: Number, default: 0 },
     visibility: { type:Boolean, default: true}, // Visibility
     remarks: { type: String }, // Additional remarks

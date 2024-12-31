@@ -37,16 +37,15 @@ module.exports.getinventoriespage = async (req, res, next) => {
       "inventoryTemplate status createdBy"
     ); // Fetch inventoryTemplate and status fields only
 
-// Filter inventories based on the logged-in user
-const filteredUserInventories = userInventories.filter(
-  (item) => item.createdBy?.toString() === req.user._id.toString()
-);
+    // Filter inventories based on the logged-in user
+    const filteredUserInventories = userInventories.filter(
+      (item) => item.createdBy?.toString() === req.user._id.toString()
+    );
 
-// Get an array of inventoryTemplate IDs as strings
-const userInventoryIds = filteredUserInventories.map((item) =>
-  item.inventoryTemplate.toString()
-);
-
+    // Get an array of inventoryTemplate IDs as strings
+    const userInventoryIds = filteredUserInventories.map((item) =>
+      item.inventoryTemplate.toString()
+    );
 
     // Update status for inventories based on UserInventory statuses
     for (const inventory of inventories) {
@@ -191,7 +190,10 @@ exports.addInventoryItem = async (req, res) => {
       purchasePrice,
       remarks,
       fournisseurId,
-      NFacture
+      NFacture,
+      NBL,
+      BLDate,
+      factureDate,
     } = req.body;
     // Validate required fields (if not already handled by form validation)
     if (!inventoryId || !medicamentId || !batchNumber || !physicalQuantity) {
@@ -209,12 +211,15 @@ exports.addInventoryItem = async (req, res) => {
       batchNumber,
       expiryDate,
       tva,
-      serialNumber, // Optional
+      serialNumber, 
       physicalQuantity,
       purchasePrice,
       fournisseurId,
       remarks,
       NFacture,
+      NBL,
+      BLDate,
+      factureDate,
       createdBy: req.user._id,
     });
 
@@ -244,6 +249,9 @@ exports.updateInventoryItem = async (req, res) => {
       purchasePrice,
       fournisseurId,
       NFacture,
+      NBL,
+      BLDate,
+      factureDate,
       remarks,
     } = req.body;
 
@@ -267,7 +275,7 @@ exports.updateInventoryItem = async (req, res) => {
     }
 
     // Update the fields of the inventory item
-    inventoryItem.medicamentId = medicamentId ;
+    inventoryItem.medicamentId = medicamentId;
     inventoryItem.serviceABV = serviceABV;
     inventoryItem.storageName = storageName;
     inventoryItem.batchNumber = batchNumber;
@@ -276,9 +284,12 @@ exports.updateInventoryItem = async (req, res) => {
     inventoryItem.physicalQuantity = physicalQuantity;
     inventoryItem.fournisseurId = fournisseurId;
     inventoryItem.NFacture = NFacture;
-    inventoryItem.tva = tva ; 
+    inventoryItem.factureDate = factureDate;
+    inventoryItem.NBL = NBL;
+    inventoryItem.BLDate = BLDate;
+    inventoryItem.tva = tva;
     inventoryItem.purchasePrice = purchasePrice || inventoryItem.purchasePrice; // Keep the original if not provided
-    inventoryItem.remarks = remarks || inventoryItem.remarks; // Keep the original if not provided
+    inventoryItem.remarks = remarks ; // Keep the original if not provided
     inventoryItem.updatedBy = req.user._id;
 
     // Save the updated inventory item
@@ -315,28 +326,34 @@ module.exports.removeUserFromInventory = async (req, res, next) => {
     // Check if the user has created any items in the specified inventory
     const itemsCreatedByUser = await InventoryItem.find({
       inventoryId: inventoryId,
-      createdBy: userId
+      createdBy: userId,
     });
     // If the user has created items in the inventory, do not remove them
     if (itemsCreatedByUser.length > 0) {
-      return res.status(400).json({ message: "User has created items in this inventory, cannot remove" });
+      return res
+        .status(400)
+        .json({
+          message: "User has created items in this inventory, cannot remove",
+        });
     }
 
     // If no items are created by the user in the inventory, proceed to remove the user
     const userInventory = await UserInventory.findOneAndDelete({
       inventoryTemplate: inventoryId,
-      createdBy: userId
+      createdBy: userId,
     });
 
     if (!userInventory) {
-      return res.status(404).json({ message: "User not found in the inventory" });
+      return res
+        .status(404)
+        .json({ message: "User not found in the inventory" });
     }
 
     res.redirect(`/inventory/users/${inventoryId}`);
-
-
   } catch (error) {
-    res.status(500).json({ message: "Error removing user from inventory", error });
+    res
+      .status(500)
+      .json({ message: "Error removing user from inventory", error });
   }
 };
 module.exports.getInventoryUsers = async (req, res, next) => {
@@ -346,7 +363,6 @@ module.exports.getInventoryUsers = async (req, res, next) => {
     const usersInventory = await UserInventory.find({
       inventoryTemplate: inventoryId,
     }).populate("createdBy");
-   
 
     res.render("Inventory/inventory-users", {
       usersInventory,
@@ -410,7 +426,10 @@ module.exports.getUsersInventories = async (req, res, next) => {
       .exec();
 
     // Calculate the total of purchasePrice of all inventory items
-    const total = inventoryItems.reduce((sum, item) => sum + item.purchasePrice, 0);
+    const total = inventoryItems.reduce(
+      (sum, item) => sum + item.purchasePrice,
+      0
+    );
     const itemCount = inventoryItems.length;
 
     // Update the total in the Inventory model
@@ -428,7 +447,7 @@ module.exports.getUsersInventories = async (req, res, next) => {
       inventoryItems,
       users,
       total,
-      itemCount
+      itemCount,
     });
   } catch (error) {
     console.error("Error fetching inventory details:", error);
@@ -436,11 +455,10 @@ module.exports.getUsersInventories = async (req, res, next) => {
   }
 };
 
-
 module.exports.deleteInventoryItem = async (req, res, next) => {
   try {
     const itemId = req.params.itemId;
-   
+
     // Attempt to find and delete the item
     const deletedItem = await InventoryItem.findOneAndDelete({ _id: itemId });
 
@@ -469,9 +487,8 @@ module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
     // Fetch data from InventoryItem collection
     const inventoryItems = await InventoryItem.find({
       inventoryId: inventoryId,
-      visibility: true, 
+      visibility: true,
     }).populate("inventoryId medicamentId createdBy");
-    
 
     // Check if no items are found
     if (!inventoryItems || inventoryItems.length === 0) {
@@ -499,14 +516,21 @@ module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
         Quantity: item.physicalQuantity,
         PurchasePrice: item.purchasePrice || 0,
         TVA: item.tva || "N/A",
-        MontantHT: (item.purchasePrice?item.purchasePrice:0) * item.physicalQuantity || 0,
+        MontantHT:
+          (item.purchasePrice ? item.purchasePrice : 0) *
+            item.physicalQuantity || 0,
         Remarks: item.remarks || "N/A",
         CreatedBy: item.createdBy ? item.createdBy.username : "N/A",
       }));
-    } else if (template === "byservices" || template === "byservicesandstorages") {
+    } else if (
+      template === "byservices" ||
+      template === "byservicesandstorages"
+    ) {
       // Group inventory items by medicamentId
       const groupedItems = inventoryItems.reduce((acc, item) => {
-        const key = item.medicamentId ? item.medicamentId.designation : "Unknown";
+        const key = item.medicamentId
+          ? item.medicamentId.designation
+          : "Unknown";
         if (!acc[key]) {
           acc[key] = {};
         }
@@ -559,7 +583,9 @@ module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
     res.download(fileName); // This will send the Excel file to the client
   } catch (err) {
     console.error("Error exporting data to Excel:", err);
-    res.status(500).json({ message: "Error exporting data to Excel.", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error exporting data to Excel.", error: err.message });
   }
 };
 module.exports.hideInventoryItem = async (req, res, next) => {
@@ -571,15 +597,12 @@ module.exports.hideInventoryItem = async (req, res, next) => {
     console.log("itemId:", itemId);
     console.log("visibility:", visibility);
 
-
     // Update the visibility status of the item
     const updatedItem = await InventoryItem.findByIdAndUpdate(
       itemId,
       { visibility },
       { new: true } // Return the updated document
     );
-
-  
 
     if (updatedItem) {
       res.json({

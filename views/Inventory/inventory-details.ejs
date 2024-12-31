@@ -104,11 +104,11 @@
         <td><%= item.physicalQuantity %></td>
         <td><%= item.purchasePrice?item.purchasePrice.toFixed(2):parseInt(0).toFixed(2)%> DA</td>
         <td><%= item.tva?item.tva:'N/A'%> %</td>
-        <td><%= (parseInt(item.purchasePrice?item.purchasePrice:0) * item.physicalQuantity).toFixed(2)%> DA</td>
+        <td><%= (parseFloat(item.purchasePrice?item.purchasePrice:0) * item.physicalQuantity).toFixed(2)%> DA</td>
         <% if(item.serviceABV == 'URG'){%>
-        <td><%=(parseInt(item.purchasePrice?item.purchasePrice:0) * 1.4).toFixed(2) %> DA</td>
+        <td><%=(parseFloat(item.purchasePrice?item.purchasePrice:0) * 1.4).toFixed(2) %> DA</td>
         <% } else {%>
-        <td><%= (parseInt(item.purchasePrice?item.purchasePrice:0) * 1.36).toFixed(2) %> DA</td>
+        <td><%= (parseFloat(item.purchasePrice?item.purchasePrice:0) * 1.36).toFixed(2) %> DA</td>
         <% } %>
         <td><%= item.remarks || 'None' %></td>
         <td>

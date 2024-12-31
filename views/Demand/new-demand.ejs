@@ -11,9 +11,7 @@
         <label for="source" class="form-label">Source</label>
         <select class="form-select" id="source" name="source" aria-readonly="true">
           <% services.forEach(service => { %>
-          <% if(service._id != serviceABV){ %>
           <option value="<%= service.name %>" data-source-name="<%= service.name %>" selected><%= service.name %></option>
-          <% } %>
           <% }) %>
         </select>
         <div class="invalid-feedback">
@@ -22,21 +20,30 @@
       </div>
 
       <!-- Destination Depot -->
-      <div class="col-md-6">
-        <label for="destination" class="form-label">Destination</label>
-        <select class="form-select" id="destination" name="destination" required>
-          <% services.forEach(service => { %>
-         
+   
+<div class="col-md-6">
+  <label for="destination" class="form-label">Destination</label>
+  <select class="form-select" id="destination" name="destination" required>
+    <% if(user.role == "Admin") { %>
+      <% services.forEach(service => { %>
+        <option value="<%= service.name %>" data-destination-name="<%= service.name %>">
+          <%= service.name %>
+        </option>
+      <% }) %>
+    <% } else { %>
+      <% services.forEach(service => { %>
+        <% if(service._id == serviceABV) { %>
           <option value="<%= service.name %>" data-destination-name="<%= service.name %>">
             <%= service.name %>
           </option>
-          <% }) %>
-        </select>
-        <div class="invalid-feedback">
-          Please select a destination depot.
-        </div>
-      </div>
-    </div>
+        <% } %>
+      <% }) %>
+    <% } %>
+  </select>
+  <div class="invalid-feedback">
+    Please select a destination depot.
+  </div>
+</div>
 
     
     <!-- Medicament Table (Main Section) -->
@@ -44,7 +51,7 @@
       <table class="demand-table" id="MedicamentTable">
         <thead>
           <tr>
-            <th>Medicament</th>
+            <th>Medicament </th>
             <th>Quantity exist</th>
             <th>Quantity requested</th>
             <th>Priority</th>
@@ -104,7 +111,7 @@
      
     <div class="d-flex">
       <button type="submit" class="btn add-command" >Submit</button>
-      <button type="reset" class="btn cancel-btn">Cancel</button>
+      <button type="reset" class="btn cancel-btn">Reset</button>
     </div>
   </form>
 </div>

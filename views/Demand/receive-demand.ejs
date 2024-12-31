@@ -1,16 +1,22 @@
 <% layout('layouts/boilerplate') %>
 <div class="receive-demand-page-container">
   <div class="receive-demand-header">
+    <button class="btn back-btn back-button" onclick="window.location.href='/demand/demand-details/<%= demand._id %>'"><i class="bi bi-arrow-left-circle"></i></button>
     <h1>Receive Demand N° <%= demand.demandNumber %></h1>
     <h2>From <%= demand.source %> To <%= demand.destination %></h2>
   </div>
 
   <!-- Begin form for submitting received quantities -->
+  <form class="search-bar">
+    <input type="text" id="search" placeholder="Search in Received liste" />
+  </form>
   <form id="receivedDemandForm" action="/demand/<%= demand._id %>" method="POST">
     <table class="receive-demand-table">
       <thead>
         <tr>
+          <th>Barcode</th>
           <th>Designation</th>
+          <th>Boite de</th>
           <th>Batch Number</th>
           <th>Serial Number</th>
           <th>Expiry Date</th>
@@ -18,10 +24,12 @@
           <th>Quantity Received</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="tablebody">
         <% receivedstock.forEach(stock => { %>
           <tr class="receive-demand-row" data-medicament-id="<%= stock.medicamentId %>">
-            <td><%= stock.designation %></td>
+            <td class="barcode"><%= stock.barcode %></td>
+            <td class="designation"><%= stock.designation %></td>
+            <td class="boite_de"><%= stock.boite_de %></td>
             <td class="batch-number"><%= stock.batchNumber %></td>
             <td class="serial-number"><%= stock.serialNumber ? stock.serialNumber : 'N/A' %></td>
             <td class="expiry-date"><%= stock.expiryDate ? new Date(stock.expiryDate).toLocaleDateString() : 'N/A' %></td>
@@ -49,3 +57,45 @@
     </div>
   </form>
 </div>
+<script>
+  // Function to handle barcode scanning or manual entry
+  document.getElementById('search').addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent the default form submission
+
+      const searchValue = this.value.trim(); // Get the input value
+      const rows = document.querySelectorAll('.receive-demand-row'); // Get all table rows
+
+
+      // Loop through rows to find a matching batch number
+      for (let row of rows) {
+        const barcodeCell = row.querySelector('.barcode'); // Get barcode cell
+        const barcode = barcodeCell ? barcodeCell.textContent.trim() : '';
+        const designationCell = row.querySelector('.designation');
+        const designation = designationCell ? designationCell.textContent.trim() : '';
+
+       
+        if (barcode === searchValue || designation.toLowerCase().includes(searchValue.toLowerCase())) {
+          // Matching row found, update the received quantity
+          const quantityInput = row.querySelector('.receive-quantity-input');
+          const boite_de = row.querySelector('.boite_de');
+          const boite_deValue = parseInt(boite_de.textContent.trim()|| 1);
+          const currentValue = parseInt(quantityInput.value) || 0; // Get current value, default to 0 if empty
+          quantityInput.value = currentValue + boite_deValue; // Increment by 1
+          quantityInput.dispatchEvent(new Event('change')); // Trigger change event if needed
+            // Highlight the matching row
+        row.style.backgroundColor = 'lightgreen';
+        setTimeout(() => {
+          row.style.backgroundColor = ''; // Remove the highlight after 1 second
+        }, 1000);
+
+          this.value = ''; // Clear the search input
+          return; // Stop searching after the match
+        }
+      }
+
+      // If no match found, you can alert the user (optional)
+      alert('Barcode / Designation not found in the list.');
+    }
+  });
+</script>
