@@ -1,4 +1,4 @@
-<button type="button" class="btn demand-new-button" data-bs-toggle="modal" data-bs-target="#new-<%= inventory._id %>">
+<button type="button" class="btn demand-new-button me-2" data-bs-toggle="modal" data-bs-target="#new-<%= inventory._id %>">
   New Item
 </button>
 
@@ -83,7 +83,7 @@
                 <option value="" disabled selected>Select an Item</option>
                 <% medicaments.forEach(function(medicament) { %>
                 <option value="<%= medicament._id %>">
-                    <%= medicament.code_pch %>, <%= medicament.designation %>
+                     <%= medicament.designation %>, Code: <%= medicament.code_pch %>
                 </option>
                 <% }); %>
             </select>
@@ -91,8 +91,8 @@
 
           <!-- Batch Number Input -->
           <div class="col-md-6 mb-3">
-            <label for="batchNumber" class="form-label label-required">Batch Number</label>
-            <input type="text" class="form-control" id="batchNumber" name="batchNumber" required>
+            <label for="batchNumber" class="form-label">Batch Number</label>
+            <input type="text" class="form-control" id="batchNumber" name="batchNumber">
           </div>
 
           <!-- Serial Number Input (conditionally rendered) -->
@@ -102,8 +102,8 @@
           </div>
             <!-- expire date Input -->
             <div class="col-md-6 mb-3">
-              <label for="expiryDate" class="form-label label-required">Expiry date</label>
-              <input type="date" class="form-control" id="expiryDate" name="expiryDate" required>
+              <label for="expiryDate" class="form-label">Expiry date</label>
+              <input type="date" class="form-control" id="expiryDate" name="expiryDate">
             </div>
             <!-- Physical Quantity Input -->
             <div class="col-md-6 mb-3">

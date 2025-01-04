@@ -10,13 +10,18 @@ const {
    initiateTransfer,
    rejectDemand,
 getReceivedDemandPage,
-receiveDemand
+initiatereceiveDemand,
+transferMedicamentsToInStock,
+approvereceiveDemand
+
   } = require("../controller/demand");
   router.route("/demands/:serviceABV").get(isLoggedIn,isResponsableService,catchAsync(getDemandsPage));
   router.route("/initiateTransfer").post(isLoggedIn,isResponsableService,catchAsync(initiateTransfer));
   router.route("/demand-details/:demandId").get(isLoggedIn,isResponsableService,catchAsync(getDemandDetailsPage));
+  router.route("/:demandId/transfer").get(isLoggedIn,isResponsableService,catchAsync(transferMedicamentsToInStock));
+  router.route("/:demandId/approve").get(isLoggedIn,isResponsableService,catchAsync(approvereceiveDemand));
   router.route("/demand-details/reject").post(isLoggedIn,isResponsableService,catchAsync(rejectDemand));
-  router.route("/:demandId").get(isLoggedIn,isResponsableService,catchAsync(getReceivedDemandPage)).post(isLoggedIn,isResponsableService,catchAsync(receiveDemand));
+  router.route("/:demandId").get(isLoggedIn,isResponsableService,catchAsync(getReceivedDemandPage)).post(isLoggedIn,isResponsableService,catchAsync(initiatereceiveDemand));
   router.route("/:serviceABV/newdemand").get(isLoggedIn,isResponsableService,catchAsync(getAddDemandPage)).post(isLoggedIn,isResponsableService,catchAsync(createDemand));
 
 module.exports = router;

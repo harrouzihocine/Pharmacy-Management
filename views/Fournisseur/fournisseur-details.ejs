@@ -3,7 +3,10 @@
     <button class="btn back-btn back-button " onclick="window.location.href='/fournisseur'"><i class="bi bi-arrow-left-circle"></i></button>
 <h3>Liste des contacts</h3>
 
-  <div class="contacts-grid">
+<div class="contacts-grid">
+  <% if (fournisseur.contacts.length === 0) { %>
+    <p>No contacts available.</p>
+  <% } else { %>
     <% fournisseur.contacts.forEach((contact) => { %>
       <div class="contact-card">
         <div class="contact-header">
@@ -17,15 +20,16 @@
           <p><strong>Description:</strong> <%= contact.description %></p>
         </div>
         <div class="contact-footer">
-            <form action="/fournisseur/<%= fournisseur.id %>/contact/<%= contact._id %>?_method=DELETE" method="POST" style="display: inline;">
-                <button type="submit" class="btn delete-btn py-1 px-2" title="Delete Contact">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </form>
-                            
+          <form action="/fournisseur/<%= fournisseur.id %>/contact/<%= contact._id %>?_method=DELETE" method="POST" style="display: inline;">
+            <button type="submit" class="btn delete-btn py-1 px-2" title="Delete Contact">
+              <i class="bi bi-trash"></i>
+            </button>
+          </form>
         </div>
       </div>
     <% }) %>
-  </div>
+  <% } %>
+</div>
+
 </div>
 </div>

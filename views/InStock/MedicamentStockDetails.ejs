@@ -42,7 +42,7 @@
             <td><%= stock.batchNumber %></td>
             <td><%= stock.expiryDate ? stock.expiryDate.toLocaleDateString() : 'N/A' %> 
               <% if (stock.isExpiringSoon !='Valid'&&  stock.isExpiringSoon !='No Expiration Data') { %>
-                <span class="tag out-of-stock">Expiration Soon</span>
+                <span class="tag out-of-stock"><%= stock.isExpiringSoon %></span>
               <% } %>
             </td>
             

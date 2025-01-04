@@ -54,9 +54,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.plugin(passportLocalMongoose);
-userSchema.virtual("fullname").get(function () {
-  return this.lastname + " " + this.firstname;
-});
+
 // Hash the password before saving the user
 userSchema.pre("save", async function (next) {
   if (this.isModified("hash")) {

@@ -1,0 +1,49 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="patient-details-container">
+  <div class="col m-auto">
+    <h3 class="mb-4 text-center">Patients List</h3>
+    <div class="mb-3">
+      <%- include("./new") %>
+    </div>
+
+    <form class="search-bar mb-2">
+      <input type="text" id="search" placeholder="Search in patient list" />
+    </form>
+
+    <table class="patient-details-table sortable">
+      <thead>
+        <tr>
+          <th scope="col">Fullname</th>
+          <th scope="col">Birthdate</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Adress</th>
+          
+          <th scope="col">Phone</th>
+          <th id="item1" scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+        <% var i = 1 %> 
+        <% for (patient of patients) { %>
+          <tr>
+            <td onclick="window.location.href='/patients/<%= patient._id %>'"><%= patient.fullname %></td>
+            <td onclick="window.location.href='/patients/<%= patient._id %>'"><%= patient.date_of_birth.toLocaleDateString() %></td>
+            <td onclick="window.location.href='/patients/<%= patient._id %>'"><%= patient.gender %></td>
+            <td onclick="window.location.href='/patients/<%= patient._id %>'"><%= patient.address %></td>
+            
+            <td onclick="window.location.href='/patients/<%= patient._id %>'"><%= patient.phone %></td>
+            <td>
+              <div class="d-flex justify-content-center align-items-center">
+               
+                <button type="button" class="btn py-1 px-2" style="background-color:rgba(0 208 255 / 0.56);" onclick="window.location.href='/prescription/<%= serviceABV %>/<%= patient._id %>'">
+                  <img width="25" height="25" src="../assets/ordonnance.png" alt="">
+                </button>
+              </div>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

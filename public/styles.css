@@ -2257,6 +2257,12 @@
   color: #ffffff; /* Soft pastel blue for text */
   border: 0px; /* Complementary border for subtle separation */
 }
+.status-Received {
+  background: #117200; /* Cool muted blue tone for low stock */
+  color: #FFFFFF; /* Soft pastel blue for text */
+  border: 0px; /* Complementary border for subtle separation */
+}
+
 /*-------------------------------Demand Details Page---------------------------------*/
 /* Container for the Demand Details Page */
 .demand-details-page-container {
@@ -3359,3 +3365,296 @@ table.dataTable tbody tr {
   text-align: right;
 }
 
+/*------------------------------------ Patient Details Page -------------------------------------*/
+.patient-details-container {
+  width: 90rem;
+  background-color: #0201281d;
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+}
+
+/* Title Style */
+.patient-details-container h3 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+.patient-details-container h4 {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+
+/* Table Styling */
+.patient-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.patient-details-table th,
+.patient-details-table td {
+  max-width: 300px !important;
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.patient-details-table th {
+  background-color: #3e3e3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Table Rows */
+.patient-details-table tr:nth-child(even) {
+  background-color: #333;
+}
+
+.patient-details-table tr:hover {
+  background-color: #444;
+}
+
+/* Table Data Cells */
+.patient-details-table td {
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.patient-details-table td:hover {
+  background-color: #555;
+}
+
+/* Action Buttons */
+.patient-details-table .delete-btn {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.patient-details-table .delete-btn:hover {
+  background-color: #e53935;
+}
+
+.patient-details-table .edit-btn {
+  background-color: #ff9800;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.patient-details-table .edit-btn:hover {
+  background-color: #fb8c00;
+}
+
+/* Container for Action Buttons */
+.d-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Add New Button */
+.new-patient-btn {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.new-patient-btn:hover {
+  background-color: #388e3c;
+}
+/*------------------------ Create Prescription Page Styles ------------------------*/
+
+/* Container for the Create Prescription Page */
+.create-prescription-page-container {
+
+  background-color: #0201281d;
+  color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin: 20px;
+}
+
+/* Header Styling */
+.create-prescription-header {
+  position: relative;
+  text-align: center;
+}
+
+.create-prescription-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.create-prescription-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: #bbbbbb;
+}
+
+
+
+/* Table Styling */
+.create-prescription-table {
+  width: 100%;
+  border-collapse: collapse;
+ 
+}
+
+.create-prescription-table th,
+.create-prescription-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #444;
+}
+
+.create-prescription-table th {
+  background-color: #2e2e2e;
+  color: #fff;
+  font-weight: 600;
+}
+
+.create-prescription-table tr:nth-child(even) {
+  background-color: #222;
+}
+
+.create-prescription-table tr:hover {
+  background-color: #333;
+}
+
+.create-prescription-table td {
+  color: #fff;
+}
+
+/* Input Fields in Table */
+.quantity-input,
+.comment-input {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+}
+
+.quantity-input:focus,
+.comment-input:focus {
+  outline: none;
+  border-color: #55104d;
+}
+
+/* Action Buttons */
+.prescription-action-buttons {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.create-prescription-btn {
+  background-color: #55104d;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.create-prescription-btn:hover {
+  background-color: #726c7a;
+}
+
+/* Highlight for Search Matches */
+.create-prescription-row[data-highlight="true"] {
+  background-color: lightgreen !important;
+}
+/*-----------------------edit item inventory page --------------------*/
+.edit-item-container {
+  width: 80rem;
+  background-color: #0201281d; /* Dark background for the container */
+  color: #fff;
+ 
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+  margin: 20px;
+}
+/* Form Styling */
+.edit-item-form {
+  
+ margin: 10px;
+  text-align: left;
+}
+
+/* Form Group Styling */
+.edit-item-form .form-group {
+  margin-bottom: 20px;
+}
+
+/* Label Styling */
+.edit-item-form .form-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+/* Input and Select Styles */
+.edit-item-form  .form-control,
+.edit-item-form  .form-select {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #fff;
+}
+
+.edit-item-form  .form-control:focus,
+.edit-item-form  .form-select:focus {
+  border-color: #726c7a;
+  background-color: #333;
+  outline: none;
+}
+
+/* Button Styles */
+.edit-item-form  button {
+  padding: 12px 30px;
+  background-color: #55104d; /* Dark color for action */
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Make button take the full width */
+}
+
+.edit-item-form button:hover {
+  background-color: #726c7a;
+}

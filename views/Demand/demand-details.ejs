@@ -23,7 +23,7 @@
       </tr>
       <tr>
         <th>Status</th>
-        <td><%= demand.status %></td>
+        <td><%= demand.status %> <%= demand.isReceived? '(Received)' : '' %></td>
       </tr>
       <tr>
         <th>Comment</th>
@@ -135,6 +135,17 @@
             <% }); %>
           </tbody>
         </table>
+        <% if (!demand.isReceived && demand.status == 'Approved') { %>
+        <button type="button" class="btn trans-btn mt-2" onclick="window.location.href='/demand/<%= demand._id %>/transfer'">
+      Confirm Tranfer
+    </button>
+    <% } %>
+  
+        <% if (demand.status === 'Non completed') { %>
+        <button type="button" class="btn trans-btn mt-2" onclick="window.location.href='/demand/<%= demand._id %>/approve'">
+     Aprrove Transfer
+    </button>
+    <% } %>
       </div>
   <% } %>
   <!-- Reject Reason Section -->
@@ -152,10 +163,11 @@
       Reject
     </button>
 
-    <% } if(demand){ %>
+    <% } if(demand.status == 'In transfer' || !demand.isReceived && demand.status != 'Rejected' && demand.status != 'Pending'){ %>
     <button type="button" class="btn trans-btn mt-2" onclick="window.location.href='/demand/<%= demand._id %>'">
-      Receive Command
+      Edit receive Command
     </button>
+   
   </div>
   <% }} else { %>
   <tr>

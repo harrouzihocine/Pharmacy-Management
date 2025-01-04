@@ -1,61 +1,93 @@
 <button type="button" class="btn demand-new-button" data-bs-toggle="modal" data-bs-target="#addMedicamentModal">
-    <i class="bi bi-plus-circle-fill"></i> Add Medicament
-  </button>
-  
-  <div class="modal fade add-storage-modal" id="addMedicamentModal" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-      <div class="modal-content add-storage-page-container">
-        <div class="modal-header">
-          <h5 class="modal-title">Add Medicament</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-  
-        <div class="modal-body">
-          <form id="addMedicamentForm" method="POST" class="add-storage-form row needs-validation" action="/medicament" novalidate>
-           
-            <!-- Code PCH -->
-            <div class="form-group col-12">
-              <label for="code_pch" class="form-label label-required">Code PCH:</label>
-              <input name="code_pch" id="code_pch" class="form-control" type="text" placeholder="Enter Code PCH" required />
-            </div>
-            
-            <!-- Designation -->
-            <div class="form-group col-12">
-              <label for="designation" class="form-label label-required">Designation:</label>
-              <input name="designation" id="designation" class="form-control" type="text" placeholder="Enter Designation" required />
-            </div>
-  
-            <!-- Nom Commercial -->
-            <div class="form-group col-md-6">
-              <label for="nom_commercial" class="form-label">Nom Commercial:</label>
-              <input name="nom_commercial" id="nom_commercial" class="form-control" type="text" placeholder="Enter Nom Commercial"/>
-            </div>
-  
-            <!-- Type de Médicament -->
-            <div class="form-group col-6">
-              <label for="type_medicament" class="form-label label-required">Type de Médicament:</label>
-              <input name="type_medicament" id="type_medicament" class="form-control" type="text" placeholder="Enter Type" required />
-            </div>
-  
-            <!-- Forme -->
-            <div class="form-group col-md-6">
-              <label for="forme" class="form-label label-required">Form:</label>
-              <input name="forme" id="forme" class="form-control" type="text" placeholder="Enter Forme" required />
-            </div>
-  
-            <!-- Boite De -->
-            <div class="form-group col-md-6">
-              <label for="boite_de" class="form-label label-required">Boite De:</label>
-              <input name="boite_de" id="boite_de" class="form-control" type="number" placeholder="Enter Boite De" required />
-            </div>
-  
-            <!-- Submit Button -->
-            <div class="form-group mt-4">
-              <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-          </form>
-        </div>
+  <i class="bi bi-plus-circle-fill"></i> Add Medicament
+</button>
+
+<div class="modal fade add-storage-modal" id="addMedicamentModal" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content add-storage-page-container">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Medicament</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="addMedicamentForm" method="POST" class="add-storage-form row needs-validation" action="/medicament" novalidate>
+
+          <!-- Code PCH -->
+          <div class="form-group col-12">
+            <label for="code_pch" class="form-label label-required">Code PCH:</label>
+            <input name="code_pch" id="code_pch" class="form-control" type="text" placeholder="Enter Code PCH" required />
+          </div>
+
+          <!-- Designation -->
+          <div class="form-group col-12">
+            <label for="designation" class="form-label label-required">Designation:</label>
+            <input name="designation" id="designation" class="form-control" type="text" placeholder="Enter Designation" required />
+          </div>
+
+          <!-- Nom Commercial -->
+          <div class="form-group col-md-6">
+            <label for="nom_commercial" class="form-label">Nom Commercial:</label>
+            <input name="nom_commercial" id="nom_commercial" class="form-control" type="text" placeholder="Enter Nom Commercial" />
+          </div>
+
+          <!-- Type de Médicament -->
+          <div class="form-group col-6">
+            <label for="type_medicament" class="form-label label-required">Type de Médicament:</label>
+            <select name="type_medicament" id="type_medicament" class="form-control" required>
+              <option value="" disabled selected>Select Type</option>
+              <option value="MÉDICAMENT">MÉDICAMENT</option>
+              <option value="STUPÉFIANT">STUPÉFIANT</option>
+              <option value="PSYCHOTROPE 1">PSYCHOTROPE 1</option>
+              <option value="PSYCHOTROPE 2">PSYCHOTROPE 2</option>
+              <option value="FROID">FROID</option>
+              <option value="SOLUTÉ GRAND VOLUME">SOLUTÉ GRAND VOLUME</option>
+              <option value="ANTISEPTIQUE">ANTISEPTIQUE</option>
+              <option value="LIGATURE">LIGATURE</option>
+              <option value="CHIMIQUE">CHIMIQUE</option>
+              <option value="CONSOMMABLE">CONSOMMABLE</option>
+              <option value="STÉRILISATION">STÉRILISATION</option>
+              <option value="CATHETERISME">CATHETERISME</option>
+              <option value="RADIOLOGIE">RADIOLOGIE</option>
+              <option value="LABORATOIRE">LABORATOIRE</option>
+              <option value="ANAPATHE">ANAPATHE</option>
+              <option value="FIBROSCOPIE">FIBROSCOPIE</option>
+              <option value="CHIRURGIE GÉNÉRALE">CHIRURGIE GÉNÉRALE</option>
+              <option value="INSTRUMENT">INSTRUMENT</option>
+              <option value="OSTÉO-SYNTHÈSE">OSTÉO-SYNTHÈSE</option>
+            </select>
+          </div>
+
+
+          <!-- Forme -->
+          <div class="form-group col-md-6">
+            <label for="forme" class="form-label label-required">Form:</label>
+            <select name="forme" id="forme" class="form-control" required>
+              <option value="" disabled selected>Select Form</option>
+              <option value="AMPOULE">AMPOULE</option>
+              <option value="FLACON">FLACON</option>
+              <option value="UNITE">UNITE</option>
+              <option value="LITRE">LITRE</option>
+              <option value="COMPRIME">COMPRIME</option>
+              <option value="SACHET">SACHET</option>
+              <option value="TUBE">TUBE</option>
+              <option value="GELULE">GELULE</option>
+            </select>
+          </div>
+
+
+          <!-- Boite De -->
+          <div class="form-group col-md-6">
+            <label for="boite_de" class="form-label label-required">Boite De:</label>
+            <input name="boite_de" id="boite_de" class="form-control" type="number" placeholder="Enter Boite De" required />
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-group mt-4">
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-  
+</div>

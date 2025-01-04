@@ -3,7 +3,7 @@
 <div class="stock-details-container">
   <button  class="btn back-btn back-button" onclick="window.location.href='/pharmacy'"><i class="bi bi-arrow-left-circle"></i></button>
   <h1>Stock Details for Medicament</h1>
-  <h2><%= designantion %></h2>
+  <h2><%= designation %></h2>
 
   <table class="stock-details-table">
     <thead>
@@ -35,7 +35,7 @@
         <td><%= stock.serialNumber?stock.serialNumber:'N/A'  %> </td>
         <td><%= stock.expiryDate ? new Date(stock.expiryDate).toLocaleDateString() : 'N/A' %>
             <% if (stock.isExpiringSoon !='Valid' ) { %>
-          <span class="tag out-of-stock">Expiration Soon</span>
+          <span class="tag out-of-stock"><%= stock.isExpiringSoon %></span>
         <% } %>
          
         </td>

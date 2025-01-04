@@ -12,6 +12,10 @@ const demandSchema = new mongoose.Schema(
       enum: ["Pending", "In transfer", "Approved", "Rejected", "Non completed"], // Status options
       default: "Pending",
     },
+    isReceived: {
+      type: Boolean,
+      default: false,
+    },
     source: {
       type: String,
       required: true,

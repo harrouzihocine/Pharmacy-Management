@@ -56,13 +56,16 @@
   <% if(status == 'Draft'){ %>
   <!-- New Item Form Section -->
   <div class="new-item-form-section">
-    <h3>Add New Item</h3>
+    <h3>Add / search Item</h3>
     <%- include("./new-item", { medicaments, groupedStorages, inventory,fournisseurs }) %>
+    <%- include("./medicaments", { medicaments}) %>
   </div>
   <% } %>
   <h3 class="mt-4">Inventory Items</h3>
+ 
+
   <!-- Inventory Items Table Section -->
-  <form class="search-bar">
+  <form class="search-bar mb-2">
     <input type="text" id="search" placeholder="Search in inventory items" />
   </form>
   <table class="inventory-items-table sortable">
@@ -102,13 +105,14 @@
         <td><%= item.batchNumber %></td>
         <td><%= item.serialNumber || 'N/A' %></td>
         <td><%= item.physicalQuantity %></td>
-        <td><%= item.purchasePrice?item.purchasePrice.toFixed(2):parseInt(0).toFixed(2)%> DA</td>
+        <td><%= item.purchasePrice ? item.purchasePrice.toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) : parseInt(0).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></td>
+
         <td><%= item.tva?item.tva:'N/A'%> %</td>
-        <td><%= (parseFloat(item.purchasePrice?item.purchasePrice:0) * item.physicalQuantity).toFixed(2)%> DA</td>
+        <td><%= (parseFloat(item.purchasePrice?item.purchasePrice:0) * item.physicalQuantity).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' })%></td>
         <% if(item.serviceABV == 'URG'){%>
-        <td><%=(parseFloat(item.purchasePrice?item.purchasePrice:0) * 1.4).toFixed(2) %> DA</td>
+        <td><%=(parseFloat(item.purchasePrice?item.purchasePrice:0) * 1.4).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></td>
         <% } else {%>
-        <td><%= (parseFloat(item.purchasePrice?item.purchasePrice:0) * 1.36).toFixed(2) %> DA</td>
+        <td><%= (parseFloat(item.purchasePrice?item.purchasePrice:0) * 1.36).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></td>
         <% } %>
         <td><%= item.remarks || 'None' %></td>
         <td>
@@ -117,7 +121,10 @@
               <%- item.visibility ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>' %>
             </button>
             <% if(status === 'Draft'){ %>
-            <%- include("./edit-item", { item,inventory, groupedStorages, fournisseurs }) %>
+         
+            <button type="button" class="btn edit-btn px-2 py-1 edit-button-container hidden" onclick="window.location.href='/inventory/item/<%= inventory.id %>/<%= item._id %>?userId=<%= user.id %>'">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
             <button type="button" class="btn delete-btn delete-item-btn py-1 px-2" data-url="/inventory/item/<%= item._id %>?_method=DELETE">
               <i class="bi bi-trash"></i>
             </button>

@@ -26,13 +26,28 @@
       <div class="modal-body">
         <form  class="add-storage-form row needs-validation" action="/fournisseur/<%= fournisseur.id %>/?_method=PUT" id="editForm" method="POST" novalidate>
          <!-- Code client -->
-         <div class="form-group col-4">
+         <div class="form-group col-6">
           <label for="codeClient" class="form-label">Code client</label>
           <input id="codeClient" name="fournisseur[codeClient]" type="text" class="form-control" style="text-transform: capitalize" value="<%= fournisseur.codeClient %>"  autofocus />
           <div class="valid-feedback">BIEN</div>
         </div>
-        <div class="form-group col-8">
-          <label for="name" class="form-label">Raison sociale</label>
+       <!-- Statut juridique -->
+<div class="form-group col-6">
+  <label for="reason" class="form-label">Statut juridique</label>
+  <select id="reason" name="fournisseur[statutjuridique]" class="form-control" required>
+    <option value="">Empty</option>
+    <option value="SARL" <% if (fournisseur.statutjuridique === 'SARL') { %> selected <% } %>>SARL</option>
+    <option value="EURL" <% if (fournisseur.statutjuridique === 'EURL') { %> selected <% } %>>EURL</option>
+    <option value="SPA" <% if (fournisseur.statutjuridique === 'SPA') { %> selected <% } %>>SPA</option>
+    <option value="SNC" <% if (fournisseur.statutjuridique === 'SNC') { %> selected <% } %>>SNC</option>
+    <option value="SCS" <% if (fournisseur.statutjuridique === 'SCS') { %> selected <% } %>>SCS</option>
+    <option value="SCA" <% if (fournisseur.statutjuridique === 'SCA') { %> selected <% } %>>SCA</option>
+    <option value="GR" <% if (fournisseur.statutjuridique === 'GR') { %> selected <% } %>>GR</option>
+  </select>
+</div>
+
+        <div class="form-group col-12">
+          <label for="name" class="form-label">Nom commercial</label>
           <input id="name" name="fournisseur[name]" type="text" class="form-control" style="text-transform: capitalize" required value="<%= fournisseur.name %>" />
         </div>
         <div class="form-group">

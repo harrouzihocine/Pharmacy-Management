@@ -1,5 +1,6 @@
 const Demand = require("../models/demand");
 const InStock = require("../models/inStock");
+const Storage = require("../models/storage");
 const Pharmacy = require("../models/pharmacy");
 const VirtualInStock = require("../models/VirtualInStock");
 const services = [
@@ -98,7 +99,7 @@ exports.createDemand = async (req, res) => {
     });
 
     await newDemand.save();
-
+    req.flash('success', 'the demand has been saved successfully');
     // Redirect to a success page or respond with a success message
     res.redirect("/demand/demands/" + serviceABV);
   } catch (error) {
@@ -109,7 +110,7 @@ exports.createDemand = async (req, res) => {
 
 exports.getDemandDetailsPage = async (req, res) => {
   const { demandId } = req.params;
-  const serviceABV  = req.query.service;
+ 
   
   try {
     // Fetch the demand with necessary population
@@ -119,7 +120,8 @@ exports.getDemandDetailsPage = async (req, res) => {
 
     // Access the source from the demand object
     const source = demand.source;
-
+    const service = services.find(s => s.name === demand.destination);
+    const serviceABV = service._id;
     if (!source) {
       return res.status(404).send({ message: "Source not found." });
     }
@@ -296,11 +298,14 @@ exports.initiateTransfer = async (req, res) => {
       .json({
         message: "Transfer initiated successfully and virtual stock updated.",
       });
+      req.flash("success", "Transfer initiated successfully and virtual stock updated.");
   } catch (error) {
     console.error(error);
     res
       .status(500)
       .json({ error: "An error occurred while processing the transfer." });
+      req.flash("error", "An error occurred while processing the transfer.");
+
   }
 };
 
@@ -373,11 +378,11 @@ exports.getReceivedDemandPage = async (req, res) => {
   }
 };
 
-exports.receiveDemand = async (req, res) => {
+exports.initiatereceiveDemand = async (req, res) => {
   const demandId = req.params.demandId;
-  const receivedQuantities = req.body.receivedQuantity; // Object of virtualStockID -> receivedQuantity
-  const transferredQuantities = req.body.transferredQuantity; // Object of virtualStockID -> transferredQuantity
-  const virtualStockIDs = Object.keys(receivedQuantities); // Array of virtualStockIDs
+  const receivedQuantities = req.body.receivedQuantity; 
+  const transferredQuantities = req.body.transferredQuantity; 
+  const virtualStockIDs = Object.keys(receivedQuantities);
 
   try {
     let allQuantitiesMatch = true;
@@ -414,6 +419,7 @@ exports.receiveDemand = async (req, res) => {
     } else {
       console.log(`Demand with ID ${demandId} not found.`);
     }
+    req.flash("success", "Received quantities updated in virtual stock please confirm the transfer.");
 
     // Redirect or return a success message
     res.redirect(`/demand/demand-details/${demandId}`);
@@ -424,5 +430,79 @@ exports.receiveDemand = async (req, res) => {
       .json({
         message: "An error occurred while updating the received quantities.",
       });
+  }
+};
+
+exports.approvereceiveDemand = async (req, res) => {
+  const { demandId } = req.params;
+
+  try {
+    const demand = await Demand.findById(demandId);
+      demand.isReceived = true;
+      demand.status = "Approved";
+    
+    await demand.save();
+
+   
+   req.flash("success", "Medicaments are approved and  transferred to InStock successfully");
+    res.redirect(`demand/demand-details/${demandId}`);
+
+  } catch (error) {
+    console.error("Error transferring medicaments to InStock:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+exports.transferMedicamentsToInStock = async (req, res) => {
+  const { demandId } = req.params;
+
+  try {
+    // Find the demand by ID and populate virtualStockIDs
+    const demand = await Demand.findById(demandId).populate("virtualStockIDs");
+
+    if (!demand) {
+      return res.status(404).json({ message: "Demand not found" });
+    }
+
+    // Check if the demand is approved
+    if (demand.status !== "Approved") {
+      return res.status(400).json({ message: "Demand is not approved" });
+    }
+
+    // Find the Storage document where service matches the demand's destination
+    const storage = await Storage.findOne({ service: demand.destination });
+
+    if (!storage) {
+      return res.status(404).json({ message: "Storage not found for the destination service" });
+    }
+
+    // Iterate through each VirtualInStock entry
+    for (const virtualStock of demand.virtualStockIDs) {
+      // Create a new InStock entry
+      const inStockEntry = new InStock({
+        medicamentId: virtualStock.medicamentId,
+        storageId: storage._id, // Use the _id of the found Storage document
+        quantity: virtualStock.receivedQuantity || virtualStock.quantity, // Use receivedQuantity if available, else use quantity
+        batchNumber: virtualStock.batchNumber,
+        expiryDate: virtualStock.expiryDate,
+        barcode: virtualStock.barcode,
+        createdBy: demand.createdBy, // Assuming the creator is the same
+      });
+
+      // Save the InStock entry
+      await inStockEntry.save();
+    }
+
+    // Optionally, update the demand status to indicate the transfer is complete
+    demand.isReceived = true;
+    
+    
+    await demand.save();
+
+    req.flash("success", "Medicaments transferred to InStock successfully");
+    res.redirect(`/demand/demand-details/${demandId}`);
+
+  } catch (error) {
+    console.error("Error transferring medicaments to InStock:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

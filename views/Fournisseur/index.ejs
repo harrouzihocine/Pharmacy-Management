@@ -16,7 +16,7 @@
       <thead>
         <tr>
           <th scope="col">Code Client</th>
-          <th scope="col">Raison sociale</th>
+          <th scope="col">Nom commercial</th>
           <th scope="col">Wilaya</th>
           <th scope="col">Email</th>
           <th scope="col">Téléphone</th>
@@ -31,7 +31,7 @@
         <tr>
 
           <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%= fournisseur.codeClient?fournisseur.codeClient: 'N/A' %></td>
-          <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%= fournisseur.name %></td>
+          <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%= fournisseur.statutjuridique %> <%= fournisseur.name %></td>
           <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%= fournisseur.wilaya %></td>
           <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%=fournisseur.email%></td>
           <td onclick="window.location.href='/fournisseur/<%=fournisseur.id %>'"><%=fournisseur.phone%></td>

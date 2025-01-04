@@ -40,7 +40,7 @@
             <button class="view-btn" style="background-color: rgba(255 255 255 / 0.8);" onclick="window.location.href='/inStock/service/<%= service.serviceABV %>'"><img width="25" height="25" src="https://img.icons8.com/?size=100&id=66316&format=png&color=000000" alt="external-medicament-healthcare-and-medicine-filled-outline-perfect-kalash"></button>
             <button class="view-btn" style="background-color: rgba(86 35 154 / 0.85);" onclick="window.location.href='/demand/demands/<%= service.serviceABV %>'"><i class="fa-solid fa-truck-medical"></i> <i class="fa-solid fa-arrow-right-arrow-left"></i></button>
             <% if(service.expiredCount > 0){ %>
-            <button class="btn view-btn position-relative py-0 px-2" style="background-color: rgba(255 0 0 / 0.5);" onclick="window.location.href='/inStock/service/expired/<%= service.serviceABV %>'">
+            <button class="btn view-btn position-relative py-1 px-2" style="background-color: rgba(255 0 0 / 0.5);" onclick="window.location.href='/inStock/service/expired/<%= service.serviceABV %>'">
               
               <span class="position-absolute top-0 start-100 translate-middle text-dark badge rounded-pill bg-white"><%= service.expiredCount %></span>
               <i class="fa-solid fa-triangle-exclamation fs-4"></i></button>
@@ -49,7 +49,7 @@
             </div>
         </td>
         <td>
-          <button class="view-btn py-0 px-2" style="background-color: rgba(0 208 255 / 0.56);" onclick="window.location.href='/inStock/service/stock-details/<%= service.serviceABV %>'"><img width="37" height="37" src="https://img.icons8.com/color-glass/48/hand-with-a-pill.png" alt="hand-with-a-pill"/></button>
+          <button class="view-btn py-0 px-2" style="background-color: rgba(0 208 255 / 0.56);" onclick="window.location.href='/patient/<%= service.serviceABV %>'"><img width="37" height="37" src="https://img.icons8.com/color-glass/48/hand-with-a-pill.png" alt="hand-with-a-pill"/></button>
         </td>
       </tr>
       <% } %>

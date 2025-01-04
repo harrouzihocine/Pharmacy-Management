@@ -1,0 +1,91 @@
+<% layout('layouts/boilerplate') %>
+<div class="create-prescription-page-container">
+  <div class="create-prescription-header">
+    <button class="btn back-btn back-button" onclick="window.location.href='/patient/<%= patient._id %>'"><i class="bi bi-arrow-left-circle"></i></button>
+    <h1>Create Prescription for <%= patient.fullname %></h1>
+    <h2>Service: <%= serviceABV %></h2>
+  </div>
+
+  <!-- Search bar for searching medicaments -->
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search Medicaments" />
+  </form>
+
+  <!-- Form to submit prescription -->
+  <form id="createPrescriptionForm" action="/prescriptions" method="POST">
+    <input type="hidden" name="patientId" value="<%= patient._id %>">
+    <input type="hidden" name="serviceABV" value="<%= serviceABV %>">
+    
+    <table class="create-prescription-table">
+      <thead>
+        <tr>
+            <th>Barcode</th>
+          <th>Medicament</th>
+          <th>Quantity</th>
+          <th>Comment</th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+        <% medicaments.forEach(med => { %>
+          <tr class="create-prescription-row" data-medicament-id="<%= med.medicamentId._id %>">
+            <td><%= med.barcode %></td>
+            <td class="medicament-name"><%= med.medicamentId.designation %></td>
+            <td>
+              <input 
+                type="number" 
+                class="form-control quantity-input" 
+                name="medicaments[<%= med.medicamentId._id %>][quantity]" 
+                id="quantity_<%= med.medicamentId._id %>" 
+                min="1"
+                required
+              >
+            </td>
+            <td>
+              <input 
+                type="text" 
+                class="form-control comment-input" 
+                name="medicaments[<%= med.medicamentId._id %>][comment]" 
+                placeholder="Optional comment"
+              >
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <div class="prescription-action-buttons">
+      <button type="submit" class="btn create-prescription-btn">Create Prescription</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Function to handle search and highlight matching medicaments
+  document.getElementById('search').addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent the default form submission
+
+      const searchValue = this.value.trim(); // Get the input value
+      const rows = document.querySelectorAll('.create-prescription-row'); // Get all table rows
+
+      // Loop through rows to find a matching medicament
+      for (let row of rows) {
+        const medicamentNameCell = row.querySelector('.medicament-name'); // Get medicament name cell
+        const medicamentName = medicamentNameCell ? medicamentNameCell.textContent.trim() : '';
+
+        if (medicamentName.toLowerCase().includes(searchValue.toLowerCase())) {
+          // Highlight the matching row
+          row.style.backgroundColor = 'lightgreen';
+          setTimeout(() => {
+            row.style.backgroundColor = ''; // Remove the highlight after 1 second
+          }, 1000);
+          this.value = ''; // Clear the search input
+          return; // Stop searching after the match
+        }
+      }
+
+      // If no match found, you can alert the user (optional)
+      alert('Medicament not found in the list.');
+    }
+  });
+</script>

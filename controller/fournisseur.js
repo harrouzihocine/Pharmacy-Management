@@ -39,6 +39,7 @@ module.exports.createFournisseur = async (req, res) => {
   }
 
   const newFournisseur = new Fournisseur({
+    statutjuridique: fournisseur.statutjuridique,
     name:
       fournisseur.name.charAt(0).toUpperCase() +
       fournisseur.name.slice(1).toLowerCase(),
@@ -83,6 +84,7 @@ module.exports.updateFournisseur = async (req, res) => {
   await Fournisseur.findByIdAndUpdate(
     id,
     {
+      statutjuridique: fournisseur.statutjuridique,
       name:
       fournisseur.name.charAt(0).toUpperCase() +
       fournisseur.name.slice(1).toLowerCase(),

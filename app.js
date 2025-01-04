@@ -102,8 +102,15 @@ app.use("/demand", inDemandRoutes);
 
 const inInventoryRoutes = require("./routes/inventory"); 
 app.use("/inventory", inInventoryRoutes); 
+
 const fournisseurRoutes = require("./routes/fournisseur"); 
-app.use("/fournisseur",fournisseurRoutes); 
+app.use("/fournisseur",fournisseurRoutes);
+ 
+const prescriptionRoutes = require("./routes/prescription"); 
+app.use("/prescription",prescriptionRoutes); 
+
+const patientRoutes = require("./routes/patient"); 
+app.use("/patient",patientRoutes); 
 
 const port = process.env.PORT;
 

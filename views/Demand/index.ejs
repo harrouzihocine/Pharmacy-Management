@@ -40,7 +40,11 @@
                   <% if (demand.status === 'In transfer') { %>status-Intransfer<% } %>
                   <% if (demand.status === 'Non completed') { %>status-Noncompleted<% } %>">
                   <%= demand.status %>
+                  
                 </span>
+                <% if (demand.isReceived) { %>
+                <span class="p-0 m-0"><img width="35" height="35" src="https://img.icons8.com/parakeet/35/checkmark.png" alt="checkmark"/></span>
+               <% } %>
               </td>
              
             </tr>

@@ -57,6 +57,24 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </script>
 <script>
+  $(document).ready(function () {
+   $("#searchMED").on("keyup", function () {
+     var value = $(this).val().toLowerCase();
+     $("#tablebodyMED tr").filter(function () {
+       // Filter rows by matching text from all cells except the last one
+       var match = $(this)
+         .find("td")
+         .toArray()
+         .some(function (cell) {
+           return $(cell).text().toLowerCase().indexOf(value) > -1;
+         });
+       $(this).toggle(match);
+     });
+   });
+ });
+ 
+ </script>
+<script>
  $(document).ready(function() {
     $('.sortable').DataTable({
         searching: false,  // Disables the search bar

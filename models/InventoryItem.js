@@ -8,9 +8,9 @@ const InventoryItemSchema = new mongoose.Schema(
 
     serviceABV: { type: String }, // Service identifier
     storageName: { type: String }, // Storage name
-    batchNumber: { type: String, required: true }, // Batch number
+    batchNumber: { type: String}, // Batch number
     serialNumber: { type: String }, // Optional serial number
-    expiryDate: { type: Date, required: true }, // Expiry date
+    expiryDate: { type: Date}, // Expiry date
     tva: { type: Number}, // tva
     physicalQuantity: { type: Number, required: true }, // Physical quantity
     purchasePrice: { type: Number }, // Purchase price

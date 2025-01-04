@@ -17,6 +17,7 @@ const ContactSchema = new mongoose.Schema({
 );
 const Fournisseur = new Schema(
   {
+    statutjuridique: { type: String },
     name: String,
     codeClient: String,
     wilaya: String,

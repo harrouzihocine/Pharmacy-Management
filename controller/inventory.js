@@ -102,7 +102,7 @@ module.exports.getInventoryDetailsPage = async (req, res, next) => {
       .lean(); // Convert Mongoose documents to plain objects for rendering
 
     // Fetch all medicaments for adding new items
-    const medicaments = await Medicament.find();
+    const medicaments = await Medicament.find().sort({ code_interne: 1 });
 
     // Fetch user details
     const user = await User.findById(userId);
@@ -196,7 +196,7 @@ exports.addInventoryItem = async (req, res) => {
       factureDate,
     } = req.body;
     // Validate required fields (if not already handled by form validation)
-    if (!inventoryId || !medicamentId || !batchNumber || !physicalQuantity) {
+    if (!inventoryId || !medicamentId || !physicalQuantity) {
       return res
         .status(400)
         .json({ error: "All required fields must be filled!" });
@@ -233,6 +233,58 @@ exports.addInventoryItem = async (req, res) => {
     res.status(500).json({ error: "Server error. Please try again later." });
   }
 };
+module.exports.getUpdateItemPage = async (req, res, next) => {
+  const inventoryId = req.params.inventoryId;
+  const itemId = req.params.itemId;
+  const userId = req.query.userId;
+
+  try {
+    // Fetch inventory details
+    const inventory = await Inventory.findById(inventoryId);
+    const fournisseurs = await Fournisseur.find();
+    // Check the status of the UserInventory for the given inventoryId and userId
+    
+
+    // Fetch all inventory items for this inventory
+    const item = await InventoryItem.find({
+      _id: itemId,
+    })
+      .populate("medicamentId", "designation") // Populate medicament details (e.g., name or designation)
+      .lean(); // Convert Mongoose documents to plain objects for rendering
+      const medicaments = await Medicament.find();
+    // Fetch grouped storages for dropdown or information
+    const groupedStorages = await Storage.aggregate([
+      {
+        $group: {
+          _id: "$serviceABV", // Group by serviceABV
+          storages: {
+            $push: {
+              storageName: "$storageName",
+              endroitCode: "$endroitCode",
+              endroitDescription: "$endroitDescription",
+              service: "$service",
+            },
+          },
+        },
+      },
+      { $sort: { _id: 1 } }, // Optional: Sort by serviceABV alphabetically
+    ]);
+
+  
+    // Render page with data
+    res.render("Inventory/edit-item", {
+      inventory,
+      item:item[0],
+      groupedStorages,
+      fournisseurs,
+      medicaments,
+      user:userId
+    });
+  } catch (error) {
+    console.error("Error fetching inventory details:", error);
+    next(error); // Handle errors appropriately
+  }
+};
 exports.updateInventoryItem = async (req, res) => {
   try {
     const inventoryItemId = req.params.itemId; // Assuming the item ID is passed in the URL
@@ -253,13 +305,15 @@ exports.updateInventoryItem = async (req, res) => {
       BLDate,
       factureDate,
       remarks,
+      inventory,
+      user
     } = req.body;
 
     // Validate required fields (if not already handled by form validation)
     if (
       !inventoryItemId ||
       !medicamentId ||
-      !batchNumber ||
+
       !physicalQuantity
     ) {
       return res
@@ -278,7 +332,7 @@ exports.updateInventoryItem = async (req, res) => {
     inventoryItem.medicamentId = medicamentId;
     inventoryItem.serviceABV = serviceABV;
     inventoryItem.storageName = storageName;
-    inventoryItem.batchNumber = batchNumber;
+    inventoryItem.batchNumber = batchNumber || inventoryItem.batchNumber; // Keep the original if not provided
     inventoryItem.serialNumber = serialNumber || inventoryItem.serialNumber; // Keep the original if not provided
     inventoryItem.expiryDate = expiryDate || inventoryItem.expiryDate; // Keep the original if not provided
     inventoryItem.physicalQuantity = physicalQuantity;
@@ -296,7 +350,7 @@ exports.updateInventoryItem = async (req, res) => {
     await inventoryItem.save();
 
     // Respond with success
-    res.redirect(`back`);
+    res.redirect(`/inventory/${inventory}/user/${user}`);
   } catch (error) {
     console.error("Error updating inventory item:", error);
     res.status(500).json({ error: "Server error. Please try again later." });

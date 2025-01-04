@@ -14,14 +14,30 @@
         <form id="addToStorageForm" method="POST" class="add-storage-form row needs-validation" action="/fournisseur" novalidate>
 
           <!-- Code client -->
-          <div class="form-group col-4">
+          <div class="form-group col-6">
             <label for="codeClient" class="form-label">Code client</label>
             <input id="codeClient" name="fournisseur[codeClient]" type="text" class="form-control" style="text-transform: capitalize" autofocus />
             <div class="valid-feedback">BIEN</div>
           </div>
-          <!-- Raison Sociale -->
-          <div class="form-group col-8">
-            <label for="name" class="form-label">Raison sociale</label>
+          <!-- Statut juridique -->
+          <div class="form-group col-6">
+            <label for="statutjuridique" class="form-label">Statut juridique</label>
+            <select id="statutjuridique" name="fournisseur[statutjuridique]" class="form-control" required>
+              <option value="">Empty</option>
+              <option value="SARL">SARL</option>
+              <option value="EURL">EURL</option>
+              <option value="SPA">SPA</option>
+              <option value="SNC">SNC</option>
+              <option value="SCS">SCS</option>
+              <option value="SCA">SCA</option>
+              <option value="GR">GR</option>
+            </select>
+            <div class="valid-feedback">BIEN</div>
+          </div>
+
+          <!-- Nom fournisseur -->
+          <div class="form-group col-12">
+            <label for="name" class="form-label">Nom commercial</label>
             <input id="name" name="fournisseur[name]" type="text" class="form-control" style="text-transform: capitalize" required />
             <div class="valid-feedback">BIEN</div>
           </div>

@@ -22,7 +22,8 @@ const {
   deleteInventoryItem,
   updateInventoryItem,
   exportInventoryItemsToExcel,
-  hideInventoryItem
+  hideInventoryItem,
+  getUpdateItemPage
 } = require("../controller/inventory");
 router.route("/").get(isLoggedIn, isResponsableService,catchAsync(getinventoriespage));
 router
@@ -36,10 +37,13 @@ router
   
 router
 .route("/item/:itemId")
+ 
 .put(isLoggedIn, isResponsableService,catchAsync(updateInventoryItem))
 .delete(isLoggedIn, isResponsableService,catchAsync(deleteInventoryItem))
 .patch(isLoggedIn, isPharmacienPrincipal,catchAsync(hideInventoryItem));
-
+router
+.route("/item/:inventoryId/:itemId")
+ .get(isLoggedIn, isResponsableService,catchAsync(getUpdateItemPage))
 router.route("/add-user/:inventoryID").get(isLoggedIn, isResponsableService,catchAsync(addUserToInventory));
 router.route("/:inventoryId/remove-user/:userId").get(isLoggedIn, isPharmacienPrincipal,catchAsync(removeUserFromInventory));
 router.route("/users/:inventoryID").get(isLoggedIn, isResponsableService,(getInventoryUsers));
