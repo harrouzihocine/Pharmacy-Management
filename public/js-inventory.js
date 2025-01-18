@@ -65,43 +65,79 @@
       });
      
     }
-
+/*------------------------------------select new medicament with choices.js-----------------------------------------*/
     document.addEventListener('DOMContentLoaded', function () {
-      // Initialize Choices.js on the select element
-      const medicamentSelect = document.getElementById('medicament');
-      
-      // Initialize Choices.js with custom configurations
-      const choices = new Choices(medicamentSelect, {
-          searchEnabled: true,  // Enable search functionality
-          itemSelectText: '',   // Prevent displaying 'Press to select' text
-          noResultsText: 'No items found', // Custom message when no match is found
-          placeholder: true,    // Enable placeholder
-          placeholderValue: 'Select an Item', // Custom placeholder text
-          searchFloor: 1,       // Minimum number of characters to trigger search
-          searchResultLimit: 0, // No limit on search results
-          shouldSort: false,    // Disable sorting search results
-          position: 'bottom',   // Place the results dropdown below the input
-          fuseOptions: {
-              includeScore: true,
-              threshold: 0.3, // Controls how fuzzy the search is
-          },
-      });
+  const medicamentSelect = document.getElementById('medicament-new-select');
+
+  // Convert the select options into an array of objects with explicit `label` and `value`
+  const options = Array.from(medicamentSelect.options).map(option => {
+      return {
+          value: option.value,
+          label: option.text,
+      };
+  });
+
+  // Clear the existing options
+  medicamentSelect.innerHTML = '';
+
+  // Initialize Choices.js with the custom options
+  const choices = new Choices(medicamentSelect, {
+      choices: options,
+      searchEnabled: true,
+      searchFields: ['label'],
+      searchFilter: function (option, searchText) {
+          const optionText = option.label.toLowerCase();
+          const searchTextLower = searchText.toLowerCase();
+          return optionText.includes(searchTextLower);
+      },
+      shouldSort: false,
+      itemSelectText: '',
+      placeholderValue: 'Select an Item',
+      noResultsText: 'No results found',
+      noChoicesText: 'No items to choose from',
+      renderChoiceLimit: -1, // Show all matching options
+  });
+
+  // Force re-render the dropdown
+  choices.setChoices(options, 'value', 'label', true);
+});
+/*------------------------------------select edit medicament with choices.js-----------------------------------------*/
+document.addEventListener('DOMContentLoaded', function () {
+  // Initialize Choices.js on the select element
+  const medicamentSelect = document.getElementById('medicament-edit-select');
   
-      // Case-insensitive search functionality (Choices.js handles this internally)
-      medicamentSelect.addEventListener('search', function(event) {
-          const searchTerm = event.target.value.toLowerCase();
-          const options = medicamentSelect.querySelectorAll('option');
-          
-          options.forEach(option => {
-              const optionText = option.textContent.toLowerCase();
-              if (optionText.includes(searchTerm)) {
-                  option.style.display = 'block';  // Show the matching options
-              } else {
-                  option.style.display = 'none';   // Hide the non-matching options
-              }
-          });
+  // Initialize Choices.js with custom configurations
+  const choices = new Choices(medicamentSelect, {
+      searchEnabled: true,  // Enable search functionality
+      itemSelectText: '',   // Prevent displaying 'Press to select' text
+      noResultsText: 'No items found', // Custom message when no match is found
+      placeholder: true,    // Enable placeholder
+      placeholderValue: 'Select an Item', // Custom placeholder text
+      searchFloor: 1,       // Minimum number of characters to trigger search
+      searchResultLimit: 0, // No limit on search results
+      shouldSort: false,    // Disable sorting search results
+      position: 'bottom',   // Place the results dropdown below the input
+      fuseOptions: {
+          includeScore: true,
+          threshold: 0.3, // Controls how fuzzy the search is
+      },
+  });
+
+  // Case-insensitive search functionality (Choices.js handles this internally)
+  medicamentSelect.addEventListener('search', function(event) {
+      const searchTerm = event.target.value.toLowerCase();
+      const options = medicamentSelect.querySelectorAll('option');
+      
+      options.forEach(option => {
+          const optionText = option.textContent.toLowerCase();
+          if (optionText.includes(searchTerm)) {
+              option.style.display = 'block';  // Show the matching options
+          } else {
+              option.style.display = 'none';   // Hide the non-matching options
+          }
       });
   });
+});
 /*----------------------------------------------------delete item--------------------------------*/
       // Define the function for handling the delete action
 function handleDelete(button) {
@@ -224,4 +260,56 @@ function toggleVisibility(button) {
       });
     }
   });
+}
+/*-----------------------purshase price in new-item--------------------*/
+function getMinPurchasePrice(inventoryId, medicamentId) {
+  console.log("medID"+medicamentId);
+  
+
+  $.ajax({
+    url: '/inventory/new-item/getMinPurchasePrice', 
+    method: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({
+      inventoryId: inventoryId,
+      medicamentId: medicamentId
+    }),
+
+    success: function(response) {
+      console.log("response.minPurchasePrice:", response.minPurchasePrice);
+      if (response.minPurchasePrice !== null) {
+        // Set the value of the purchasePrice input field
+        $('#purchasePrice').val(response.minPurchasePrice);
+      } else {
+        // If no price is found, clear the input field
+        $('#purchasePrice').val('');
+      }
+      if (response.boite_de != null) {
+        $('#boite_de').html(response.boite_de);
+        $('#boite_de_input').val(response.boite_de);
+      } else {
+        $('#boite_de_input').val('');
+        $('#boite_de').html(''); 
+      }
+    },
+    error: function(err) {
+      console.error('Error:', err);
+    }
+  });
+}
+
+/*-----------------------new blanc page edit--------------------*/
+
+function handleEditClick(event, button) {
+  // Get the URL from the button's data-url attribute
+  const url = button.getAttribute("data-url");
+
+  // Check if Ctrl key is pressed
+  if (event.ctrlKey) {
+    // Open the URL in a new tab/window
+    window.open(url, "_blank");
+  } else {
+    // Navigate to the URL in the same window
+    window.location.href = url;
+  }
 }

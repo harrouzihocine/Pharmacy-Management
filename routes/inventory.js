@@ -23,34 +23,52 @@ const {
   updateInventoryItem,
   exportInventoryItemsToExcel,
   hideInventoryItem,
-  getUpdateItemPage
+  getUpdateItemPage,
+  getMinPurchasePrice,
 } = require("../controller/inventory");
-router.route("/").get(isLoggedIn, isResponsableService,catchAsync(getinventoriespage));
+router
+  .route("/")
+  .get(isLoggedIn, isResponsableService, catchAsync(getinventoriespage));
 router
   .route("/new")
-  .get(isLoggedIn, isPharmacienPrincipal,catchAsync(getcreateInventoryPage))
-  .post(isLoggedIn, isPharmacienPrincipal,catchAsync(createInventory));
+  .get(isLoggedIn, isPharmacienPrincipal, catchAsync(getcreateInventoryPage))
+  .post(isLoggedIn, isPharmacienPrincipal, catchAsync(createInventory));
 router
   .route("/:inventoryId")
-  .get(isLoggedIn, isResponsableService,catchAsync(getUsersInventories))
-  .post(isLoggedIn, isResponsableService,catchAsync(addInventoryItem));
-  
+  .get(isLoggedIn, isResponsableService, catchAsync(getUsersInventories))
+  .post(isLoggedIn, isResponsableService, catchAsync(addInventoryItem));
+
 router
-.route("/item/:itemId")
- 
-.put(isLoggedIn, isResponsableService,catchAsync(updateInventoryItem))
-.delete(isLoggedIn, isResponsableService,catchAsync(deleteInventoryItem))
-.patch(isLoggedIn, isPharmacienPrincipal,catchAsync(hideInventoryItem));
+  .route("/item/:itemId")
+
+  .put(isLoggedIn, isResponsableService, catchAsync(updateInventoryItem))
+  .delete(isLoggedIn, isResponsableService, catchAsync(deleteInventoryItem))
+  .patch(isLoggedIn, isPharmacienPrincipal, catchAsync(hideInventoryItem));
 router
-.route("/item/:inventoryId/:itemId")
- .get(isLoggedIn, isResponsableService,catchAsync(getUpdateItemPage))
-router.route("/add-user/:inventoryID").get(isLoggedIn, isResponsableService,catchAsync(addUserToInventory));
-router.route("/:inventoryId/remove-user/:userId").get(isLoggedIn, isPharmacienPrincipal,catchAsync(removeUserFromInventory));
-router.route("/users/:inventoryID").get(isLoggedIn, isResponsableService,(getInventoryUsers));
+  .route("/item/:inventoryId/:itemId")
+  .get(isLoggedIn, isResponsableService, catchAsync(getUpdateItemPage));
+router
+  .route("/add-user/:inventoryID")
+  .get(isLoggedIn, isResponsableService, catchAsync(addUserToInventory));
+router
+  .route("/:inventoryId/remove-user/:userId")
+  .get(isLoggedIn, isPharmacienPrincipal, catchAsync(removeUserFromInventory));
+router
+  .route("/users/:inventoryID")
+  .get(isLoggedIn, isResponsableService, getInventoryUsers);
+
 router
   .route("/:inventoryId/user/:userId")
-  .get(isLoggedIn, isPharmacienPrincipal,catchAsync(getInventoryDetailsPage))
-  .post(isLoggedIn, isResponsableService,catchAsync(validateUserInventory));
-  router
-  .route("/export/:inventoryId").get(isLoggedIn, isPharmacienPrincipal,catchAsync(exportInventoryItemsToExcel))
+  .get(isLoggedIn, isPharmacienPrincipal, catchAsync(getInventoryDetailsPage))
+  .post(isLoggedIn, isResponsableService, catchAsync(validateUserInventory));
+router
+  .route("/export/:inventoryId")
+  .get(
+    isLoggedIn,
+    isPharmacienPrincipal,
+    catchAsync(exportInventoryItemsToExcel)
+  );
+router
+  .route("/new-item/getMinPurchasePrice")
+  .post(isLoggedIn, isPharmacienPrincipal, catchAsync(getMinPurchasePrice));
 module.exports = router;

@@ -34,25 +34,26 @@
   <label for="type_medicament" class="form-label">Type de Médicament:</label>
   <select name="type_medicament" id="type_medicament" class="form-control">
     <option value="" disabled>Select Type</option>
+    <option value="ANAPATHE" <%= medicament.type_medicament === "ANAPATHE" ? "selected" : "" %>>ANAPATHE</option>
+    <option value="ANTISEPTIQUE" <%= medicament.type_medicament === "ANTISEPTIQUE" ? "selected" : "" %>>ANTISEPTIQUE</option>
+    <option value="CATHETERISME" <%= medicament.type_medicament === "CATHETERISME" ? "selected" : "" %>>CATHETERISME</option>
+    <option value="CHIMIQUE" <%= medicament.type_medicament === "CHIMIQUE" ? "selected" : "" %>>CHIMIQUE</option>
+    <option value="CHIRURGIE GÉNÉRALE" <%= medicament.type_medicament === "CHIRURGIE GÉNÉRALE" ? "selected" : "" %>>CHIRURGIE GÉNÉRALE</option>
+    <option value="CONSOMMABLE" <%= medicament.type_medicament === "CONSOMMABLE" ? "selected" : "" %>>CONSOMMABLE</option>
+    <option value="FIBROSCOPIE" <%= medicament.type_medicament === "FIBROSCOPIE" ? "selected" : "" %>>FIBROSCOPIE</option>
+    <option value="FROID" <%= medicament.type_medicament === "FROID" ? "selected" : "" %>>FROID</option>
+    <option value="INSTRUMENT" <%= medicament.type_medicament === "INSTRUMENT" ? "selected" : "" %>>INSTRUMENT</option>
+    <option value="LABORATOIRE" <%= medicament.type_medicament === "LABORATOIRE" ? "selected" : "" %>>LABORATOIRE</option>
+    <option value="LIGATURE" <%= medicament.type_medicament === "LIGATURE" ? "selected" : "" %>>LIGATURE</option>
     <option value="MÉDICAMENT" <%= medicament.type_medicament === "MÉDICAMENT" ? "selected" : "" %>>MÉDICAMENT</option>
-    <option value="STUPÉFIANT" <%= medicament.type_medicament === "STUPÉFIANT" ? "selected" : "" %>>STUPÉFIANT</option>
+    <option value="OSTÉO-SYNTHÈSE" <%= medicament.type_medicament === "OSTÉO-SYNTHÈSE" ? "selected" : "" %>>OSTÉO-SYNTHÈSE</option>
     <option value="PSYCHOTROPE 1" <%= medicament.type_medicament === "PSYCHOTROPE 1" ? "selected" : "" %>>PSYCHOTROPE 1</option>
     <option value="PSYCHOTROPE 2" <%= medicament.type_medicament === "PSYCHOTROPE 2" ? "selected" : "" %>>PSYCHOTROPE 2</option>
-    <option value="FROID" <%= medicament.type_medicament === "FROID" ? "selected" : "" %>>FROID</option>
-    <option value="SOLUTÉ GRAND VOLUME" <%= medicament.type_medicament === "SOLUTÉ GRAND VOLUME" ? "selected" : "" %>>SOLUTÉ GRAND VOLUME</option>
-    <option value="ANTISEPTIQUE" <%= medicament.type_medicament === "ANTISEPTIQUE" ? "selected" : "" %>>ANTISEPTIQUE</option>
-    <option value="LIGATURE" <%= medicament.type_medicament === "LIGATURE" ? "selected" : "" %>>LIGATURE</option>
-    <option value="CHIMIQUE" <%= medicament.type_medicament === "CHIMIQUE" ? "selected" : "" %>>CHIMIQUE</option>
-    <option value="CONSOMMABLE" <%= medicament.type_medicament === "CONSOMMABLE" ? "selected" : "" %>>CONSOMMABLE</option>
-    <option value="STÉRILISATION" <%= medicament.type_medicament === "STÉRILISATION" ? "selected" : "" %>>STÉRILISATION</option>
-    <option value="CATHETERISME" <%= medicament.type_medicament === "CATHETERISME" ? "selected" : "" %>>CATHETERISME</option>
     <option value="RADIOLOGIE" <%= medicament.type_medicament === "RADIOLOGIE" ? "selected" : "" %>>RADIOLOGIE</option>
-    <option value="LABORATOIRE" <%= medicament.type_medicament === "LABORATOIRE" ? "selected" : "" %>>LABORATOIRE</option>
-    <option value="ANAPATHE" <%= medicament.type_medicament === "ANAPATHE" ? "selected" : "" %>>ANAPATHE</option>
-    <option value="FIBROSCOPIE" <%= medicament.type_medicament === "FIBROSCOPIE" ? "selected" : "" %>>FIBROSCOPIE</option>
-    <option value="CHIRURGIE GÉNÉRALE" <%= medicament.type_medicament === "CHIRURGIE GÉNÉRALE" ? "selected" : "" %>>CHIRURGIE GÉNÉRALE</option>
-    <option value="INSTRUMENT" <%= medicament.type_medicament === "INSTRUMENT" ? "selected" : "" %>>INSTRUMENT</option>
-    <option value="OSTÉO-SYNTHÈSE" <%= medicament.type_medicament === "OSTÉO-SYNTHÈSE" ? "selected" : "" %>>OSTÉO-SYNTHÈSE</option>
+    <option value="SOLUTÉ GRAND VOLUME" <%= medicament.type_medicament === "SOLUTÉ GRAND VOLUME" ? "selected" : "" %>>SOLUTÉ GRAND VOLUME</option>
+    <option value="STÉRILISATION" <%= medicament.type_medicament === "STÉRILISATION" ? "selected" : "" %>>STÉRILISATION</option>
+    <option value="STUPÉFIANT" <%= medicament.type_medicament === "STUPÉFIANT" ? "selected" : "" %>>STUPÉFIANT</option>
+    
   </select>
 </div>
 
@@ -63,13 +64,14 @@
   <select name="forme" id="forme" class="form-control">
     <option value="" disabled>Select Form</option>
     <option value="AMPOULE" <%= medicament.forme === "AMPOULE" ? "selected" : "" %>>AMPOULE</option>
-    <option value="FLACON" <%= medicament.forme === "FLACON" ? "selected" : "" %>>FLACON</option>
-    <option value="UNITE" <%= medicament.forme === "UNITE" ? "selected" : "" %>>UNITE</option>
-    <option value="LITRE" <%= medicament.forme === "LITRE" ? "selected" : "" %>>LITRE</option>
     <option value="COMPRIME" <%= medicament.forme === "COMPRIME" ? "selected" : "" %>>COMPRIME</option>
+    <option value="FLACON" <%= medicament.forme === "FLACON" ? "selected" : "" %>>FLACON</option>
+    <option value="GELULE" <%= medicament.forme === "GELULE" ? "selected" : "" %>>GELULE</option>
+    <option value="LITRE" <%= medicament.forme === "LITRE" ? "selected" : "" %>>LITRE</option>
     <option value="SACHET" <%= medicament.forme === "SACHET" ? "selected" : "" %>>SACHET</option>
     <option value="TUBE" <%= medicament.forme === "TUBE" ? "selected" : "" %>>TUBE</option>
-    <option value="TUBE" <%= medicament.forme === "GELULE" ? "selected" : "" %>>GELULE</option>
+    <option value="UNITE" <%= medicament.forme === "UNITE" ? "selected" : "" %>>UNITE</option>
+    
   </select>
 </div>
 

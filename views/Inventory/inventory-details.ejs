@@ -122,9 +122,15 @@
             </button>
             <% if(status === 'Draft'){ %>
          
-            <button type="button" class="btn edit-btn px-2 py-1 edit-button-container hidden" onclick="window.location.href='/inventory/item/<%= inventory.id %>/<%= item._id %>?userId=<%= user.id %>'">
-              <i class="bi bi-pencil-fill"></i>
-            </button>
+           <button 
+  type="button" 
+  id="edititempage" 
+  class="btn edit-btn px-2 py-1 edit-button-container hidden" 
+  data-url="/inventory/item/<%= inventory.id %>/<%= item._id %>?userId=<%= user.id %>"
+  onclick="handleEditClick(event, this)"
+  oncontextmenu="handleRightClick(event, this)">
+  <i class="bi bi-pencil-fill"></i>
+</button>
             <button type="button" class="btn delete-btn delete-item-btn py-1 px-2" data-url="/inventory/item/<%= item._id %>?_method=DELETE">
               <i class="bi bi-trash"></i>
             </button>
@@ -137,9 +143,12 @@
       <% }); %>
       <% } else { %>
       <tr>
-        <td colspan="12" class="inventory-empty-row">No items found.</td>
+        <td colspan="13" class="inventory-empty-row">No items found.</td>
       </tr>
       <% } %>
     </tbody>
   </table>
 </div>
+<script>
+
+</script>

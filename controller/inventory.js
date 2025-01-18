@@ -6,6 +6,7 @@ const InventoryItem = require("../models/InventoryItem");
 const UserInventory = require("../models/userInventory");
 const Fournisseur = require("../models/fournisseur");
 const xlsx = require("xlsx");
+const { ObjectId } = require('mongodb');
 
 module.exports.getcreateInventoryPage = async (req, res, next) => {
   const groupedStorages = await Storage.aggregate([
@@ -87,7 +88,7 @@ module.exports.getInventoryDetailsPage = async (req, res, next) => {
     // Fetch inventory details
     const inventory = await Inventory.findById(inventoryId);
     const fournisseurs = await Fournisseur.find();
-    // Check the status of the UserInventory for the given inventoryId and userId
+    
     const userInventory = await UserInventory.findOne({
       inventoryTemplate: inventoryId,
       createdBy: userId,
@@ -98,8 +99,8 @@ module.exports.getInventoryDetailsPage = async (req, res, next) => {
       inventoryId,
       createdBy: userId,
     })
-      .populate("medicamentId", "designation") // Populate medicament details (e.g., name or designation)
-      .lean(); // Convert Mongoose documents to plain objects for rendering
+      .populate("medicamentId", "designation boite_de" ) 
+      .lean(); 
 
     // Fetch all medicaments for adding new items
     const medicaments = await Medicament.find().sort({ code_interne: 1 });
@@ -178,7 +179,7 @@ module.exports.createInventory = async (req, res, next) => {
 exports.addInventoryItem = async (req, res) => {
   try {
     const inventoryId = req.params.inventoryId;
-    const {
+    let {
       medicamentId,
       serviceABV,
       storageName,
@@ -194,14 +195,26 @@ exports.addInventoryItem = async (req, res) => {
       NBL,
       BLDate,
       factureDate,
+      boite_de
     } = req.body;
+      byBox = req.body.byBox === "on";
+      QTEbyBox = req.body.QTEbyBox === "on";
     // Validate required fields (if not already handled by form validation)
     if (!inventoryId || !medicamentId || !physicalQuantity) {
       return res
         .status(400)
         .json({ error: "All required fields must be filled!" });
     }
-
+  
+    if (isNaN(boite_de) || boite_de <= 0) {
+      boite_de = 1;
+    }
+    if (byBox) {
+      purchasePrice = purchasePrice / boite_de;
+    }
+    if (QTEbyBox) {
+      physicalQuantity = physicalQuantity * boite_de;
+    }
     // Create a new inventory item
     const inventoryItem = new InventoryItem({
       inventoryId,
@@ -220,6 +233,9 @@ exports.addInventoryItem = async (req, res) => {
       NBL,
       BLDate,
       factureDate,
+      byBox,
+      QTEbyBox,
+      boite_de,
       createdBy: req.user._id,
     });
 
@@ -251,6 +267,13 @@ module.exports.getUpdateItemPage = async (req, res, next) => {
     })
       .populate("medicamentId", "designation") // Populate medicament details (e.g., name or designation)
       .lean(); // Convert Mongoose documents to plain objects for rendering
+       // Reverse the previous calculations to get the original values
+    if (item[0].byBox) {
+      item[0].purchasePrice = item[0].purchasePrice * item[0].boite_de;
+    }
+    if (item[0].QTEbyBox) {
+      item[0].physicalQuantity = item[0].physicalQuantity / item[0].boite_de;
+    }
       const medicaments = await Medicament.find();
     // Fetch grouped storages for dropdown or information
     const groupedStorages = await Storage.aggregate([
@@ -289,7 +312,7 @@ exports.updateInventoryItem = async (req, res) => {
   try {
     const inventoryItemId = req.params.itemId; // Assuming the item ID is passed in the URL
 
-    const {
+    let {
       medicamentId,
       serviceABV,
       storageName,
@@ -306,9 +329,11 @@ exports.updateInventoryItem = async (req, res) => {
       factureDate,
       remarks,
       inventory,
+      boite_de,
       user
     } = req.body;
-
+    const byBox = req.body.byBox === "on";
+    const QTEbyBox = req.body.QTEbyBox === "on";
     // Validate required fields (if not already handled by form validation)
     if (
       !inventoryItemId ||
@@ -320,31 +345,47 @@ exports.updateInventoryItem = async (req, res) => {
         .status(400)
         .json({ error: "All required fields must be filled!" });
     }
-
+    if (isNaN(boite_de) || boite_de <= 0) {
+      boite_de = 1;
+    }
+  
     // Find the inventory item by its ID and inventory ID
     const inventoryItem = await InventoryItem.findOne({ _id: inventoryItemId });
 
     if (!inventoryItem) {
       return res.status(404).json({ error: "Inventory item not found!" });
     }
-
-    // Update the fields of the inventory item
+    if (byBox) {
+      inventoryItem.purchasePrice = purchasePrice / boite_de;
+    
+    }else{
+      inventoryItem.purchasePrice = purchasePrice;
+     
+    }
+    if (QTEbyBox) {
+      inventoryItem.physicalQuantity = physicalQuantity * boite_de;
+    
+    }else{
+      inventoryItem.physicalQuantity = physicalQuantity;
+    }
+  
     inventoryItem.medicamentId = medicamentId;
     inventoryItem.serviceABV = serviceABV;
     inventoryItem.storageName = storageName;
     inventoryItem.batchNumber = batchNumber || inventoryItem.batchNumber; // Keep the original if not provided
     inventoryItem.serialNumber = serialNumber || inventoryItem.serialNumber; // Keep the original if not provided
     inventoryItem.expiryDate = expiryDate || inventoryItem.expiryDate; // Keep the original if not provided
-    inventoryItem.physicalQuantity = physicalQuantity;
     inventoryItem.fournisseurId = fournisseurId;
     inventoryItem.NFacture = NFacture;
     inventoryItem.factureDate = factureDate;
     inventoryItem.NBL = NBL;
     inventoryItem.BLDate = BLDate;
     inventoryItem.tva = tva;
-    inventoryItem.purchasePrice = purchasePrice || inventoryItem.purchasePrice; // Keep the original if not provided
     inventoryItem.remarks = remarks ; // Keep the original if not provided
     inventoryItem.updatedBy = req.user._id;
+    inventoryItem.byBox = byBox;
+    inventoryItem.QTEbyBox = QTEbyBox;
+    inventoryItem.boite_de = boite_de || inventoryItem.boite_de;
 
     // Save the updated inventory item
     await inventoryItem.save();
@@ -675,4 +716,30 @@ module.exports.hideInventoryItem = async (req, res, next) => {
       message: "An error occurred while updating the item's visibility.",
     });
   }
+};
+module.exports.getMinPurchasePrice = async (req, res, next) => {
+  const { inventoryId, medicamentId } = req.body;
+  
+    try {
+      const result = await InventoryItem.findOne({
+        inventoryId: inventoryId,
+        medicamentId: medicamentId,
+        purchasePrice: { $ne: null }, 
+      })
+        .sort({ purchasePrice: 1 }) 
+        .limit(1);
+      
+      const medicament = await Medicament.findOne({
+        _id: medicamentId,
+      });
+      console.log("med", medicament);
+        if (result!==null) {
+            res.json({ minPurchasePrice: result.purchasePrice, boite_de: medicament.boite_de });
+        } else {
+            res.json({ minPurchasePrice: null, boite_de: medicament.boite_de });
+        }
+    } catch (error) {
+        console.error('Error fetching minimum purchase price:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };

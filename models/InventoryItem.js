@@ -13,7 +13,10 @@ const InventoryItemSchema = new mongoose.Schema(
     expiryDate: { type: Date}, // Expiry date
     tva: { type: Number}, // tva
     physicalQuantity: { type: Number, required: true }, // Physical quantity
-    purchasePrice: { type: Number }, // Purchase price
+    purchasePrice: { type: Number, default: 0 }, // Purchase price
+    byBox: { type:Boolean, default: false},
+    QTEbyBox: { type: Boolean, default: false },
+    boite_de: { type: Number, default: 1  },
     NFacture: { type: String }, // NFacture
     factureDate: { type: Date }, // factureDate
     NBL: { type: String }, // NBL
@@ -22,7 +25,7 @@ const InventoryItemSchema = new mongoose.Schema(
     visibility: { type:Boolean, default: true}, // Visibility
     remarks: { type: String }, // Additional remarks
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  
+ 
   },
   { timestamps: true }
 );

@@ -39,13 +39,15 @@ exports.getDemandsPage = async (req, res) => {
       ]
     })
     .populate("createdBy", "username") // Populate `createdBy` with the `username` field
-    .select("-medicaments"); // Exclude `medicaments` from the response
+    .select("-medicaments") // Exclude `medicaments` from the response
+    .sort({ createdAt: -1 }); // Sort by createdAt in descending order
 
     res.render("demand/index", { demands, serviceABV });
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
 };
+
 exports.getAddDemandPage = async (req, res) => {
   const { serviceABV } = req.params;
   try {
@@ -445,7 +447,7 @@ exports.approvereceiveDemand = async (req, res) => {
 
    
    req.flash("success", "Medicaments are approved and  transferred to InStock successfully");
-    res.redirect(`demand/demand-details/${demandId}`);
+    res.redirect(`/demand/demand-details/${demandId}`);
 
   } catch (error) {
     console.error("Error transferring medicaments to InStock:", error);

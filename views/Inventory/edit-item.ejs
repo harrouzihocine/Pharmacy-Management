@@ -42,9 +42,9 @@
     <% } %>
     <hr>
     <!-- Medicament Select -->
-    <div class="col-12 mb-3">
+    <div class="col-11 mb-3">
       <label for="medicament" class="form-label label-required">Item</label>
-      <select class="form-select" id="medicament" name="medicamentId" required>
+      <select class="form-select" id="medicament-edit-select" name="medicamentId" onchange="getMinPurchasePrice('<%= inventory._id %>', this.value)" required>
         <option value="" disabled selected>Select an Item</option>
         <% medicaments.forEach(function(medicament) { %>
         <option value="<%= medicament._id %>" <%= medicament._id.toString() === item.medicamentId._id.toString() ? 'selected' : '' %>>
@@ -53,7 +53,16 @@
         <% }); %>
       </select>
     </div>
-
+    <div class="col-1 mt-5">
+      <button type="button" class="btn back-btn" onclick="getMinPurchasePrice('<%= inventory._id %>', document.getElementById('medicament-edit-select').value)">
+        <img width="30" height="30" src="https://img.icons8.com/offices/30/available-updates.png" alt="available-updates"/>
+      </button>
+    </div>
+<!-- boite_de  Input -->
+<div class="col-md-12">
+  <label for="boite_de" class="form-label">Boite de: <strong id="boite_de"><%= item.boite_de %></strong></label>
+  <input type="hidden" name="boite_de" id="boite_de_input" value="<%= item.boite_de %>"/>
+</div>
     <!-- Batch Number Input -->
     <div class="form-group col-md-6 mb-3">
       <label for="batchNumber" class="form-label">Batch Number</label>
@@ -66,27 +75,35 @@
       <input type="text" class="form-control" id="serialNumber" name="serialNumber" value="<%= item.serialNumber || '' %>">
     </div>
 
-    <!-- Expiry Date Input -->
-    <div class="form-group col-md-6 mb-3">
-      <label for="expiryDate" class="form-label">Expiry Date</label>
-      <input type="date" class="form-control" id="expiryDate" name="expiryDate" value="<%= item.expiryDate ? item.expiryDate.toISOString().split('T')[0] : '' %>">
-    </div>
+   
 
     <!-- Quantity Input -->
     <div class="form-group col-md-6 mb-3">
       <label for="physicalQuantity" class="form-label label-required">Quantity (in Unité)</label>
       <input type="number" class="form-control" id="physicalQuantity" name="physicalQuantity" min="0" value="<%= item.physicalQuantity %>" required>
     </div>
+     <!-- Expiry Date Input -->
+     <div class="form-group col-md-6 mb-3">
+      <label for="expiryDate" class="form-label">Expiry Date</label>
+      <input type="date" class="form-control" id="expiryDate" name="expiryDate" value="<%= item.expiryDate ? item.expiryDate.toISOString().split('T')[0] : '' %>">
+    </div>
+     <!-- checkbox for qte Input (by boite or by unit)-->
+     <div class="form-group form-check">
+      <input type="checkbox" class="form-check-input" id="QTEbyBox" name="QTEbyBox" <%= item.QTEbyBox ? "checked" : "" %>>
+      <label class="form-check-label">
+        By Box
+      </label>
+    </div>
     <hr>
     <!-- Fournisseur Select -->
     <div class="form-group col-12 mb-3">
       <label for="fournisseurId" class="form-label">Select Fournisseur</label>
-      <select id="fournisseurId" name="fournisseurId" class="form-control">
+      <select id="fournisseurId" name="fournisseurId" class="form-control" >
         <option value="" disabled selected>-- Select a fournisseur --</option>
         <% if (fournisseurs.length > 0) { %>
         <% fournisseurs.forEach(fournisseur => { %>
-        <option value="<%= fournisseur._id %>" <%= fournisseur._id.toString() === item.fournisseurId.toString() ? 'selected' : '' %>>
-          <%= fournisseur.name %>, Wilaya: <%= fournisseur.wilaya %>, Mobile: <%= fournisseur.mobile[0] %>
+        <option value="<%= fournisseur._id %>" <%= (fournisseur._id?fournisseur._id.toString():null) === (item.fournisseurId?item.fournisseurId.toString():null) ? 'selected' : '' %>>
+          <%= fournisseur.name %>, Wilaya: <%= fournisseur.wilaya %>, Mobile:  <%= fournisseur.mobile[0] %> 
         </option>
         <% }) %>
         <% } %>
@@ -103,6 +120,13 @@
     <div class="col-md-6 mb-3">
       <label for="tva" class="form-label">TVA (%)</label>
       <input type="number" class="form-control" id="tva" name="tva" min="0" value="<%= item.tva %>">
+    </div>
+    <div class="form-group form-check">
+      <!-- checkbox for Purchase Price Input (by boite or by unit)-->
+      <input type="checkbox" class="form-check-input" id="byBox" name="byBox" <%= item.byBox ? "checked" : "" %>>
+      <label class="form-check-label" >
+        By Box
+      </label>
     </div>
     <hr>
     <!-- N° Facture Input -->
@@ -133,6 +157,6 @@
     </div>
     <input type="text" value="<%= inventory.id%>" name="inventory" hidden>
     <input type="text" value="<%=  user %>" name="user" hidden>
-    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <button type="submit" class="btn save-edit-changes">Save Changes</button>
   </form>
 </div>
