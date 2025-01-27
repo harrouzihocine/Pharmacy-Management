@@ -26,7 +26,7 @@
       </thead>
       <tbody id="tablebody">
         <% receivedstock.forEach(stock => { %>
-          <tr class="receive-demand-row" data-medicament-id="<%= stock.medicamentId %>">
+          <tr class="distock-medicaments-row" data-medicament-id="<%= stock.medicamentId %>">
             <td class="barcode"><%= stock.barcode %></td>
             <td class="designation"><%= stock.designation %></td>
             <td class="boite_de"><%= stock.boite_de %></td>
@@ -58,44 +58,52 @@
   </form>
 </div>
 <script>
-  // Function to handle barcode scanning or manual entry
-  document.getElementById('search').addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-      event.preventDefault(); // Prevent the default form submission
+ document.getElementById('search').addEventListener('keydown', function (event) {
+  if (event.key === 'Enter') {
+    event.preventDefault(); // Prevent the default form submission
 
-      const searchValue = this.value.trim(); // Get the input value
-      const rows = document.querySelectorAll('.receive-demand-row'); // Get all table rows
+    const searchValue = this.value.trim(); // Get the input value
+    const rows = document.querySelectorAll('.distock-medicaments-row'); // Get all table rows
 
+    let found = false;
 
-      // Loop through rows to find a matching batch number
-      for (let row of rows) {
-        const barcodeCell = row.querySelector('.barcode'); // Get barcode cell
-        const barcode = barcodeCell ? barcodeCell.textContent.trim() : '';
-        const designationCell = row.querySelector('.designation');
-        const designation = designationCell ? designationCell.textContent.trim() : '';
+    // Loop through rows to find a matching barcode or designation
+    for (let row of rows) {
+      const barcodeCell = row.querySelector('.barcode'); // Get barcode cell
+      const barcode = barcodeCell ? barcodeCell.textContent.trim() : '';
+      const designationCell = row.querySelector('.designation');
+      const designation = designationCell ? designationCell.textContent.trim() : '';
 
-       
-        if (barcode === searchValue || designation.toLowerCase().includes(searchValue.toLowerCase())) {
-          // Matching row found, update the received quantity
-          const quantityInput = row.querySelector('.receive-quantity-input');
-          const boite_de = row.querySelector('.boite_de');
-          const boite_deValue = parseInt(boite_de.textContent.trim()|| 1);
-          const currentValue = parseInt(quantityInput.value) || 0; // Get current value, default to 0 if empty
-          quantityInput.value = currentValue + boite_deValue; // Increment by 1
-          quantityInput.dispatchEvent(new Event('change')); // Trigger change event if needed
-            // Highlight the matching row
+      if (barcode === searchValue || designation.toLowerCase().includes(searchValue.toLowerCase())) {
+        // Matching row found, focus on the input field
+        const quantityInput = row.querySelector('.receive-quantity-input');
+        quantityInput.focus(); // Move cursor to the input field
+        quantityInput.value = 1; // Set default value to 1
+
+        // Highlight the matching row
         row.style.backgroundColor = 'lightgreen';
         setTimeout(() => {
           row.style.backgroundColor = ''; // Remove the highlight after 1 second
         }, 1000);
 
-          this.value = ''; // Clear the search input
-          return; // Stop searching after the match
-        }
-      }
+        // Listen for the next Enter key press to confirm the value
+        quantityInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent form submission
+            document.getElementById('search').value = ''; // Clear the search input
+            document.getElementById('search').focus(); // Move cursor back to the search bar
+          }
+        });
 
-      // If no match found, you can alert the user (optional)
+        found = true;
+        break; // Stop searching after the match
+      }
+    }
+
+    // If no match found, alert the user (optional)
+    if (!found) {
       alert('Barcode / Designation not found in the list.');
     }
-  });
+  }
+});
 </script>

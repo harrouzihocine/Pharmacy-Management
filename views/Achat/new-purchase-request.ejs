@@ -1,67 +1,60 @@
 <% layout('layouts/boilerplate') %>
 <div class="create-prescription-page-container">
   <div class="create-prescription-header">
-    <button class="btn back-btn back-button" onclick="window.location.href='/patient/<%= patient._id %>'"><i class="bi bi-arrow-left-circle"></i></button>
-    <h1>Create Prescription for <%= patient.fullname %></h1>
+    <button class="btn back-btn back-button" onclick="window.location.href='/achat/demands'"><i class="bi bi-arrow-left-circle"></i></button>
+    <h1>Create Purchase requests</h1>
   </div>
 
- 
+
 
   <!-- Form to submit prescription -->
-  <form id="createPrescriptionForm" action="/prescription/<%= patient._id %>/<%= admission._id %>?serviceABV=<%= serviceABV %>" method="POST">
-    <input type="hidden" name="patientId" value="<%= patient._id %>">
+  <form id="createPrescriptionForm" action="/achat/demands/new" method="POST">
+   
     
-    <table class="create-prescription-table" id="prescription-MedicamentTable">
+    <table class="create-prescription-table mt-2" id="prescription-MedicamentTable">
       <thead>
         <tr>
           <th>Medicament</th>
           <th>Quantity/day</th>
-          <th>Instructions</th>
+        
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td style="width: 60%;">
-            <select class="form-select form-select-lg medicament-select" name="prescription[0][medicamentId]" required>
+            <select class="form-select form-select-lg medicament-select" name="request[0][medicamentId]" required>
               <option value="" disabled selected>Select Medicament</option>
               <% Medicaments.forEach(Medicament => { %>
-                <option value="<%= Medicament.medicamentId._id %>">
-                  <%= Medicament.medicamentId.designation %>
+                <option value="<%= Medicament._id %>">
+                  <%= Medicament.designation %>
                 </option>
               <% }) %>
             </select>
           </td>
           
-          <td class="d-flex">
-            <select class="form-control" name="prescription[0][quantity_whole]">
-                <option value="0">-</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-            </select>
-            <select class="form-control" name="prescription[0][quantity_fraction]">
-                <option value="0">-</option>
-                <option value="0.25">1/4</option>
-                <option value="0.5">1/2</option>
-                <option value="0.75">3/4</option>
-            </select>
-          </td>
-          <td><input class="form-control" name="prescription[0][comment]" placeholder="Instructions"></input></td>
+          <td>
+            <input type="number" class="form-control" name="request[0][quantity]" min="0" placeholder="Enter quantity">
+        </td>
+        
           <td>
             <button type="button" class="btn delete-btn"><i class="bi bi-trash"></i></button>
           </td>
         </tr>
       </tbody>
     </table>
+   
     <button type="button" class="btn add-command" id="addRowBtn">Add Medicament</button>
+      <!-- Notes -->
+      <div class="col-12 mt-2">
+        <label for="notes" class="form-label">Notes</label>
+        <textarea id="notes" name="notes" class="form-control" rows="2" placeholder="Enter notes for the request"></textarea>
+        <div class="invalid-feedback">
+          Please provide a request notes here .
+        </div>
+      </div>
     <div class="prescription-action-buttons">
-      <button type="submit" class="btn create-prescription-btn">Create Prescription</button>
+      <button type="submit" class="btn create-prescription-btn">Create Purchase request</button>
     </div>
    
   </form>
@@ -71,35 +64,20 @@
 <template id="rowTemplate">
   <tr>
     <td style="width: 60%;">
-      <select class="form-select form-select-lg medicament-select" name="prescription[{{index}}][medicamentId]" required>
+      <select class="form-select form-select-lg medicament-select" name="request[{{index}}][medicamentId]" required>
         <option value="" disabled selected>Select Medicament</option>
         <% Medicaments.forEach(Medicament => { %>
-          <option value="<%= Medicament.medicamentId._id %>">
-            <%= Medicament.medicamentId.designation %>
+          <option value="<%= Medicament._id %>">
+            <%= Medicament.designation %>
           </option>
         <% }) %>
       </select>
     </td>
-    <td class="d-flex">
-      <select class="form-control" name="prescription[{{index}}][quantity_whole]">
-        <option value="0">-</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-      </select>
-      <select class="form-control" name="prescription[{{index}}][quantity_fraction]">
-        <option value="0">-</option>
-        <option value="0.25">1/4</option>
-        <option value="0.5">1/2</option>
-        <option value="0.75">3/4</option>
-      </select>
-    </td>
-    <td><input class="form-control" name="prescription[{{index}}][comment]" placeholder="Instructions"></input></td>
+    <td>
+      <input type="number" class="form-control" name="request[{{index}}][quantity]" min="0" placeholder="Enter quantity">
+  </td>
+  
+   
     <td>
       <button type="button" class="btn delete-btn"><i class="bi bi-trash"></i></button>
     </td>
@@ -174,11 +152,11 @@
 
       rows.forEach((row) => {
         const medicamentSelect = row.querySelector('select[name*="[medicamentId]"]');
-        const quantityWhole = row.querySelector('select[name*="[quantity_whole]"]');
-        const quantityFraction = row.querySelector('select[name*="[quantity_fraction]"]');
+        const quantityWhole = row.querySelector('select[name*="[quantity]"]');
+      
 
         // Check if the row is valid
-        if (medicamentSelect.value && (quantityWhole.value !== "0" || quantityFraction.value !== "0")) {
+        if (medicamentSelect.value && quantity.value ) {
           isValid = true;
         }
       });

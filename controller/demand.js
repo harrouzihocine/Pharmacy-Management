@@ -4,6 +4,7 @@ const Storage = require("../models/storage");
 const Pharmacy = require("../models/pharmacy");
 const VirtualInStock = require("../models/VirtualInStock");
 const services = [
+  { _id: 'PCS', name: 'Pharmacie centrale' },
   { _id: "APP", name: "Approvisionnement" },
   { _id: "CON", name: "Consultations" },
   { _id: "RAD", name: "Radiologie" },
@@ -65,8 +66,7 @@ exports.getAddDemandPage = async (req, res) => {
 };
 exports.createDemand = async (req, res) => {
   try {
-    const { source, destination, comment, Medicament, otherMedicaments } =
-      req.body;
+    const { source, destination, comment, Medicament, otherMedicaments } = req.body;
     const { serviceABV } = req.params;
 
     // Validate required fields
@@ -124,6 +124,7 @@ exports.getDemandDetailsPage = async (req, res) => {
     const source = demand.source;
     const service = services.find(s => s.name === demand.destination);
     const serviceABV = service._id;
+   
     if (!source) {
       return res.status(404).send({ message: "Source not found." });
     }

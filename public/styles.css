@@ -13,11 +13,12 @@
   height: 100%;
   color: #ffffff; /* Light grey text */
 }
-.main-content  {
+.main-content {
   display: block;
-  width: 95%;
+  align-content: center;
+  min-width: 95%;
 }
-.alert{
+.alert {
   position: fixed; /* Ensure it's fixed and doesn't affect layout */
   top: 0rem;
   left: 50%;
@@ -30,7 +31,7 @@
   border-radius: 0 0 10px 10px;
 }
 
-.alert-dismissible .btn-close{
+.alert-dismissible .btn-close {
   top: -12px;
 }
 /*----------------------------------------------------------------tags--------------------------------------------*/
@@ -852,8 +853,8 @@
 }
 .medicament-details-container .title {
   display: flex;
-   align-items: center;
-   justify-content: center;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 10px;
 }
 /* Individual Info Box Styling */
@@ -2259,7 +2260,7 @@
 }
 .status-Received {
   background: #117200; /* Cool muted blue tone for low stock */
-  color: #FFFFFF; /* Soft pastel blue for text */
+  color: #ffffff; /* Soft pastel blue for text */
   border: 0px; /* Complementary border for subtle separation */
 }
 
@@ -2453,7 +2454,7 @@
 .modal-batch-selection-table {
   width: 100% !important;
   border-collapse: collapse !important;
-  margin-top: 20px !important;
+  margin-top: 5px !important;
   text-align: center !important;
   background-color: #222 !important; /* Dark background for the table itself */
   color: #fff !important;
@@ -2904,9 +2905,9 @@ table.dataTable tbody tr {
   border-radius: 12px;
   display: flex;
   flex-direction: row;
-  
+
   justify-content: start;
-  flex-shrink:inherit;
+  flex-shrink: inherit;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -2924,7 +2925,6 @@ table.dataTable tbody tr {
 }
 
 .info-box span {
- 
   font-size: 1.1rem;
   margin-top: 1px;
   margin-right: 10px;
@@ -2945,16 +2945,16 @@ table.dataTable tbody tr {
 .users-inventory-information-section {
   animation: fadeIn 0.6s ease-out; /* Smooth fade-in animation */
 }
-  /* Style for the dropdown */
-  .template-selector {
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #444;
-    background-color: #222;
-    color: #fff;
-    outline: none;
-  }
+/* Style for the dropdown */
+.template-selector {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #fff;
+  outline: none;
+}
 
 /*--------------------style for  inventory details page ------------------------*/
 .inventory-details-container {
@@ -3122,7 +3122,6 @@ table.dataTable tbody tr {
 
 /* Icons */
 
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .dashboard-row {
@@ -3280,11 +3279,10 @@ table.dataTable tbody tr {
   color: #00bcd4; /* Bright teal for emphasis */
   font-weight: 600;
   font-size: 1.1rem;
-
 }
 .visibility-btn {
-  background-color: #7E99A3; /* Blue background for both states */
-  color: #ffffff ;
+  background-color: #7e99a3; /* Blue background for both states */
+  color: #ffffff;
 }
 /*--------------------------- fournisseur details ------------------------*/
 /***** Container Style *****/
@@ -3307,8 +3305,6 @@ table.dataTable tbody tr {
   color: #fff;
 }
 
-
-
 /***** Grid Style *****/
 .contacts-grid {
   display: flex;
@@ -3321,7 +3317,7 @@ table.dataTable tbody tr {
   background-color: #0201281d;
   padding: 20px;
   border-radius: 10px;
- 
+
   min-width: 300px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -3367,7 +3363,6 @@ table.dataTable tbody tr {
 
 /***** Footer Style *****/
 .contact-footer {
-
   margin-top: 10px;
   text-align: right;
 }
@@ -3399,7 +3394,6 @@ table.dataTable tbody tr {
   font-weight: 600;
   color: #fff;
 }
-
 
 /* Table Styling */
 .patient-details-table {
@@ -3495,7 +3489,6 @@ table.dataTable tbody tr {
 
 /* Container for the Create Prescription Page */
 .create-prescription-page-container {
-
   background-color: #0201281d;
   color: #fff;
   padding: 40px;
@@ -3524,13 +3517,10 @@ table.dataTable tbody tr {
   color: #bbbbbb;
 }
 
-
-
 /* Table Styling */
 .create-prescription-table {
   width: 100%;
   border-collapse: collapse;
- 
 }
 
 .create-prescription-table th,
@@ -3557,16 +3547,13 @@ table.dataTable tbody tr {
 .create-prescription-table td {
   color: #fff;
 }
-
-/* Input Fields in Table */
-.quantity-input,
-.comment-input {
-  width: 100%;
-  padding: 8px;
+.create-prescription-table .form-control,
+.form-select {
+  padding: 12px;
   font-size: 1rem;
-  border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #333;
+  border: 1px solid #444;
+  background-color: #222;
   color: #fff;
 }
 
@@ -3606,15 +3593,14 @@ table.dataTable tbody tr {
   width: 80rem;
   background-color: #0201281d; /* Dark background for the container */
   color: #fff;
- 
+
   border-radius: 10px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
   margin: 20px;
 }
 /* Form Styling */
 .edit-item-form {
-  
- margin: 10px;
+  margin: 10px;
   text-align: left;
 }
 
@@ -3632,8 +3618,8 @@ table.dataTable tbody tr {
 }
 
 /* Input and Select Styles */
-.edit-item-form  .form-control,
-.edit-item-form  .form-select {
+.edit-item-form .form-control,
+.edit-item-form .form-select {
   padding: 12px;
   font-size: 1rem;
   border-radius: 5px;
@@ -3642,15 +3628,15 @@ table.dataTable tbody tr {
   color: #fff;
 }
 
-.edit-item-form  .form-control:focus,
-.edit-item-form  .form-select:focus {
+.edit-item-form .form-control:focus,
+.edit-item-form .form-select:focus {
   border-color: #726c7a;
   background-color: #333;
   outline: none;
 }
 
 /* Button Styles */
-.edit-item-form  .save-edit-changes {
+.edit-item-form .save-edit-changes {
   padding: 12px 30px;
   background-color: #55104d; /* Dark color for action */
   color: #fff;
@@ -3664,4 +3650,20 @@ table.dataTable tbody tr {
 
 .edit-item-form .save-edit-changes:hover {
   background-color: #726c7a;
+}
+/*----------------------- prescription index page  --------------------*/
+.passive-row {
+  background-color: rgba(255, 0, 0, 0.2) !important;
+}
+/*----------------------- new purchase demand --------------------*/
+.create-prescription-page-container textarea[name="notes"] {
+  width: 100%;
+  background-color: #333;
+  color: #ffffff;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 12px;
+  resize: vertical;
+  font-size: 1rem;
+  line-height: 1.5;
 }

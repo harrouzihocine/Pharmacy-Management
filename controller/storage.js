@@ -36,6 +36,7 @@ const endroits = [
 ]
 
 const services = [
+  { _id: 'PCS', name: 'Pharmacie centrale' },
     { _id: 'APP', name: 'Approvisionnement' },
     { _id: 'CON', name: 'Consultations' },
     { _id: 'RAD', name: 'Radiologie' },
@@ -50,6 +51,7 @@ const services = [
     { _id: 'MIN', name: 'Médecine Interne' },
     { _id: 'MPR', name: 'Médecine physique et réadaptation' },
     { _id: 'DAF', name: 'Direction administrative et finance' },
+   
   ];
 // Add a new storage,
 exports.addStorage = async (req, res, next) => {

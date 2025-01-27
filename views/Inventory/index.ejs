@@ -1,6 +1,9 @@
 <% layout('layouts/boilerplate') %>
 <div class="inventories-container">
   <h1>Inventories</h1>
+  <button type="button" class="btn demand-new-button" onclick="window.location.href='/inventory/new'">
+    <span class="ms-1">New Inventory</span>
+  </button>
   <form class="search-bar mb-2">
     <input type="text" id="search"  placeholder="Search in inventory items" />
 </form>

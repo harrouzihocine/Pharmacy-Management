@@ -1,6 +1,7 @@
 <% layout('layouts/boilerplate') %>
 
 <div class="patient-details-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/storage'"><i class="bi bi-arrow-left-circle"></i></button>
   <div class="col m-auto">
     <h3 class="mb-4 text-center">Patients List</h3>
     <div class="mb-3">
@@ -27,18 +28,17 @@
         <% var i = 1 %> 
         <% for (patient of patients) { %>
           <tr>
-            <td onclick="window.location.href='/patients/<%= patient._id %>'"><%= patient.fullname %></td>
-            <td onclick="window.location.href='/patients/<%= patient._id %>'"><%= patient.date_of_birth.toLocaleDateString() %></td>
-            <td onclick="window.location.href='/patients/<%= patient._id %>'"><%= patient.gender %></td>
-            <td onclick="window.location.href='/patients/<%= patient._id %>'"><%= patient.address %></td>
+            <td onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= patient.fullname %></td>
+            <td onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= patient.date_of_birth.toLocaleDateString() %></td>
+            <td onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= patient.gender %></td>
+            <td onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= patient.address %></td>
             
-            <td onclick="window.location.href='/patients/<%= patient._id %>'"><%= patient.phone %></td>
+            <td onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'"><%= patient.phone %></td>
             <td>
               <div class="d-flex justify-content-center align-items-center">
                
-                <button type="button" class="btn py-1 px-2" style="background-color:rgba(0 208 255 / 0.56);" onclick="window.location.href='/prescription/<%= serviceABV %>/<%= patient._id %>'">
-                  <img width="25" height="25" src="../assets/ordonnance.png" alt="">
-                </button>
+                
+               <%- include("../Admission/new") %> 
               </div>
             </td>
           </tr>

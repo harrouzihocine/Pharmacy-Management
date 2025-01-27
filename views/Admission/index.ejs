@@ -1,0 +1,48 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="patient-details-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/patient/<%= serviceABV %>'"><i class="bi bi-arrow-left-circle"></i></button> 
+  <div class="col m-auto">
+    <h3 class="mb-4 text-center">Admissions List for <%= patient.fullname %> <%- include("../Admission/new") %> </h3>
+    
+    <form class="search-bar mb-2">
+      <input type="text" id="search" placeholder="Search in admissions list" />
+    </form>
+
+    <table class="patient-details-table sortable">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Service</th>
+          <th scope="col">Admission Type</th>
+          <th scope="col">Acte</th>
+          <th id="item1" scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+        <% var i = 1 %> 
+        <% for (admission of admissions) { %>
+          <tr>
+            <td onclick="window.location.href='/prescription/prescriptions/<%= admission.patientId._id %>/<%= admission._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= admission.date.toLocaleDateString() %></td>
+            <td onclick="window.location.href='/prescription/prescriptions/<%= admission.patientId._id %>/<%= admission._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= admission.serviceABV %></td>
+            <td onclick="window.location.href='/prescription/prescriptions/<%= admission.patientId._id%>/<%= admission._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= admission.admissionType %></td>
+            <td onclick="window.location.href='/prescription/prescriptions/<%= admission.patientId._id %>/<%= admission._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= admission.acte %></td>
+            <td>
+              <div class="d-flex justify-content-center align-items-center">
+               
+                <button type="button" class="btn py-1 px-2 me-2" style="background-color:rgba(0 208 255 / 0.56);" onclick="window.location.href='/prescription/<%= admission.patientId._id %>/<%= admission._id %>?serviceABV=<%= serviceABV %>'">
+                  <img width="25" height="25" src="../assets/ordonnance.png" alt="">
+                </button>
+                <% if (admission.status !== 'Discharged') { %>
+                <button type="button" class="btn py-1 px-1" style="background-color:rgba(255 255 255 / 0.79);" onclick="window.location.href='/prescription/<%= admission.serviceABV %>/<%= admission.patientId._id %>?serviceABV=<%= serviceABV %>'">
+                    <img width="29" height="25" src="https://img.icons8.com/fluency/29/export.png" alt="export"/>
+                </button>
+                <% } %>
+              </div>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

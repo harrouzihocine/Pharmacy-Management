@@ -38,7 +38,7 @@ const inStockSchema = new mongoose.Schema(
   opts
 );
 
-// Pre-save middleware to generate barcode automatically
+
 inStockSchema.pre("save", async function (next) {
   if (!this.barcode) {
     try {
@@ -49,9 +49,19 @@ inStockSchema.pre("save", async function (next) {
         return next(new Error("Medicament not found."));
       }
 
-      // Construct the barcode using code_interne, batchNumber, and expiryDate
+      // Construct the barcode using code_interne, batchNumber, serialNumber (if exists), and expiryDate
       const formattedExpiryDate = moment(this.expiryDate).format("YYYYMMDD"); // Format expiry date (optional)
-      this.barcode = `${medicament.code_interne}-${this.batchNumber}-${formattedExpiryDate}`;
+      let barcode = `${medicament.code_interne}-${this.batchNumber}`;
+
+      // Add serialNumber to the barcode if it exists
+      if (this.serialNumber) {
+        barcode += `-${this.serialNumber}`;
+      }
+
+      // Add expiryDate to the barcode
+      barcode += `-${formattedExpiryDate}`;
+
+      this.barcode = barcode;
 
       // Ensure the barcode is unique
       const existingBarcode = await this.constructor.findOne({ barcode: this.barcode });

@@ -734,7 +734,7 @@ module.exports.getMinPurchasePrice = async (req, res, next) => {
       });
       console.log("med", medicament);
         if (result!==null) {
-            res.json({ minPurchasePrice: result.purchasePrice, boite_de: medicament.boite_de });
+            res.json({ minPurchasePrice: result.purchasePrice, boite_de: medicament.boite_de, byBox: result.byBox});
         } else {
             res.json({ minPurchasePrice: null, boite_de: medicament.boite_de });
         }

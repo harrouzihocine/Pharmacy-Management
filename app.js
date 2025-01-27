@@ -112,6 +112,11 @@ app.use("/prescription",prescriptionRoutes);
 const patientRoutes = require("./routes/patient"); 
 app.use("/patient",patientRoutes); 
 
+const admissionRoutes = require("./routes/admission"); 
+app.use("/admission",admissionRoutes); 
+
+const achatRoutes = require("./routes/achat"); 
+app.use("/achat",achatRoutes); 
 const port = process.env.PORT;
 
 app.listen(port, "0.0.0.0", () => {

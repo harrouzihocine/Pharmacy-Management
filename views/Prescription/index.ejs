@@ -1,0 +1,61 @@
+<% layout('layouts/boilerplate') %>
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <!-- Toast messages will be inserted here -->
+  </div>
+</div>
+<div class="patient-details-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/prescription/prescriptions/<%= patient._id %>/<%= prescription.admissionId._id %>?serviceABV=<%= serviceABV %>'"><i class="bi bi-arrow-left-circle"></i></button>
+  <div class="col m-auto">
+    <h3 class="mb-2 text-center">Medicaments List for prescription: <%= prescription.prescriptionCode %></h3>
+    <h4 class="mb-4 text-center">Patient: <%= patient.fullname %> </h4>
+    <form class="search-bar mb-2">
+      <input type="text" id="search" placeholder="Search in medicaments list" />
+    </form>
+
+    <table class="patient-details-table sortable">
+      <thead>
+        <tr>
+          <th scope="col">Medicament</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Instructions</th>
+          <th scope="col">Created By</th>
+          <th scope="col">Destocked Quantity</th>
+          <th scope="col">Dispensed Quantity</th>
+          <th id="item1" scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+        <% var i = 1 %>
+        <% for (medicament of prescription.medicaments) { %>
+        <% 
+            // Find the corresponding medicament in medicamentQuantities
+            const medicamentQuantity = medicamentQuantities.find(
+              (mq) => mq.medicamentId.toString() === medicament.medicamentId._id.toString()
+            );
+            const totalDispensed = medicamentQuantity ? medicamentQuantity.totalDispensed : 0;
+            const totalDestocked = medicamentQuantity ? medicamentQuantity.totalDestocked : 0;
+          %>
+        <tr class="<%= medicament.status === 'Passive' ? 'passive-row' : '' %>">
+          <td onclick="window.location.href='/prescription/dispensements/<%= prescription._id %>/<%= medicament.medicamentId._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= medicament.medicamentId.designation %></td>
+          <td onclick="window.location.href='/prescription/dispensements/<%= prescription._id %>/<%= medicament.medicamentId._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= medicament.quantity %></td>
+          <td onclick="window.location.href='/prescription/dispensements/<%= prescription._id %>/<%= medicament.medicamentId._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= medicament.comment || 'N/A' %></td>
+          <td onclick="window.location.href='/prescription/dispensements/<%= prescription._id %>/<%= medicament.medicamentId._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= medicament.createdBy.username %></td>
+          <td onclick="window.location.href='/prescription/dispensements/<%= prescription._id %>/<%= medicament.medicamentId._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= totalDestocked %></td>
+          <td onclick="window.location.href='/prescription/dispensements/<%= prescription._id %>/<%= medicament.medicamentId._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= totalDispensed %></td>
+          <td>
+            <div class="d-flex justify-content-center align-items-center">
+              <% if (medicament.status === 'Active') { %>
+              <button type="button" class="btn archive-btn py-1 px-2 me-2"  style="background-color: rgba(255 255 255 / 0.76);" onclick="window.location.href='/prescription/medicaments/delete/<%=prescription._id%>/<%=medicament._id%>?serviceABV=<%= serviceABV %>&status=Passive'"><img width="29" height="29" src="https://img.icons8.com/color-glass/29/power-off-button.png" alt="power-off-button"/></button>
+              <%- include("./distock-medicaments", { medicament, prescription, serviceABV }) %>
+              <% } else { %>
+                <button type="button" class="btn archive-btn py-1 px-2 me-2" style="background-color: rgba(255 255 255 / 0.76);" onclick="window.location.href='/prescription/medicaments/delete/<%=prescription._id%>/<%=medicament._id%>?serviceABV=<%= serviceABV %>&status=Active'"><img width="29" height="29" src="https://img.icons8.com/fluency/29/turn-on.png" alt="turn-on"/></button>
+              <% } %>
+            </div>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

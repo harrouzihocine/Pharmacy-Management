@@ -1,6 +1,7 @@
 const Patient = require("../models/patient");
-
+const moment = require("moment");
 const services = [
+  { _id: 'PCS', name: 'Pharmacie centrale' },
   { _id: "APP", name: "Approvisionnement" },
   { _id: "CON", name: "Consultations" },
   { _id: "RAD", name: "Radiologie" },
@@ -20,12 +21,10 @@ const services = [
 exports.getPatientList = async (req, res) => {
   const { serviceABV } = req.params;
 
-
-
   try {
     const patients = await Patient.find();
-
-    res.render("Patient/index", { patients, serviceABV });
+    const admissionDate = moment().format('YYYY-MM-DD');
+    res.render("Patient/index", { patients, serviceABV,admissionDate });
   } catch (err) {
     res.status(500).send({ message: err.message });
   }

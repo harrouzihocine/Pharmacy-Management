@@ -7,13 +7,13 @@ const {
   selectMedicament,
   unselectMedicament,
   settingsMedicament,
-     
+ 
   } = require("../controller/pharmacy");
   router.route("/").get( isLoggedIn,isPharmacienPrincipal,catchAsync(getSelectedMedicaments));
-
   router.route("/select").post(isLoggedIn,isPharmacienPrincipal,catchAsync(selectMedicament));
   router.route("/unselect").post(isLoggedIn,isPharmacienPrincipal,catchAsync(unselectMedicament));
   router.route("/settings").post(isLoggedIn,isPharmacienPrincipal,catchAsync(settingsMedicament));
+
   
 
 

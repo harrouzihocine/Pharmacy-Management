@@ -2,6 +2,7 @@ const Medicament = require('../models/medicament');
 const Pharmacy = require('../models/pharmacy');
 const Storage = require('../models/storage');
 const InStock = require('../models/inStock');
+const PurchaseRequest = require('../models/purchaseRequest');
 
 exports.getSelectedMedicaments = async (req, res) => {
   try {
@@ -113,5 +114,26 @@ exports.getSelectedMedicaments = async (req, res) => {
         res.status(500).send("Error updating minquantity for medicament.");
     }
 };
-
+  exports.getNewPurchaseRequestPage = async (req, res) => {
+   
+    try {
+      const Medicaments = await PurchaseRequest.find().populate("medicamentId").exec();
+      
+       res.render("Pharmacy/newPurchaseRequest"); 
+    } catch (err) {
+        console.error("Error getting new purchase request:", err);
+        res.status(500).send("Error updating minquantity for medicament.");
+    }
+};
+exports.getNewPurchaseRequestPage = async (req, res) => {
+   
+  try {
+    const Medicaments = await Medicament.find();
+    
+     res.render("Pharmacy/newPurchaseRequest",Medicaments); 
+  } catch (err) {
+      console.error("Error getting new purchase request:", err);
+      res.status(500).send("Error updating minquantity for medicament.");
+  }
+};
  

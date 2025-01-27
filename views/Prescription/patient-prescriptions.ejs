@@ -1,0 +1,35 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="patient-details-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'"><i class="bi bi-arrow-left-circle"></i></button>
+  <div class="col m-auto">
+    <h3 class="mb-4 text-center">Prescriptions List for <%= patient.fullname %></h3>
+
+    <form class="search-bar mb-2">
+      <input type="text" id="search" placeholder="Search in prescriptions list" />
+    </form>
+
+    <table class="patient-details-table sortable">
+      <thead>
+        <tr>
+          <th scope="col">prescription Code</th>
+          <th scope="col">Date</th>
+          <th scope="col">Created By</th>
+          
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+        <% var i = 1 %>
+        <% for (prescription of prescriptions) { %>
+        <tr>
+          <td onclick="window.location.href='/prescription/details/<%= prescription._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= prescription.prescriptionCode %></td>
+          <td onclick="window.location.href='/prescription/details/<%= prescription._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= prescription.createdAt.toLocaleDateString() %></td>
+          <td onclick="window.location.href='/prescription/details/<%= prescription._id%>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= prescription.createdBy.username %></td>
+
+          
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

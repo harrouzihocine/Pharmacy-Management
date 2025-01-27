@@ -43,7 +43,9 @@
             type="button" 
             class="btn gear-btn" 
             onclick="printTicket({
+              designation: '<%= stock.medicamentId.designation %>',
               barcode: '<%= stock.barcode %>',
+              serialNumber: '<%= stock.serialNumber %>',
               batchNumber: '<%= stock.batchNumber %>',
               expiryDate: '<%= stock.expiryDate %>',
               locationCode: '<%= stock.locationCode %>'

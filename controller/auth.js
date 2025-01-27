@@ -2,6 +2,7 @@ const User = require("../models/user");
 const moment = require("moment");
 const bcrypt = require("bcryptjs");
 const services = [
+  { _id: 'PCS', name: 'Pharmacie centrale' },
   { _id: 'APP', name: 'Approvisionnement' },
   { _id: 'CON', name: 'Consultations' },
   { _id: 'RAD', name: 'Radiologie' },
