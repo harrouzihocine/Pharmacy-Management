@@ -1,0 +1,73 @@
+<% layout('layouts/boilerplate') %>
+<div class="storage-table-container">
+<button class="btn back-btn back-button" onclick="window.location.href='/achat'"><i class="bi bi-arrow-left-circle"></i></button>
+    
+  <h1>List of Purchase Requests</h1>
+  <!-- <button type="button" class="btn demand-new-button" onclick="window.location.href='/achat'">
+  <span class="ms-1">Purchase Requests</span>
+  </button> -->
+    
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in Purchase Requests list" />
+  </form>
+  <table class="storage-table sortable mt-2">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Note</th>
+        <th>Created By</th>
+        <th>CreatedAt</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% for (purchaseRequest of PurchaseRequests) { %>
+
+      <tr >
+        <!-- DisplayPurchaseRequestCode -->
+        <td onclick="window.location.href='/achat/approvisionnement/demands/details/<%= purchaseRequest._id %>'" style="cursor: pointer;">
+          <%= purchaseRequest.PurchaseRequestCode %>
+        </td>
+
+
+        <!-- Display additional notes -->
+        <td onclick="window.location.href='/achat/approvisionnement/demands/details/<%= purchaseRequest._id %>'" style="cursor: pointer;">
+          <%= purchaseRequest.notes %>
+        </td>
+       
+        <!-- Display the pharmacist who created the request -->
+        <td onclick="window.location.href='/achat/approvisionnement/demands/details/<%= purchaseRequest._id %>'" style="cursor: pointer;">
+          <%= purchaseRequest.createdBy.username %>
+        </td>
+        <td onclick="window.location.href='/achat/approvisionnement/demands/details/<%= purchaseRequest._id %>'" style="cursor: pointer;">
+          <%= purchaseRequest.createdAt.toLocaleString() %>
+        </td>
+         <!-- Display status of the request -->
+         <td onclick="window.location.href='/achat/approvisionnement/demands/details/<%= purchaseRequest._id %>'" style="cursor: pointer;">
+            <span class="tag status-badge  <% if (purchaseRequest.status === 'Pending') { %>status-pending<% } %>
+                      <% if (purchaseRequest.status === 'Approved') { %>status-approved<% } %>
+                      <% if (purchaseRequest.status === 'Rejected') { %>status-rejected<% } %>
+                      <% if (purchaseRequest.status === 'Canceled') { %>status-rejected<% } %>
+                      <% if (purchaseRequest.status === 'Treated') { %>status-approved<% } %>
+                      <% if (purchaseRequest.status === 'Draft') { %>status-Draft<% } %>">
+              <%= purchaseRequest.status %>
+            </span>
+           
+          </td>
+        <td>
+          <div class="d-flex">
+            <% if (purchaseRequest.status == 'Draft') { %>
+            <!-- Delete Button -->
+            <button class="view-btn  decline-purchaseRequest" style="background-color: rgba(255 0 0 / 0.5);" data-id="<%=purchaseRequest._id %>">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+            <% } %>
+          </div>
+        </td>
+      </tr>
+
+      <% } %>
+    </tbody>
+  </table>
+</div>

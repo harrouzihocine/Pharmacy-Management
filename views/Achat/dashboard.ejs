@@ -1,0 +1,178 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="achat-dashboard-container">
+ 
+  <!-- Title -->
+  <h3 class="achat-title">Achat Dashboard</h3>
+
+
+  <!-- Quick Access Buttons -->
+  <div class="achat-quick-access-grid">
+    <button class="achat-card" onclick="location.href='/achat/approvisionnement/demands';">
+      <div class="achat-card-header">
+        <span class="achat-icon">📄</span>
+        <span class="achat-badge">Demands</span>
+      </div>
+      <div class="achat-card-body">
+        <p>View and manage demand requests.</p>
+      </div>
+    </button>
+
+    <button class="achat-card" onclick="location.href='/achat/approvisionnement/facture-proforma';">
+      <div class="achat-card-header">
+        <span class="achat-icon">📋</span>
+        <span class="achat-badge">Proforma</span>
+      </div>
+      <div class="achat-card-body">
+        <p>Manage proforma invoices.</p>
+      </div>
+    </button>
+
+    <button class="achat-card" onclick="location.href='/achat/approvisionnement/BC';">
+      <div class="achat-card-header">
+        <span class="achat-icon">📝</span>
+        <span class="achat-badge">Orders</span>
+      </div>
+      <div class="achat-card-body">
+        <p>Handle purchase orders.</p>
+      </div>
+    </button>
+
+    <button class="achat-card" onclick="location.href='/achat/bon-livraison';">
+      <div class="achat-card-header">
+        <span class="achat-icon">🚚</span>
+        <span class="achat-badge">Delivery</span>
+      </div>
+      <div class="achat-card-body">
+        <p>Manage delivery notes.</p>
+      </div>
+    </button>
+
+    <button class="achat-card" onclick="location.href='/achat/factures';">
+      <div class="achat-card-header">
+        <span class="achat-icon">💰</span>
+        <span class="achat-badge">Invoices</span>
+      </div>
+      <div class="achat-card-body">
+        <p>View and process invoices.</p>
+      </div>
+    </button>
+  </div>
+</div>
+
+<style>
+  /* Container Styles */
+  .achat-dashboard-container {
+    width: 90rem;
+    max-width: 95%;
+    background-color: #0201281d; /* Dark background for the container */
+    color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Premium shadow effect */
+    margin: 20px auto;
+  }
+
+ 
+
+  /* Title */
+  .achat-title {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  /* Search Bar */
+  .achat-search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  .achat-search-input {
+    width: 100%;
+    max-width: 600px;
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: 2px solid #4ecdc4;
+    background-color: transparent;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .achat-search-input::placeholder {
+    color: #ccc;
+  }
+
+  .achat-search-input:focus {
+    border-color: #4ecdc4;
+    box-shadow: 0 0 15px rgba(78, 205, 196, 0.7);
+  }
+
+  /* Quick Access Grid */
+  .achat-quick-access-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 cards in one row */
+    gap: 25px;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  /* Card Styles */
+  .achat-card {
+    background-color: #0201281d;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border: none;
+    color: #fff;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .achat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Card Header */
+  .achat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .achat-icon {
+    font-size: 2.5rem;
+    color: #4ecdc4;
+  }
+
+  .achat-badge {
+    background-color: #4ecdc4;
+    color: #1a1a2e;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  /* Card Body */
+  .achat-card-body {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .achat-card-body p {
+    margin: 5px 0;
+    color: #f5f5f5;
+  }
+</style>

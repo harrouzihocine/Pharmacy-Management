@@ -1,120 +1,131 @@
 <% layout('layouts/boilerplate') %>
 <div class="storage-table-container">
+  
   <h1>List of Purchase Requests</h1>
   <button type="button" class="btn demand-new-button" onclick="window.location.href='/achat/demands/new'">
     <span class="ms-1">New Purchase Request</span>
   </button>
-  <table class="storage-table">
+    
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in admissions list" />
+  </form>
+  <table class="storage-table  sortable mt-2">
     <thead>
       <tr>
         <th>Code</th>
         <th>Note</th>
         <th>Created By</th>
+        <th>CreatedAt</th>
         <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="tablebody">
       <% for (purchaseRequest of PurchaseRequests) { %>
-     
-          <tr  class="<%= purchaseRequest.status === 'Canceled' ? 'passive-row' : '' %>">
-            <!-- DisplayPurchaseRequestCode -->
-            <td onclick="window.location.href='/purchase-requests/<%= purchaseRequest._id %>'" style="cursor: pointer;">
-              <%= purchaseRequest.PurchaseRequestCode %>
-            </td>
-           
-         
-            <!-- Display additional notes -->
-            <td onclick="window.location.href='/purchase-requests/<%= purchaseRequest._id %>'" style="cursor: pointer;">
-              <%= purchaseRequest.notes %>
-            </td>
-               <!-- Display status of the request -->
-               <td onclick="window.location.href='/purchase-requests/<%= purchaseRequest._id %>'" style="cursor: pointer;" >
-                <span class="tag status-badge  <% if (purchaseRequest.status === 'Pending') { %>status-pending<% } %>
-                    <% if (purchaseRequest.status === 'Approved') { %>status-approved<% } %>
-                    <% if (purchaseRequest.status === 'Rejected') { %>status-rejected<% } %>
-                    <% if (purchaseRequest.status === 'Canceled') { %>status-rejected<% } %>
-                    <% if (purchaseRequest.status === 'Draft') { %>status-Draft<% } %>">
-                <%= purchaseRequest.status %>
-                </span>
-                <% if (purchaseRequest.status === 'Draft') { %>
-                  <button class="btn validate-purchaseRequest validated-btn validated-btn-success" data-id="<%=purchaseRequest._id %>">
-                    <i class="bi bi-check-circle"></i>
-                  </button>
-                <% } %>
-                
-              </td>
-            <!-- Display the pharmacist who created the request -->
-            <td onclick="window.location.href='/purchase-requests/<%= purchaseRequest._id %>'" style="cursor: pointer;">
-              <%= purchaseRequest.createdBy.username %>
-            </td>
-            <td>
-              <div class="d-flex">
-                <% if (purchaseRequest.status == 'Draft') { %>
-                <!-- Delete Button -->
-                <button class="view-btn  decline-purchaseRequest" style="background-color: rgba(255 0 0 / 0.5);"  data-id="<%=purchaseRequest._id %>">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-                <% } %>
-              </div>
-            </td>
-          </tr>
-     
+
+      <tr class="<%= purchaseRequest.status === 'Canceled' ? 'passive-row' : '' %>">
+        <!-- DisplayPurchaseRequestCode -->
+        <td onclick="window.location.href='/achat/demands/details/<%= purchaseRequest._id %>'" style="cursor: pointer;">
+          <%= purchaseRequest.PurchaseRequestCode %>
+        </td>
+
+
+        <!-- Display additional notes -->
+        <td onclick="window.location.href='/achat/demands/details/<%= purchaseRequest._id %>'" style="cursor: pointer;">
+          <%= purchaseRequest.notes %>
+        </td>
+       
+        <!-- Display the pharmacist who created the request -->
+        <td onclick="window.location.href='/achat/demands/details/<%= purchaseRequest._id %>'" style="cursor: pointer;">
+          <%= purchaseRequest.createdBy.username %>
+        </td>
+        <td onclick="window.location.href='/achat/demands/details/<%= purchaseRequest._id %>'" style="cursor: pointer;">
+          <%= purchaseRequest.createdAt.toLocaleString() %>
+        </td>
+         <!-- Display status of the request -->
+         <td onclick="window.location.href='/achat/demands/details/<%= purchaseRequest._id %>'" style="cursor: pointer;">
+            <span class="tag status-badge  <% if (purchaseRequest.status === 'Pending') { %>status-pending<% } %>
+                      <% if (purchaseRequest.status === 'Approved') { %>status-approved<% } %>
+                      <% if (purchaseRequest.status === 'Rejected') { %>status-rejected<% } %>
+                      <% if (purchaseRequest.status === 'Canceled') { %>status-rejected<% } %>
+                      <% if (purchaseRequest.status === 'Treated') { %>status-approved<% } %>
+                      <% if (purchaseRequest.status === 'Draft') { %>status-Draft<% } %>">
+              <%= purchaseRequest.status %>
+            </span>
+            <% if (purchaseRequest.status === 'Draft') { %>
+            <button class="btn validate-purchaseRequest validated-btn validated-btn-success" data-id="<%=purchaseRequest._id %>">
+              <i class="bi bi-check-circle"></i>
+            </button>
+            <% } %>
+  
+          </td>
+        <td>
+          <div class="d-flex">
+            <% if (purchaseRequest.status == 'Draft') { %>
+            <!-- Delete Button -->
+            <button class="view-btn  decline-purchaseRequest" style="background-color: rgba(255 0 0 / 0.5);" data-id="<%=purchaseRequest._id %>">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+            <% } %>
+          </div>
+        </td>
+      </tr>
+
       <% } %>
     </tbody>
   </table>
 </div>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Add event listeners to all validate buttons
-      const validateButtons = document.querySelectorAll(".validate-purchaseRequest");
-      validateButtons.forEach((button) => {
-        button.addEventListener("click", function (e) {
-          e.stopPropagation(); // Prevent row click event
-          const purchaseRequestId = button.getAttribute("data-id");
-  
-          // Show SweetAlert confirmation dialog
-          Swal.fire({
-            title: "Are you sure?",
-            text: "Do you want to validate this purchase request?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, validate it!",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // Redirect to the validation endpoint
-              window.location.href = `/achat/demands/validate/${purchaseRequestId}`;
-            }
-          });
+  document.addEventListener("DOMContentLoaded", function() {
+    // Add event listeners to all validate buttons
+    const validateButtons = document.querySelectorAll(".validate-purchaseRequest");
+    validateButtons.forEach((button) => {
+      button.addEventListener("click", function(e) {
+        e.stopPropagation(); // Prevent row click event
+        const purchaseRequestId = button.getAttribute("data-id");
+
+        // Show SweetAlert confirmation dialog
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Do you want to validate this purchase request?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, validate it!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Redirect to the validation endpoint
+            window.location.href = `/achat/demands/validate/${purchaseRequestId}`;
+          }
         });
       });
     });
-    document.addEventListener("DOMContentLoaded", function () {
-      // Add event listeners to all validate buttons
-      const validateButtons = document.querySelectorAll(".decline-purchaseRequest");
-      validateButtons.forEach((button) => {
-        button.addEventListener("click", function (e) {
-          e.stopPropagation(); // Prevent row click event
-          const purchaseRequestId = button.getAttribute("data-id");
-  
-          // Show SweetAlert confirmation dialog
-          Swal.fire({
-            title: "Are you sure?",
-            text: "Do you want to Cancel this purchase request?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, Cancel it!",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // Redirect to the validation endpoint
-              window.location.href = `/achat/demands/cancel/${purchaseRequestId}`;
-            }
-          });
+  });
+  document.addEventListener("DOMContentLoaded", function() {
+    // Add event listeners to all validate buttons
+    const validateButtons = document.querySelectorAll(".decline-purchaseRequest");
+    validateButtons.forEach((button) => {
+      button.addEventListener("click", function(e) {
+        e.stopPropagation(); // Prevent row click event
+        const purchaseRequestId = button.getAttribute("data-id");
+
+        // Show SweetAlert confirmation dialog
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Do you want to Cancel this purchase request?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, Cancel it!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Redirect to the validation endpoint
+            window.location.href = `/achat/demands/cancel/${purchaseRequestId}`;
+          }
         });
       });
     });
-  </script>
+  });
+</script>

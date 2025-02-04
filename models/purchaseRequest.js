@@ -22,7 +22,7 @@ const PurchaseRequestSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected", "Draft","Canceled"],
+      enum: ["Pending", "Approved", "Rejected", "Draft","Canceled","Treated"],
       default: "Draft",
     }, // Status of the demand
     notes: { type: String }, // Additional notes or comments

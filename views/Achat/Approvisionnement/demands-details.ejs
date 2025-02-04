@@ -1,0 +1,151 @@
+<% layout('layouts/boilerplate') %>
+<div class="storage-table-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/achat/approvisionnement/demands'"><i class="bi bi-arrow-left-circle"></i></button>
+  <h1>List of Purchase Requests</h1>
+  <div class="demand-info-section">
+    <h2>General Information</h2>
+    <table class="demand-info-table">
+      <tr data-demand-id="<%= purchaseRequest._id %>">
+        <th>Demand Number</th>
+        <td id="PurchaseRequestCode"><%= purchaseRequest.PurchaseRequestCode %></td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td><%= purchaseRequest.status %></td>
+      </tr>
+      <tr>
+        <th>Comment</th>
+        <td><%= purchaseRequest.notes || 'N/A' %></td>
+      </tr>
+      <tr>
+        <th>Created By</th>
+        <td><%= purchaseRequest.createdBy.username %></td>
+      </tr>
+      <tr>
+        <th>Created Date</th>
+        <td><%= new Date(purchaseRequest.createdAt).toLocaleString() %></td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Items</h2>
+    
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in Items list" />
+  </form>
+  <table class="create-prescription-table medicaments-by-fournisseur sortable">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Quantity Demanded</th>
+        <th>Quantity in Profoma</th>
+        <th>Type</th>
+        <th>Form</th>    
+        <th>Fournisseurs</th>
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% purchaseRequest.medicaments.forEach(medicament => { %>
+        <tr data-medicament-id="<%= medicament.medicamentId._id %>">
+          <td><%= medicament.medicamentId.designation %></td>
+          <td class="quantity-demanded"><%= medicament.quantity %></td>
+          <td><input type="number" class="form-control proforma-quantity-cell" min="0" placeholder="Enter quantity" value="<%= medicament.quantity %>"></td>
+          <td><%= medicament.medicamentId.type_medicament %></td>
+          <td><%= medicament.medicamentId.forme %></td>
+          <td class="fournisseur-column">
+            <div class="form-group mb-3">
+              <select id="fournisseurs-<%= medicament.medicamentId._id %>" name="fournisseurs[]" class="services-select fournisseur-select" multiple>
+                <% fournisseurs.forEach(fournisseur => { %>
+                  <option value="<%= fournisseur._id %>"><%= fournisseur.name %></option>
+                <% }) %>
+              </select>
+            </div>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  
+  <button id="submit-factures" class="btn demand-new-button mt-2">Generate Facture proforma</button>
+  
+</div>
+<style>
+</style>
+<script>
+ document.addEventListener('DOMContentLoaded', () => {
+  // Initialize multi-select dropdown
+  document.querySelectorAll('.fournisseur-select').forEach(select => {
+    new Choices(select, {
+      removeItemButton: true,
+      placeholder: true,
+      placeholderValue: 'Select fournisseurs...',
+    });
+  });
+
+  // Submit all selected data grouped by fournisseur
+  document.getElementById('submit-factures').addEventListener('click', async () => {
+    const fournisseursMap = {}; // Store medicaments per fournisseur
+
+    document.querySelectorAll('.medicaments-by-fournisseur tbody tr').forEach(row => {
+      const medicamentId = row.getAttribute('data-medicament-id');
+      const fournisseurSelect = document.querySelector(`#fournisseurs-${medicamentId}`);
+      const selectedFournisseurs = Array.from(fournisseurSelect.selectedOptions).map(option => option.value);
+
+      // Capture the quantity for this medicament using the class 'quantity-cell'
+      const quantityCell = row.querySelector('.proforma-quantity-cell');
+      const quantity = quantityCell ? quantityCell.value.trim() : null;
+
+      // Capture the quantity demanded (from quantity-demanded cell)
+      const quantityDemandedCell = row.querySelector('.quantity-demanded');
+      const quantityDemanded = quantityDemandedCell ? quantityDemandedCell.textContent.trim() : null;
+       // If no fournisseurs are selected, set this medicament to null (skip)
+       if (selectedFournisseurs.length === 0) {
+        fournisseursMap[medicamentId] = null; // Send null if no fournisseur selected
+        return; // Skip to the next medicament
+      }
+      if (!quantity || isNaN(quantity) || !quantityDemanded || isNaN(quantityDemanded)) {
+        alert(`Please provide valid quantities for ${medicamentId}.`);
+        return; // Exit early if any quantity is missing or invalid
+      }
+
+      selectedFournisseurs.forEach(fournisseurId => {
+        if (!fournisseursMap[fournisseurId]) {
+          fournisseursMap[fournisseurId] = [];
+        }
+        // Add medicament with its quantity
+        fournisseursMap[fournisseurId].push({ medicamentId, quantity, quantityDemanded });
+      });
+    });
+
+    if (Object.keys(fournisseursMap).length === 0) {
+      alert('Please select at least one fournisseur.');
+      return;
+    }
+
+    const requestData = {
+      demandId: "<%= purchaseRequest._id %>", // Include demand ID
+      facturesByFournisseur: fournisseursMap
+      
+    };
+
+    try {
+      const response = await fetch('/achat/approvisionnement/facture-proforma/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestData)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        window.location.href = '/achat/approvisionnement/facture-proforma';
+      } else {
+        alert(`Error: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to send Factures Proforma.');
+    }
+  });
+});
+
+</script>

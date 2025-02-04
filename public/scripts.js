@@ -323,22 +323,35 @@ toggleButton.addEventListener("click", () => {
 });
 
 // Function to highlight the active link in the sidebar
+// Function to highlight the active link in the sidebar
 function setActiveLink() {
-  const sidebarLinks = document.querySelectorAll(".sidebar-link");
   const currentPage = window.location.pathname; // Get the current page URL path
 
-  sidebarLinks.forEach((link) => {
-    const linkPath = link.getAttribute("href"); // Get href attribute of the link
+  // Define a mapping of paths to their corresponding link classes
+  const pathToLinkClass = {
+    "/storage": ".storage-link",
+    "/medicament/": ".medicament-link",
+    "/pharmacy/": ".pharmacy-link",
+    "/achat/demands": ".purchase-demands-link",
+    "/inventory": ".inventory-link",
+    "/achat": ".purchase-link",
+    "/fournisseur": ".fournisseur-link",
+    "/profile": ".profile-link",
+    "/logout": ".logout-link",
+  };
 
-    // Remove 'active' class from all links first
+  // Remove 'active' class from all links first
+  document.querySelectorAll(".sidebar-link").forEach((link) => {
     link.classList.remove("active");
-
-    // Check for exact match or path match, and add the 'active' class if it matches
-    if (currentPage === linkPath || currentPage.startsWith(linkPath)) {
-      link.classList.add("active"); // Add the 'active' class to the matching link
-    }
   });
+
+  // Add 'active' class to the matched link
+  const linkSelector = pathToLinkClass[currentPage];
+  if (linkSelector) {
+    document.querySelector(linkSelector)?.classList.add("active");
+  }
 }
+
 
 // Call the function on page load to set the active link
 window.addEventListener("load", setActiveLink);

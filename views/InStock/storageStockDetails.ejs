@@ -4,7 +4,9 @@
     <h1>Storage Details: (<%= storage.serviceABV %>) <%= storage.storageName %> </h1>
 
     <h3>Medicaments in this Storage:</h3>
-
+    <form class="search-bar mb-2">
+        <input type="text" id="search" placeholder="Search in admissions list" />
+      </form>
     <table class="storages-table">
         <thead>
             <tr>
@@ -19,7 +21,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tablebody">
             <% if (items.length === 0) { %>
                 <tr>
                     <td colspan="8">No medicaments in this storage.</td>

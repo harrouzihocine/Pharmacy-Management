@@ -1,0 +1,45 @@
+<% layout('layouts/boilerplate') %>
+<div class="storage-table-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/achat'"><i class="bi bi-arrow-left-circle"></i></button>
+
+  <h1>List of Facture Proformas</h1>
+
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in Facture Proformas list" />
+  </form>
+  <% if (factureProformas.length > 0) { %>
+  <table class="create-prescription-table sortable">
+    <thead>
+      <tr>
+        <th>Proforma Code</th>
+        <th>Fournisseur</th>
+        <th>Created By</th>
+        <th>Status</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% factureProformas.forEach(facture => { %>
+      <tr>
+        <td onclick="window.location.href='/achat/approvisionnement/facture-proforma/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.factureProformaCode %></td>
+
+        <td onclick="window.location.href='/achat/approvisionnement/facture-proforma/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.fournisseur.name %></td>
+        <td onclick="window.location.href='/achat/approvisionnement/facture-proforma/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.createdBy.username %></td>
+        <td onclick="window.location.href='/achat/approvisionnement/facture-proforma/details/<%= facture._id %>'" style="cursor: pointer;"> <span class="tag status-badge  <% if (facture.status === 'Pending') { %>status-pending<% } %>
+                <% if (facture.status === 'Approved') { %>status-approved<% } %>
+                <% if (facture.status === 'Rejected') { %>status-rejected<% } %>
+                <% if (facture.status === 'Canceled') { %>status-rejected<% } %>
+                <% if (facture.status === 'Treated') { %>status-approved<% } %>
+                <% if (facture.status === 'Draft') { %>status-Draft<% } %>">
+            <%= facture.status %>
+          </span>
+        <td onclick="window.location.href='/achat/approvisionnement/facture-proforma/details/<%= facture._id %>'" style="cursor: pointer;">
+          <%= new Date(facture.createdAt).toLocaleString() %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } else { %>
+  <p>No facture proformas found.</p>
+  <% } %>
+</div>

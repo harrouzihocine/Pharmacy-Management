@@ -4,7 +4,9 @@
   <button  class="btn back-btn back-button" onclick="window.location.href='/pharmacy'"><i class="bi bi-arrow-left-circle"></i></button>
   <h1>Stock Details for Medicament</h1>
   <h2><%= designation %></h2>
-
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in admissions list" />
+  </form>
   <table class="stock-details-table">
     <thead>
       <tr>
@@ -18,7 +20,7 @@
         <th>Expiry Date</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="tablebody">
       <% if (stockDetails.length) { %>
        
       <% stockDetails.forEach((stock) => { %>

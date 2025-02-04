@@ -2,6 +2,10 @@
 
 <div class="pharmacy-table-container">
   <h1>List of Medicaments (Interne)</h1>
+  <form action="/pharmacy/importInventory" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".xlsx, .xls" required>
+    <button class="btn demand-new-button" type="submit">Upload</button>
+</form>
   <form class="search-bar">
     <input type="text" id="search"  placeholder="Search medicaments" />
 </form>

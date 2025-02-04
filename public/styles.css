@@ -3651,11 +3651,11 @@ table.dataTable tbody tr {
 .edit-item-form .save-edit-changes:hover {
   background-color: #726c7a;
 }
-/*----------------------- prescription index page  --------------------*/
+/*----------------------- prescription index page  --------------------------------------------------------*/
 .passive-row {
   background-color: rgba(255, 0, 0, 0.2) !important;
 }
-/*----------------------- new purchase demand --------------------*/
+/*-------------------------------------------- new purchase demand --------------------------------------*/
 .create-prescription-page-container textarea[name="notes"] {
   width: 100%;
   background-color: #333;
@@ -3666,4 +3666,25 @@ table.dataTable tbody tr {
   resize: vertical;
   font-size: 1rem;
   line-height: 1.5;
+}
+/*---------------------------------------Approvissionnement dashboard--------------------------------------------*/
+.appro-container {
+  width: 70rem; /* Maximum width for large screens */
+  margin: 10px auto; /* Center-align the container */
+  padding: 20px;
+  background-color: #0201281d; /* Lighter background for the container */
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+/*--------------------------------------------Approvissionnement demands-------------------------------------------*/
+.fournisseur-column {
+  width: 400px;  /* Adjust width as needed */
+  max-width: 400px;
+  min-width: 200px;
+  
+}
+
+.fournisseur-column .choices {
+  width: 100%;
+  max-width: 100%;
 }

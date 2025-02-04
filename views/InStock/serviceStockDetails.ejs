@@ -3,7 +3,9 @@
 <div class="stock-details-container">
   <button  class="btn back-btn back-button" onclick="window.location.href='/storage'"><i class="bi bi-arrow-left-circle"></i></button>
   <h1>Stock Details for Service: <%= serviceName %></h1>
-
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in admissions list" />
+  </form>
   <table class="stock-table">
     <thead>
       <tr>
@@ -19,7 +21,7 @@
         <th>Action</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="tablebody">
       <% if (stockDetails.length > 0) { %>
         <% stockDetails.forEach((stock) => { %>
           <tr>

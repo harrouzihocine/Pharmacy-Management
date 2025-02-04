@@ -1,0 +1,88 @@
+<% layout('layouts/boilerplate') %>
+<div class="storage-table-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/achat/approvisionnement/BC'">
+    <i class="bi bi-arrow-left-circle"></i>
+  </button>
+  <h1>Purchase Order (BC) Details</h1>
+
+  <!-- General Information Section -->
+  <div class="demand-info-section">
+    <h2>General Information</h2>
+    <table class="demand-info-table">
+      <tr>
+        <input type="text" class="factureProforma-id" value="<%=  bonDeCommande._id %>" hidden>
+        <input type="text" class="facture-proforma-demandId" value="<%= bonDeCommande.demandId._id %>" hidden>
+        <th>Facture Proforma Code</th>
+        <td><%= bonDeCommande.bonCommandeCode %></td>
+      </tr>
+      <tr>
+        <th>Created By</th>
+        <td><%= bonDeCommande.createdBy.username %></td>
+      </tr>
+      <tr>
+        <th>Created Date</th>
+        <td><%= new Date(bonDeCommande.createdAt).toLocaleString() %></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Supplier Information Section -->
+  <div class="demand-info-section">
+    <h2>Fournisseur Information</h2>
+    <table class="demand-info-table">
+    
+        <input type="text" class="fournisseur-id" value="<%=  bonDeCommande.fournisseurId._id %>" hidden>
+        <th>Fournisseur Name</th>
+        <td><%= bonDeCommande.fournisseurId.name %></td>
+      </tr>
+      <tr>
+        <th>Fournisseur Address</th>
+        <td><%= bonDeCommande.fournisseurId.wilaya || 'N/A' %>, <%= bonDeCommande.fournisseurId.city || 'N/A' %></td>
+      </tr>
+      <tr>
+        <th>Fournisseur Contact</th>
+        <td>
+          <p><strong>Phone:</strong> <%= bonDeCommande.fournisseurId.phone || 'N/A' %></p>
+
+          <% if (bonDeCommande.fournisseurId.mobile && bonDeCommande.fournisseurId.mobile.length > 0) { %>
+            <p><strong>Mobile:</strong> <%= bonDeCommande.fournisseurId.mobile.join(', ') %></p>
+          <% } else { %>
+            <p><strong>Mobile:</strong> N/A</p>
+          <% } %>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Medicaments Section -->
+  <h2>Items</h2>
+    
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in Items list" />
+  </form>
+  <table class="create-prescription-table sortable">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Quantity</th>
+        <th>Type</th>
+        <th>Form</th>
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% bonDeCommande.medicaments.forEach(medicament => { %>
+        <tr data-medicament-id="<%= medicament.medicamentId._id %>">
+          <td><%= medicament.medicamentId.designation %></td>
+          <td><%= medicament.orderQuantity %></td>
+          <td><%= medicament.medicamentId.type_medicament %></td>
+          <td><%= medicament.medicamentId.forme %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <button id="submit-proforma-factures" class="btn demand-new-button mt-2">Generate Delivery receipt (BR)</button>
+</div>
+<script>
+  
+</script>
+
