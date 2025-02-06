@@ -16,7 +16,7 @@ const FactureProformaSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Fournisseur",
       required: true,
-    }, // Supplier who will provide the medicaments
+    },
     medicaments: [
       {
         medicamentId: {
@@ -39,8 +39,8 @@ const FactureProformaSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected", "Canceled"],
-      default: "Pending",
+      enum: ["Draft", "Treated", "Canceled"],
+      default: "Draft",
     }, // Status of the invoice
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

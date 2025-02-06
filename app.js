@@ -29,6 +29,7 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use('/public', express.static(path.join(__dirname, 'node_modules/mdb-ui-kit/dist')));
+app.use("/uploads", express.static("D:/DIV/Pharmacy Management/uploads"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));

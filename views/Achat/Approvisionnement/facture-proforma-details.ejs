@@ -34,10 +34,10 @@
   <div class="demand-info-section">
     <h2>Fournisseur Information</h2>
     <table class="demand-info-table">
-    
-        <input type="text" class="fournisseur-id" value="<%=  factureProforma.fournisseur._id %>" hidden>
-        <th>Fournisseur Name</th>
-        <td><%= factureProforma.fournisseur.name %></td>
+
+      <input type="text" class="fournisseur-id" value="<%=  factureProforma.fournisseur._id %>" hidden>
+      <th>Fournisseur Name</th>
+      <td><%= factureProforma.fournisseur.name %></td>
       </tr>
       <tr>
         <th>Fournisseur Address</th>
@@ -49,9 +49,9 @@
           <p><strong>Phone:</strong> <%= factureProforma.fournisseur.phone || 'N/A' %></p>
 
           <% if (factureProforma.fournisseur.mobile && factureProforma.fournisseur.mobile.length > 0) { %>
-            <p><strong>Mobile:</strong> <%= factureProforma.fournisseur.mobile.join(', ') %></p>
+          <p><strong>Mobile:</strong> <%= factureProforma.fournisseur.mobile.join(', ') %></p>
           <% } else { %>
-            <p><strong>Mobile:</strong> N/A</p>
+          <p><strong>Mobile:</strong> N/A</p>
           <% } %>
         </td>
       </tr>
@@ -59,81 +59,93 @@
   </div>
 
   <!-- Medicaments Section -->
-  <h2>Items</h2>
-    
-  <form class="search-bar mb-2">
-    <input type="text" id="search" placeholder="Search in Items list" />
-  </form>
-  <table class="create-prescription-table sortable">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Quantity Demanded</th>
-        <th>Quantity in profoma</th>
-        <th>Order Quantity</th>
-        <th>Type</th>
-        <th>Form</th>
-      </tr>
-    </thead>
-    <tbody id="tablebody">
-      <% factureProforma.medicaments.forEach(medicament => { %>
+  <div class="medicaments-section">
+    <h2>Items</h2>
+    <form class="search-bar mb-2">
+      <input type="text" id="search" placeholder="Search in Items list" />
+    </form>
+    <table class="create-prescription-table sortable">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Quantity Demanded</th>
+          <th>Quantity in profoma</th>
+          <% if(factureProforma.status != 'Canceled'){ %>
+          <th>Order Quantity</th>
+          <% } %>
+          <th>Type</th>
+          <th>Form</th>
+          
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+        <% factureProforma.medicaments.forEach(medicament => { %>
         <tr data-medicament-id="<%= medicament.medicamentId._id %>">
           <td><%= medicament.medicamentId.designation %></td>
           <td><%= medicament.quantityDemanded %></td>
           <td><%= medicament.quantity %></td>
+          <% if(factureProforma.status != 'Canceled'){ %>
           <td><input type="number" class="form-control order-quantity-cell" min="0" placeholder="Enter quantity" value="<%=  medicament.quantityDemanded %>"></td>
+          <% } %>
           <td><%= medicament.medicamentId.type_medicament %></td>
           <td><%= medicament.medicamentId.forme %></td>
         </tr>
-      <% }) %>
-    </tbody>
-  </table>
-  <button id="submit-proforma-factures" class="btn demand-new-button mt-2">Generate Purchase Order (BC)</button>
+        <% }) %>
+      </tbody>
+    </table>
+    <% if(factureProforma.status != 'Canceled'){ %>
+    <h2>Comment</h2>
+    <textarea id="comment-proforma" name="comment" class="comment-proforma" rows="2" required placeholder="Provide a comment for BC..."></textarea>
+    <h2>Attachments</h2>
+    <input type="file" id="attachment-proforma" name="attachment" class="attachment-proforma" multiple />
+  </div>
+  <button id="submit-proforma-factures" class="btn demand-new-button">Generate Purchase Order (BC)</button>
+  <% } %>
 </div>
 <script>
-  document.getElementById('submit-proforma-factures').addEventListener('click', function() {
-    // Collect the required data
-   
-    const demandId = document.querySelector('.facture-proforma-demandId').value;
-    const fournisseurId = document.querySelector('.fournisseur-id').value;
-    const factureProformaId = document.querySelector('.factureProforma-id').value;
-   
-    
-    // Collect Medicament IDs and their respective order quantities
-    const medicaments = [];
-    document.querySelectorAll('.create-prescription-table tbody tr').forEach(row => {
-      const medicamentId = row.dataset.medicamentId;
-      const orderQuantity = row.querySelector('.order-quantity-cell').value;
+ document.getElementById('submit-proforma-factures').addEventListener('click', function() {
+  // Collect required data
+  const demandId = document.querySelector('.facture-proforma-demandId').value;
+  const fournisseurId = document.querySelector('.fournisseur-id').value;
+  const factureProformaId = document.querySelector('.factureProforma-id').value;
+  const comment = document.querySelector('.comment-proforma').value;
 
-      if (orderQuantity > 0) { // Only include rows with valid order quantities
-        medicaments.push({
-          medicamentId: medicamentId,
-          orderQuantity: orderQuantity
-        });
-      }
-    });
+  // Collect Medicament IDs and order quantities
+  const medicaments = [];
+  document.querySelectorAll('.create-prescription-table tbody tr').forEach(row => {
+    const medicamentId = row.dataset.medicamentId;
+    const orderQuantity = row.querySelector('.order-quantity-cell').value;
 
-    // Prepare data to be sent to the backend
-    const requestData = {
-      factureProformaId: factureProformaId,
-      fournisseurId: fournisseurId,
-      demandId:demandId,
-      medicaments: medicaments
-    };
+    if (orderQuantity > 0) { 
+      medicaments.push({ medicamentId, orderQuantity });
+    }
+  });
 
-    // Send the data to the backend using AJAX (Fetch API or XMLHttpRequest)
-    fetch('/achat/approvisionnement/BC/create', {
+  // Collect the selected attachment(s)
+  const attachmentFiles = document.getElementById('attachment-proforma').files;
+
+  // Prepare form data for file upload
+  const formData = new FormData();
+  formData.append('factureProformaId', factureProformaId);
+  formData.append('fournisseurId', fournisseurId);
+  formData.append('demandId', demandId);
+  formData.append('comment', comment);
+  formData.append('medicaments', JSON.stringify(medicaments));
+
+  // Append multiple files
+  for (let i = 0; i < attachmentFiles.length; i++) {
+    formData.append('attachments', attachmentFiles[i]); 
+  }
+
+  // Send the data to the backend
+  fetch('/achat/approvisionnement/BC/create', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestData)
+      body: formData
     })
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        alert('Bon de commande generated successfully!');
-        // window.location.href = '/achat/approvisionnement/BC'; // Redirect after success
+        window.location.href = '/achat/approvisionnement/BC';
       } else {
         alert('An error occurred while generating the Bon de commande');
       }
@@ -142,6 +154,6 @@
       console.error('Error:', error);
       alert('An error occurred while generating the Bon de commande');
     });
-  });
-</script>
+});
 
+</script>

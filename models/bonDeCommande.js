@@ -15,7 +15,7 @@ const bonDeCommandeSchema = new mongoose.Schema({
   factureProformaId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "FactureProforma", // Reference to the FactureProforma model
-    required: true,
+   default: null,
   },
   fournisseurId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -26,6 +26,14 @@ const bonDeCommandeSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Reference to the Fournisseur model
     required: true,
+  },
+  status: {
+    type: String,
+    enum: ["Pending", "Approved", "Rejected", "Canceled","Pending Delivery","Completed"],
+    default: "Pending",
+  },
+  comment: {
+    type: String,
   },
   medicaments: [
     {
@@ -39,6 +47,15 @@ const bonDeCommandeSchema = new mongoose.Schema({
         required: true,
         min: 0,
       },
+      quantityDemanded: {
+        type: Number,
+        min: 0,
+      },
+    },
+  ],
+  attachments: [
+    {
+      type: String, 
     },
   ],
  

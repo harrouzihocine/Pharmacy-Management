@@ -38,7 +38,7 @@
       <tr>
         <th>Item</th>
         <th>Quantity Demanded</th>
-        <th>Quantity in Profoma</th>
+        <th>Quantity in FP/BC</th>
         <th>Type</th>
         <th>Form</th>    
         <th>Fournisseurs</th>
@@ -66,7 +66,8 @@
     </tbody>
   </table>
   
-  <button id="submit-factures" class="btn demand-new-button mt-2">Generate Facture proforma</button>
+  <button id="submit-factures-fp" class="btn demand-new-button mt-2">Generate Facture proforma</button>
+  <button id="submit-factures-bc" class="btn demand-new-button mt-2">Generate Purchase Order (BC)</button>
   
 </div>
 <style>
@@ -83,7 +84,7 @@
   });
 
   // Submit all selected data grouped by fournisseur
-  document.getElementById('submit-factures').addEventListener('click', async () => {
+    document.getElementById('submit-factures-fp').addEventListener('click', async () => {
     const fournisseursMap = {}; // Store medicaments per fournisseur
 
     document.querySelectorAll('.medicaments-by-fournisseur tbody tr').forEach(row => {
@@ -147,5 +148,68 @@
     }
   });
 });
+ // Submit all selected data grouped by fournisseur BC
+ document.getElementById('submit-factures-bc').addEventListener('click', async () => {
+    const fournisseursMap = {}; // Store medicaments per fournisseur
 
+    document.querySelectorAll('.medicaments-by-fournisseur tbody tr').forEach(row => {
+      const medicamentId = row.getAttribute('data-medicament-id');
+      const fournisseurSelect = document.querySelector(`#fournisseurs-${medicamentId}`);
+      const selectedFournisseurs = Array.from(fournisseurSelect.selectedOptions).map(option => option.value);
+
+      // Capture the quantity for this medicament using the class 'quantity-cell'
+      const quantityCell = row.querySelector('.proforma-quantity-cell');
+      const quantity = quantityCell ? quantityCell.value.trim() : null;
+
+      // Capture the quantity demanded (from quantity-demanded cell)
+      const quantityDemandedCell = row.querySelector('.quantity-demanded');
+      const quantityDemanded = quantityDemandedCell ? quantityDemandedCell.textContent.trim() : null;
+       // If no fournisseurs are selected, set this medicament to null (skip)
+       if (selectedFournisseurs.length === 0) {
+        fournisseursMap[medicamentId] = null; // Send null if no fournisseur selected
+        return; // Skip to the next medicament
+      }
+      if (!quantity || isNaN(quantity) || !quantityDemanded || isNaN(quantityDemanded)) {
+        alert(`Please provide valid quantities for ${medicamentId}.`);
+        return; 
+      }
+
+      selectedFournisseurs.forEach(fournisseurId => {
+        if (!fournisseursMap[fournisseurId]) {
+          fournisseursMap[fournisseurId] = [];
+        }
+        // Add medicament with its quantity
+        fournisseursMap[fournisseurId].push({ medicamentId, quantity, quantityDemanded });
+      });
+    });
+
+    if (Object.keys(fournisseursMap).length === 0) {
+      alert('Please select at least one fournisseur.');
+      return;
+    }
+
+    const requestData = {
+      demandId: "<%= purchaseRequest._id %>", // Include demand ID
+      facturesByFournisseur: fournisseursMap
+      
+    };
+
+    try {
+      const response = await fetch('/achat/approvisionnement/BC/createBCFromDemand', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestData)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        window.location.href = '/achat/approvisionnement/BC';
+      } else {
+        alert(`Error: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to send BC.');
+    }
+  });
 </script>

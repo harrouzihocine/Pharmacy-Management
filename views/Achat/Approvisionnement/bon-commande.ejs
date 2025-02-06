@@ -14,7 +14,7 @@
         <th>BC Code</th>
         <th>Fournisseur</th>
         <th>Created By</th>
-       
+        <th>Status</th>
         <th>Created At</th>
       </tr>
     </thead>
@@ -24,9 +24,17 @@
         <td onclick="window.location.href='/achat/approvisionnement/BC/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.bonCommandeCode %></td>
 
         <td onclick="window.location.href='/achat/approvisionnement/BC/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.fournisseurId.name %></td>
-        <td onclick="window.location.href='/achat/approvisionnement/fBC/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.createdBy.username %></td>
-       
-        <td onclick="window.location.href='/achat/approvisionnement/facture-proforma/details/<%= facture._id %>'" style="cursor: pointer;">
+        <td onclick="window.location.href='/achat/approvisionnement/BC/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.createdBy.username %></td>
+        <td onclick="window.location.href='/achat/approvisionnement/BC/details/<%= facture._id %>'" style="cursor: pointer;"> <span class="tag status-badge  <% if (facture.status === 'Pending') { %>status-pending<% } %>
+          <% if (facture.status === 'Approved') { %>status-approved<% } %>
+          <% if (facture.status === 'Rejected') { %>status-rejected<% } %>
+          <% if (facture.status === 'Canceled') { %>status-rejected<% } %>
+          <% if (facture.status === 'Treated') { %>status-approved<% } %>
+          <% if (facture.status === 'Draft') { %>status-Draft<% } %>">
+      <%= facture.status %>
+    </span>
+    </td>
+        <td onclick="window.location.href='/achat/approvisionnement/BC/details/<%= facture._id %>'" style="cursor: pointer;">
           <%= new Date(facture.createdAt).toLocaleString() %>
         </td>
       </tr>
@@ -36,4 +44,5 @@
   <% } else { %>
   <p>No facture proformas found.</p>
   <% } %>
+  
 </div>
