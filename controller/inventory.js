@@ -310,8 +310,7 @@ module.exports.getUpdateItemPage = async (req, res, next) => {
 };
 exports.updateInventoryItem = async (req, res) => {
   try {
-    const inventoryItemId = req.params.itemId; // Assuming the item ID is passed in the URL
-
+    const inventoryItemId = req.params.itemId; 
     let {
       medicamentId,
       serviceABV,
@@ -334,7 +333,7 @@ exports.updateInventoryItem = async (req, res) => {
     } = req.body;
     const byBox = req.body.byBox === "on";
     const QTEbyBox = req.body.QTEbyBox === "on";
-    // Validate required fields (if not already handled by form validation)
+ 
     if (
       !inventoryItemId ||
       !medicamentId ||
@@ -372,16 +371,16 @@ exports.updateInventoryItem = async (req, res) => {
     inventoryItem.medicamentId = medicamentId;
     inventoryItem.serviceABV = serviceABV;
     inventoryItem.storageName = storageName;
-    inventoryItem.batchNumber = batchNumber || inventoryItem.batchNumber; // Keep the original if not provided
-    inventoryItem.serialNumber = serialNumber || inventoryItem.serialNumber; // Keep the original if not provided
-    inventoryItem.expiryDate = expiryDate || inventoryItem.expiryDate; // Keep the original if not provided
+    inventoryItem.batchNumber = batchNumber || inventoryItem.batchNumber; 
+    inventoryItem.serialNumber = serialNumber || inventoryItem.serialNumber; 
+    inventoryItem.expiryDate = expiryDate || inventoryItem.expiryDate; 
     inventoryItem.fournisseurId = fournisseurId;
     inventoryItem.NFacture = NFacture;
     inventoryItem.factureDate = factureDate;
     inventoryItem.NBL = NBL;
     inventoryItem.BLDate = BLDate;
     inventoryItem.tva = tva;
-    inventoryItem.remarks = remarks ; // Keep the original if not provided
+    inventoryItem.remarks = remarks ; 
     inventoryItem.updatedBy = req.user._id;
     inventoryItem.byBox = byBox;
     inventoryItem.QTEbyBox = QTEbyBox;
@@ -598,7 +597,7 @@ module.exports.exportInventoryItemsToExcel = async (req, res, next) => {
     if (template === "bigtable") {
       // Original "Big Table" logic
       data = inventoryItems.map((item) => ({
-        MedicamentId: item.medicamentId ? item.medicamentId.designation : "N/A",
+        Designation: item.medicamentId ? item.medicamentId.designation : "N/A",
         Forme: item.medicamentId ? item.medicamentId.forme : "N/A",
         Boite_de: item.medicamentId ? item.medicamentId.boite_de : "N/A",
         ServiceABV: item.serviceABV || "All Services",

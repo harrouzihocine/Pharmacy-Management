@@ -1,0 +1,78 @@
+<% layout('layouts/boilerplate') %>
+<div class="storage-table-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/achat'"><i class="bi bi-arrow-left-circle"></i></button>
+
+  <h1>List of Reception Orders (AR)</h1>
+  <button type="button" class="btn demand-new-button" onclick="window.location.href='/achat/approvisionnement/R/new'">
+    <span class="ms-1">New Reception Order</span>
+  </button>
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in Reception Orders list" />
+  </form>
+ 
+  <table class="create-prescription-table sortable">
+    <thead>
+      <tr>
+        <th>AR Code</th>
+        <th>BC Code</th>
+        <th>Fournisseur</th>
+        <th>Created By</th>
+        <th>Received By</th>
+        <th>Reception Date</th>
+        <th>Status</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+        <% if (BonReceptions.length > 0) { %>
+      <% BonReceptions.forEach(reception => { %>
+      <tr>
+        <td onclick="window.location.href='/achat/approvisionnement/R/details/<%= reception._id %>'" style="cursor: pointer;">
+          <%= reception.bonReceptionCode %>
+        </td>
+        <td onclick="window.location.href='/achat/approvisionnement/R/details/<%= reception._id %>'" style="cursor: pointer;">
+          <% if(reception.bonCommandeId.id!=null){ %>
+          <%= reception.bonCommandeId.id.bonCommandeCode %>
+          <% }else{ %>
+            N/A
+            <% } %>
+        </td>
+        <td onclick="window.location.href='/achat/approvisionnement/R/details/<%= reception._id %>'" style="cursor: pointer;">
+          <%= reception.fournisseurId.name %>
+        </td>
+        <td onclick="window.location.href='/achat/approvisionnement/R/details/<%= reception._id %>'" style="cursor: pointer;">
+          <%= reception.createdBy.username %>
+        </td>
+        <td onclick="window.location.href='/achat/approvisionnement/R/details/<%= reception._id %>'" style="cursor: pointer;">
+          <%= reception.receivedBy.username %>
+        </td>
+        <td onclick="window.location.href='/achat/approvisionnement/R/details/<%= reception._id %>'" style="cursor: pointer;">
+          <%= new Date(reception.dateReception).toLocaleDateString() %>
+        </td>
+        <td>
+          <span class="tag status-badge 
+            <% if (reception.status === 'Pending') { %>status-pending<% } %>
+            <% if (reception.status === 'Partially Received') { %>status-partial<% } %>
+            <% if (reception.status === 'Completed') { %>status-approved<% } %>
+            <% if (reception.status === 'Rejected') { %>status-rejected<% } %>">
+            <%= reception.status %>
+          </span>
+          <button type="button" class="btn edit-btn px-2 py-1" onclick="window.location.href='/achat/approvisionnement/R/edit/<%= reception._id %>'">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+        </td>
+        <td onclick="window.location.href='/achat/approvisionnement/R/details/<%= reception._id %>'" style="cursor: pointer;">
+          <%= new Date(reception.createdAt).toLocaleString() %>
+        </td>
+      </tr>
+      <% }) %>
+      <% } else { %>
+        <tr>
+           <td colspan="7">No reception orders found</td>
+        </tr>
+       
+        <% } %>
+    </tbody>
+  </table>
+ 
+</div>

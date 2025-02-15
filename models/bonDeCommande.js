@@ -10,21 +10,21 @@ const bonDeCommandeSchema = new mongoose.Schema({
   demandId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "PurchaseRequest",
-    required: true,
+   
   },
   factureProformaId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "FactureProforma", // Reference to the FactureProforma model
-   default: null,
+    ref: "FactureProforma", 
+   
   },
   fournisseurId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Fournisseur", // Reference to the Fournisseur model
+    ref: "Fournisseur", 
     required: true,
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to the Fournisseur model
+    ref: "User", 
     required: true,
   },
   status: {

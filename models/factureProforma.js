@@ -10,7 +10,7 @@ const FactureProformaSchema = new mongoose.Schema(
     demandId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "PurchaseRequest",
-      required: true,
+    
     }, // Reference to the purchase request
     fournisseur: {
       type: mongoose.Schema.Types.ObjectId,
@@ -26,12 +26,12 @@ const FactureProformaSchema = new mongoose.Schema(
         },
         quantity: {
           type: Number,
-          required: true,
+          
           min: 0,
         },
         quantityDemanded: {
           type: Number,
-          required: true,
+         
           min: 0,
         },
        

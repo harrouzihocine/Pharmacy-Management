@@ -2,7 +2,7 @@
 <div class="storage-table-container">
   <button class="btn back-btn back-button" onclick="window.location.href='/achat'"><i class="bi bi-arrow-left-circle"></i></button>
 
-  <h1>List of Facture Proformas</h1>
+  <h1>List of Facture Proforma Demands</h1>
   <button type="button" class="btn demand-new-button" onclick="window.location.href='/achat/approvisionnement/facture-proforma/new'">
     <span class="ms-1">New Facture Proforma</span>
   </button>
@@ -25,7 +25,6 @@
       <% factureProformas.forEach(facture => { %>
       <tr>
         <td onclick="window.location.href='/achat/approvisionnement/facture-proforma/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.factureProformaCode %></td>
-
         <td onclick="window.location.href='/achat/approvisionnement/facture-proforma/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.fournisseur.name %></td>
         <td onclick="window.location.href='/achat/approvisionnement/facture-proforma/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.createdBy.username %></td>
         <td onclick="window.location.href='/achat/approvisionnement/facture-proforma/details/<%= facture._id %>'" style="cursor: pointer;"> <span class="tag status-badge  <% if (facture.status === 'Pending') { %>status-pending<% } %>

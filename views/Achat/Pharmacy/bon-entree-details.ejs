@@ -1,0 +1,129 @@
+<% layout('layouts/boilerplate') %>
+<div class="inventory-details-container">
+  <button class="btn back-btn back-button " onclick="window.location.href='/achat/approvisionnement/BE'"><i class="bi bi-arrow-left-circle"></i></button>
+  <!-- Title Section -->
+  <h2>Bon Entree Code: <%= bonEntree.bonEntreeCode %></h2>
+
+  <!-- Service and Storage Information -->
+  <div class="inventory-information-section">
+    <!-- Inventory Title -->
+    <% if(bonEntree.bonReceptionId){ %>
+    <div class="info-box">
+      <strong>Bon Reception Code:</strong>
+      <span><%= bonEntree.bonReceptionId.bonReceptionCode %></span>
+    </div>
+    <% } %>
+    <!-- Service and Storage -->
+
+    <div class="info-box">
+      <strong>Service:</strong>
+      <span><%= bonEntree.serviceABV %></span>
+    </div>
+    <!-- Montant HT -->
+    <div class="info-box">
+      <strong>Montant HT:</strong>
+      <span><%= bonEntreeItems.reduce((sum, item) => sum + (parseFloat(item.purchasePrice || 0) * item.quantity), 0).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></span>
+    </div>
+
+    <!-- Montant TVA -->
+    <div class="info-box">
+      <strong>Montant TVA:</strong>
+      <span><%= bonEntreeItems.reduce((sum, item) => sum + ((parseFloat(item.purchasePrice || 0) * item.quantity) * (parseFloat(item.tva || 0) / 100)), 0).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></span>
+    </div>
+
+    <!-- Montant TTC -->
+    <div class="info-box">
+      <strong>Montant TTC:</strong>
+      <span><%= bonEntreeItems.reduce((sum, item) => sum + ((parseFloat(item.purchasePrice || 0) * item.quantity) * (1 + parseFloat(item.tva || 0) / 100)), 0).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></span>
+    </div>
+
+    <!-- Description -->
+    <div class="info-box">
+      <strong>Notes:</strong>
+      <span><%= bonEntree.notes||'N/A' %></p></span>
+    </div>
+    <!-- Status -->
+    <div class="info-box">
+      <strong>Status:</strong>
+      <span class="tag status-badge <%= bonEntree.status === 'Draft' ? 'status-Draft' : 'status-Validated' %>">
+        <%=bonEntree.status%>
+      </span>
+    </div>
+  </div>
+
+  <% if(bonEntree.status == 'Draft'){ %>
+  <!-- New Item Form Section -->
+  <div class="new-item-form-section">
+    <h3>Add Item</h3>
+    <%- include("./bon-entree-new-item", { medicaments, storages, bonEntree }) %>
+  </div>
+  <% } %>
+  <h3 class="mt-4">Bon Entree Items</h3>
+
+  <!-- Inventory Items Table Section -->
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in Bon Entree items" />
+  </form>
+  <table class="inventory-items-table sortable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Medicament</th>
+        <th>Storage</th>
+
+        <th>Batch Number</th>
+        <th>Serial Number</th>
+        <th>Qte (en Unité)</th>
+        <th>Purchase Price</th>
+        <th>Vente Price</th>
+        <th>TVA %</th>
+        <th>TVA</th>
+        <th>Montant HT</th>
+        <th>Remarks</th>
+        <% if(bonEntree.status === 'Draft'){ %>
+        <th>Actions</th>
+        <% } %>
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% if (bonEntreeItems.length > 0) { %>
+      <% bonEntreeItems.forEach((item, index) => { %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= item.medicamentId.designation %></td>
+        <td><%= item.storageName || 'N/A' %></td>
+        <td><%= item.batchNumber|| 'N/A' %></td>
+        <td><%= item.serialNumber || 'N/A' %></td>
+        <td><%= item.quantity %></td>
+        <td><%= item.purchasePrice ? item.purchasePrice.toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) : parseInt(0).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></td>
+        <td><%=(parseFloat(item.sellPrice?item.sellPrice:0) ).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></td>
+        <td><%= item.tva?item.tva:'N/A'%> %</td>
+        <td><%=(parseFloat(item.purchasePrice?(item.purchasePrice* item.quantity*item.tva/100):0) ).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></td>
+        <td><%=(parseFloat(item.purchasePrice?item.purchasePrice:0) * item.quantity).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></td>
+        <td><%= item.remarks || 'None' %></td>
+        <% if(bonEntree.status === 'Draft'){ %>
+        <td>
+          <div class="d-flex">
+
+            <button type="button" id="edititempage" class="btn edit-btn px-2 py-1 edit-button-container hidden" data-url="/achat/approvisionnement/BE/<%= bonEntree._id %>/<%= item._id %>" onclick="handleEditClick(event, this)" oncontextmenu="handleRightClick(event, this)">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button type="button" class="btn delete-btn delete-item-btn py-1 px-2" data-url="/achat/approvisionnement/BE/<%= bonEntree._id %>/<%= item._id %>?_method=DELETE">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+        <% } %>
+      </tr>
+      <% }); %>
+      <% } else { %>
+      <tr>
+        <td colspan="15" class="inventory-empty-row">No items found.</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<script>
+
+</script>

@@ -98,6 +98,7 @@ exports.createDemand = async (req, res) => {
       medicaments,
       otherMedicaments,
       createdBy: req.user._id,
+      createdAt: date,
     });
 
     await newDemand.save();

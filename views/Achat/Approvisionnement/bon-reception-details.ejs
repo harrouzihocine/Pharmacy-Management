@@ -1,0 +1,410 @@
+<% layout('layouts/boilerplate') %>
+<div class="storage-table-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/achat/approvisionnement/R'">
+    <i class="bi bi-arrow-left-circle"></i>
+  </button>
+  <h1>Reception Details (R)</h1>
+
+  <!-- General Information Section -->
+  <div class="demand-info-section">
+    <h2>General Information</h2>
+    <table class="demand-info-table">
+      <tr>
+        <input type="text" class="bonReception-id" value="<%= bonReception._id %>" hidden />
+        <th>Bon Reception Code</th>
+        <td><%= bonReception.bonReceptionCode %></td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td><%= bonReception.status %></td>
+      </tr>
+      <tr>
+        <th>Created By</th>
+        <td><%= bonReception.createdBy.username %></td>
+      </tr>
+      <tr>
+        <th>Received By</th>
+        <td><%= bonReception.receivedBy.username %></td>
+      </tr>
+      <tr>
+        <th>Reception Date</th>
+        <td><%= new Date(bonReception.dateReception).toLocaleString() %></td>
+      </tr>
+      <tr>
+        <th>Number of Packages</th>
+        <td><%= bonReception.nombreColis %></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Delivery Information Section -->
+  <div class="demand-info-section">
+    <h2>Delivery Information</h2>
+    <table class="demand-info-table">
+      <tr>
+        <th>Bon Livraison Number</th>
+        <td><%= bonReception.bonLivraison.numero || 'N/A' %></td>
+      </tr>
+      <tr>
+        <th>Bon Livraison Date</th>
+        <td><%= bonReception.bonLivraison.date ? new Date(bonReception.bonLivraison.date).toLocaleString() : 'N/A' %></td>
+      </tr>
+      <tr>
+        <th>Invoice Number</th>
+        <td><%= bonReception.facture.numero || 'N/A' %></td>
+      </tr>
+      <tr>
+        <th>Invoice Date</th>
+        <td><%= bonReception.facture.date ? new Date(bonReception.facture.date).toLocaleString() : 'N/A' %></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Supplier Information Section -->
+  <div class="demand-info-section">
+    <h2>Supplier Information</h2>
+    <table class="demand-info-table">
+      <tr>
+        <th>Supplier Name</th>
+        <td><%= bonReception.fournisseurId.name %></td>
+      </tr>
+      <tr>
+        <th>Supplier Address</th>
+        <td>
+          <%= bonReception.fournisseurId.wilaya || 'N/A' %>,
+          <%= bonReception.fournisseurId.city || 'N/A' %>
+        </td>
+      </tr>
+      <tr>
+        <th>Supplier Contact</th>
+        <td>
+          <p><strong>Phone:</strong> <%= bonReception.fournisseurId.phone || 'N/A' %></p>
+          <% if (bonReception.fournisseurId.mobile && bonReception.fournisseurId.mobile.length > 0) { %>
+          <p><strong>Mobile:</strong> <%= bonReception.fournisseurId.mobile.join(', ') %></p>
+          <% } else { %>
+          <p><strong>Mobile:</strong> N/A</p>
+          <% } %>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Surplus Items Section -->
+  <% if (bonReception.surplus && bonReception.surplus.length > 0) { %>
+  <h2>Surplus Items</h2>
+  <table class="create-prescription-table sortable mb-2">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Quantity</th>
+        <th>Type</th>
+        <th>Form</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% bonReception.surplus.forEach(item => { %>
+      <tr>
+        <td><%= item.medicamentId.designation %></td>
+        <td><%= item.quantity %></td>
+        <td><%= item.medicamentId.type_medicament %></td>
+        <td><%= item.medicamentId.forme %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } %>
+
+  <!-- Missing Items Section -->
+  <% if (bonReception.manque && bonReception.manque.length > 0) { %>
+  <h2>Missing Items</h2>
+  <table class="create-prescription-table sortable mb-2">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Quantity</th>
+        <th>Type</th>
+        <th>Form</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% bonReception.manque.forEach(item => { %>
+      <tr>
+        <td><%= item.medicamentId.designation %></td>
+        <td><%= item.quantity %></td>
+        <td><%= item.medicamentId.type_medicament %></td>
+        <td><%= item.medicamentId.forme %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } %>
+
+  <!-- Observation Section -->
+  <% if(bonReception.observation){ %>
+  <div class="other-medicaments-section">
+    <h2>Observation</h2>
+    <span><%= bonReception.observation %></span>
+  </div>
+  <% } %>
+
+  <!-- Attachments Section -->
+  <h2 class="mt-2">Attachments</h2>
+  <div class="attachments-section">
+    <div class="attachments-container">
+      <% bonReception.attachments.forEach(attachment => { 
+        const fileExtension = attachment.split('.').pop().toLowerCase();
+        const filenameWithExtension = attachment.split('\\').pop();
+        const filename = filenameWithExtension.split('.').slice(0, -1).join('.');
+      %>
+      <div class="attachment-item">
+        <% if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) { %>
+        <img src="/uploads/<%= attachment %>" alt="Attachment" class="thumbnail" onclick="openModal('/uploads/<%= attachment %>')">
+        <p class="attachment-name"><%= filename %></p>
+        <% } else if (fileExtension === 'pdf') { %>
+        <div class="pdf-thumbnail" onclick="openModal('/uploads/<%= attachment %>')">
+          <span>PDF</span>
+        </div>
+        <p class="attachment-name"><%= filename %></p>
+        <% } else { %>
+        <div class="other-file-thumbnail">
+          <span>File</span>
+        </div>
+        <p class="attachment-name"><%= filename %></p>
+        <% } %>
+        <button class="delete-attachment-btn" onclick="deleteAttachment('<%= attachment %>', '<%= bonReception._id %>')">
+          <img width="29" height="29" src="https://img.icons8.com/color/29/close-window.png" alt="close-window" />
+        </button>
+      </div>
+
+      <% }) %>
+    </div>
+
+    <!-- Add More Attachments Box -->
+    <div class="add-attachment-box">
+      <input type="file" id="attachment-input" style="display: none;" multiple onchange="uploadMoreAttachments(event, '<%= bonReception._id %>')">
+      <div class="add-attachment-box-content" onclick="document.getElementById('attachment-input').click()">
+        <span class="plus-sign">+</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div>
+    <% if(bonReception.status === 'Pending'){ %>
+    <button id="update-status-complete" class="btn demand-new-button mt-2">
+      Mark as Complete
+    </button>
+    <button id="update-status-partial" class="btn demand-new-button mt-2">
+      Mark as Partially Received
+    </button>
+    <button id="update-status-reject" class="btn demand-reject-button mt-2">
+      Reject
+    </button>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[id^="update-status-"]').forEach(button => {
+    button.addEventListener('click', function() {
+      const status = this.id === 'update-status-complete' ? 'Completed' :
+        this.id === 'update-status-partial' ? 'Partially Received' :
+        'Rejected';
+      updateStatus(status);
+    });
+  });
+
+  function updateStatus(newStatus) {
+    const brId = document.querySelector('.bonReception-id').value;
+
+    fetch("/achat/reception/update-status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          brId: brId,
+          status: newStatus,
+        }),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          window.location.reload();
+        } else {
+          alert("Error updating status");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  function openModal(fileUrl) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+
+    const fileExtension = fileUrl.split('.').pop().toLowerCase();
+
+    if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+      const img = document.createElement('img');
+      img.src = fileUrl;
+      modal.appendChild(img);
+    } else if (fileExtension === 'pdf') {
+      const iframe = document.createElement('iframe');
+      iframe.src = fileUrl;
+      iframe.style.width = '100%';
+      iframe.style.height = '80vh';
+      modal.appendChild(iframe);
+    } else {
+      const text = document.createElement('p');
+      text.innerText = 'File cannot be displayed.';
+      modal.appendChild(text);
+    }
+
+    const closeBtn = document.createElement('button');
+    closeBtn.innerText = 'X';
+    closeBtn.onclick = function() {
+      document.body.removeChild(modal);
+    };
+    modal.appendChild(closeBtn);
+
+    document.body.appendChild(modal);
+  }
+
+  function uploadMoreAttachments(event, bonReceptionId) {
+    const files = event.target.files;
+    const formData = new FormData();
+
+    formData.append('bonReceptionId', bonReceptionId);
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append('attachments', files[i]);
+    }
+
+    fetch('/achat/approvisionnement/R/add-attachments', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          refreshAttachmentSection(bonReceptionId);
+        } else {
+          alert('Error uploading files');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error uploading files');
+      });
+  }
+
+  function refreshAttachmentSection(bonReceptionId) {
+    fetch(`/achat/approvisionnement/R/attachments/${bonReceptionId}/`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const attachmentsContainer = document.querySelector('.attachments-container');
+          attachmentsContainer.innerHTML = '';
+
+          data.attachments.forEach(attachment => {
+            const attachmentItem = document.createElement('div');
+            attachmentItem.classList.add('attachment-item');
+
+            const fileExtension = attachment.split('.').pop().toLowerCase();
+            const filenameWithExtension = attachment.split('\\').pop();
+            const filename = filenameWithExtension.split('.').slice(0, -1).join('.');
+
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+              const imgElement = document.createElement('img');
+              imgElement.src = `/uploads/${attachment}`;
+              imgElement.alt = "Attachment";
+              imgElement.classList.add('thumbnail');
+              imgElement.onclick = () => openModal(`/uploads/${attachment}`);
+              attachmentItem.appendChild(imgElement);
+            } else if (fileExtension === 'pdf') {
+              const pdfThumbnail = document.createElement('div');
+              pdfThumbnail.classList.add('pdf-thumbnail');
+              pdfThumbnail.textContent = 'PDF';
+              pdfThumbnail.onclick = () => openModal(`/uploads/${attachment}`);
+              attachmentItem.appendChild(pdfThumbnail);
+            } else {
+              const otherFileThumbnail = document.createElement('div');
+              otherFileThumbnail.classList.add('other-file-thumbnail');
+              otherFileThumbnail.textContent = 'File';
+              attachmentItem.appendChild(otherFileThumbnail);
+            }
+
+            const fileNamePara = document.createElement('p');
+            fileNamePara.classList.add('attachment-name');
+            fileNamePara.textContent = filename;
+            attachmentItem.appendChild(fileNamePara);
+            // Add the delete button to each attachment item
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-attachment-btn');
+            deleteButton.innerHTML = '<img width="29" height="29" src="https://img.icons8.com/color/29/close-window.png" alt="close-window"/>';
+            deleteButton.onclick = () => deleteAttachment(attachment, bonReceptionId);
+            attachmentItem.appendChild(deleteButton);
+            attachmentsContainer.appendChild(attachmentItem);
+          });
+        } else {
+          alert('Error fetching attachments');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error refreshing attachments');
+      });
+  }
+
+  function deleteAttachment(attachment, bonReceptionId) {
+    // SweetAlert confirmation
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch('/achat/approvisionnement/R/delete-attachment', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              attachment: attachment,
+              bonReceptionId: bonReceptionId,
+            }),
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              Swal.fire(
+                'Deleted!',
+                'Your attachment has been deleted.',
+                'success'
+              );
+              // Call refreshAttachmentSection to update the attachment list
+              refreshAttachmentSection(bonReceptionId);
+            } else {
+              Swal.fire(
+                'Error!',
+                'There was an issue deleting the attachment.',
+                'error'
+              );
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            Swal.fire(
+              'Error!',
+              'There was an issue deleting the attachment.',
+              'error'
+            );
+          });
+      }
+    });
+  }
+</script>

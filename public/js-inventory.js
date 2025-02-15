@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Define the function for handling the delete action
 function handleDelete(button) {
   const url = button.getAttribute("data-url"); // Get the URL from the button's data attribute
-  console.log(url);
+ 
   Swal.fire({
     title: "Are you sure?",
     text: "You won’t be able to revert this!",

@@ -1,0 +1,120 @@
+<% layout('layouts/boilerplate') %>
+<div class="inventories-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/achat'"><i class="bi bi-arrow-left-circle"></i></button>
+  <h1>Bons Entrees (BE)</h1>
+  <button type="button" class="btn demand-new-button" onclick="window.location.href='/achat/approvisionnement/BE/new'">
+    <span class="ms-1">New Bon Entree</span>
+  </button>
+  <form class="search-bar mb-2">
+    <input type="text" id="search"  placeholder="Search in bons entrees items" />
+</form>
+  <table class="inventories-table sortable">
+    <thead>
+      <tr>
+        <th>BE Code</th>
+        <th>R Code</th>
+        <th>Service</th>
+        <th>Storage</th>
+        <th>Created At</th>
+        <th>Status</th>
+        <th>Actions</th>
+
+      </tr>
+    </thead >
+    <tbody id="tablebody">
+      <% if (bonEntrees.length > 0) { %>
+      <% bonEntrees.forEach(bonEntree => { %>
+      <tr>
+        <td onclick="window.location.href='/achat/approvisionnement/BE/<%= bonEntree.id %>'"><%= bonEntree.bonEntreeCode %></td>
+        <td onclick="window.location.href='/achat/approvisionnement/BE/<%= bonEntree.id %>'">
+          <% if(bonEntree.bonReceptionId){ %>
+          <%= bonEntree.bonReceptionId.bonReceptionCode || 'N/A' %>
+          <% }else{ %>
+          N/A
+          <% } %>
+        </td>
+        <td onclick="window.location.href='/achat/approvisionnement/BE/<%= bonEntree.id %>'"><%= bonEntree.serviceABV || 'N/A' %></td>
+        <td onclick="window.location.href='/achat/approvisionnement/BE/<%= bonEntree.id %>'"><%= bonEntree.totalAmount || 'N/A' %></td>
+        <td onclick="window.location.href='/achat/approvisionnement/BE/<%= bonEntree.id %>'"><%= bonEntree.createdAt.toLocaleString() %></td>
+        
+        <td>
+          <span class="tag status-badge <%= bonEntree.status === 'Draft' ? 'status-Draft' : 'status-Validated' %>">
+            <%= bonEntree.status%>
+          </span>
+          <% if (bonEntree.status === 'Draft') { %>
+            <button class="btn valider validated-btn validated-btn-success" data-id="<%= bonEntree._id %>" >
+              <i class="bi bi-check-circle"></i>
+            </button>
+          <% } else { %>
+            <button class="btn valider back-to-draft validated-btn validated-btn-back" data-id="<%= bonEntree._id %>" >
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          <% } %>
+        </td>
+        <td>
+          <%if (bonEntree.status === 'Validated'){ %>
+            <button type="button" class="btn py-1 px-2 me-2"
+             style="background-color:rgb(241 241 241);">
+             <img width="30" height="30"  src="../../assets/in-stock.png" alt="">
+            </button>
+     
+        <% } %>
+     
+        </td>
+      </tr>
+      <% }); %>
+      <% } else { %>
+      <tr>
+        <td colspan="8">No Bon Entrees found.</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  document.querySelectorAll('.valider').forEach(button => {
+    button.addEventListener('click', async (event) => {
+      const BCID= event.currentTarget.dataset.id; 
+      const isBackToDraft = event.currentTarget.classList.contains('back-to-draft'); 
+      const result = await Swal.fire({
+        title: isBackToDraft ? 'Revert to Draft?' : 'Validate Bon Entree?',
+        text: isBackToDraft ?
+          "You are about to revert this Bon Entree to draft mode!" :
+          "You are about to validate this Bon Entree!",
+        icon: isBackToDraft ? 'warning' : 'success',
+        showCancelButton: true,
+        confirmButtonText: isBackToDraft ? 'Yes, revert it!' : 'Yes, validate it!',
+        cancelButtonText: 'Cancel'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`/achat/approvisionnement/BE/validate/${BCID}`,{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              status: isBackToDraft ? 'Draft' : 'Validated'
+            }),
+          });
+
+          if (response.ok) {
+            Swal.fire(
+              isBackToDraft ? 'Reverted!' : 'Validated!',
+              isBackToDraft ?
+              'The Bon Entree has been reverted to draft mode.' :
+              'The Bon Entree has been validated.',
+              'success'
+            ).then(() => location.reload());
+          } else {
+            throw new Error('Status update failed.');
+          }
+        } catch (error) {
+          Swal.fire('Error!', 'There was an issue updating the Bon Entree status.', 'error');
+        }
+      }
+    });
+  });
+</script>

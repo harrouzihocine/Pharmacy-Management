@@ -11,10 +11,18 @@
     <table class="demand-info-table">
       <tr>
         <input type="text" class="factureProforma-id" value="<%=  factureProforma._id %>" hidden>
+        <% if(factureProforma.demandId){ %>
         <input type="text" class="facture-proforma-demandId" value="<%= factureProforma.demandId._id %>" hidden>
+      <% } %>
         <th>Facture Proforma Code</th>
         <td><%= factureProforma.factureProformaCode %></td>
       </tr>
+      <% if(factureProforma.demandId){ %>
+      <tr>
+      <th>Purchase Request Code</th>
+        <td><%= factureProforma.demandId.PurchaseRequestCode %></td>
+      </tr>
+      <% } %>
       <tr>
         <th>Status</th>
         <td><%= factureProforma.status %></td>
@@ -95,7 +103,7 @@
     </table>
     <% if(factureProforma.status != 'Canceled'){ %>
     <h2>Comment</h2>
-    <textarea id="comment-proforma" name="comment" class="comment-proforma" rows="2" required placeholder="Provide a comment for BC..."></textarea>
+    <textarea id="comment-proforma" name="comment" class="comment-proforma" rows="2" placeholder="Provide a comment for BC..."></textarea>
     <h2>Attachments</h2>
     <input type="file" id="attachment-proforma" name="attachment" class="attachment-proforma" multiple />
   </div>
@@ -103,12 +111,17 @@
   <% } %>
 </div>
 <script>
- document.getElementById('submit-proforma-factures').addEventListener('click', function() {
+document.getElementById('submit-proforma-factures').addEventListener('click', function() {
   // Collect required data
-  const demandId = document.querySelector('.facture-proforma-demandId').value;
-  const fournisseurId = document.querySelector('.fournisseur-id').value;
   const factureProformaId = document.querySelector('.factureProforma-id').value;
+  const fournisseurId = document.querySelector('.fournisseur-id').value;
   const comment = document.querySelector('.comment-proforma').value;
+  
+  // Get demandId if it exists
+  const demandIdElement = document.querySelector('.facture-proforma-demandId');
+  const demandId = demandIdElement ? demandIdElement.value : null;
+
+  
 
   // Collect Medicament IDs and order quantities
   const medicaments = [];
@@ -121,6 +134,11 @@
     }
   });
 
+  if (medicaments.length === 0) {
+    alert('Please specify quantities for at least one item');
+    return;
+  }
+
   // Collect the selected attachment(s)
   const attachmentFiles = document.getElementById('attachment-proforma').files;
 
@@ -128,7 +146,9 @@
   const formData = new FormData();
   formData.append('factureProformaId', factureProformaId);
   formData.append('fournisseurId', fournisseurId);
-  formData.append('demandId', demandId);
+  if (demandId) {
+    formData.append('demandId', demandId);
+  }
   formData.append('comment', comment);
   formData.append('medicaments', JSON.stringify(medicaments));
 
@@ -139,21 +159,20 @@
 
   // Send the data to the backend
   fetch('/achat/approvisionnement/BC/create', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        window.location.href = '/achat/approvisionnement/BC';
-      } else {
-        alert('An error occurred while generating the Bon de commande');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('An error occurred while generating the Bon de commande');
-    });
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      window.location.href = '/achat/approvisionnement/BC';
+    } else {
+      alert(data.message || 'An error occurred while generating the Bon de commande');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred while generating the Bon de commande');
+  });
 });
-
 </script>

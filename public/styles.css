@@ -3735,3 +3735,226 @@ table.dataTable tbody tr {
 .create-facture-proforma-btn:hover {
   background-color: #726c7a;
 }
+
+/*--------------------------------------------Approvissionnement BC-------------------------------------------*/
+/* Existing styles */
+.attachments-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  margin: 15px 0px;
+}
+
+.attachments-container {
+  display: flex;            
+  justify-content: center;  
+  align-items: start;              
+}
+
+.attachment-item {
+  width: 120px;
+  position: relative; /* Allow positioning of the delete button */
+  margin: 10px; /* Add some space between items */
+}
+
+.attachment-name {
+  font-size: 14px;
+  color: #FFFFFF;
+  margin-top: 5px;
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
+  text-align: center; 
+  display: block;
+  max-width: 100%; 
+  white-space: normal; 
+}
+
+/* Image Thumbnails */
+.thumbnail {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.thumbnail:hover {
+  transform: scale(1.1);
+}
+
+/* PDF Thumbnails */
+.pdf-thumbnail {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #AE6001A7;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+.pdf-thumbnail:hover {
+  background-color: #e0e0e0;
+}
+
+/* Other File Types */
+.other-file-thumbnail {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.other-file-thumbnail:hover {
+  background-color: #e0e0e0;
+}
+
+/* Add Attachment Box */
+.add-attachment-box-content {
+  width: 100px;
+  height: 100px;
+  background-color: #FFFFFF;
+  color: green;
+  border: green 1px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 40px;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.plus-sign {
+  font-size: 50px;
+}
+
+.add-attachment-box-content:hover {
+  background-color: #4CAF50;
+  color: white;
+  transform: scale(1.05);
+}
+
+
+.delete-attachment-btn {
+  position: absolute;
+  top: 0px;
+  right: 5px;
+  background-color: transparent;
+  border: none;
+  color: red;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  z-index: 2; 
+  transition: transform 0.2s;
+}
+
+.delete-attachment-btn:hover {
+  transform: scale(1.4);
+}
+
+
+.attachements-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.attachements-modal img {
+  max-width: 90%;
+  max-height: 80%;
+}
+
+.attachements-modal iframe {
+  max-width: 90%;
+  max-height: 80%;
+}
+
+.attachements-modal button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: red;
+  color: white;
+  border: none;
+  font-size: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.createBonReceptionForm{
+  width: 70rem; /* Maximum width for large screens */
+  margin: 10px auto; /* Center-align the container */
+  padding: 20px;
+  background-color: #0201281d; /* Lighter background for the container */
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+/*--------------------------------------------Approvissionnement Reception-------------------------------------------*/
+ .bon-reception-info {
+  width: 100%;
+  background-color: #333;
+  color: #ffffff;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 12px;
+  resize: vertical;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+/* Form Styling */
+.bon-reception-form {
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* Label Styling */
+.bon-reception-form .form-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+/* Input and Select Styles */
+.bon-reception-form .form-control,
+.bon-reception-form .form-select {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.bonCommandeSelect .choices{
+  margin-bottom: 0px;
+}
+.bon-reception-form .form-control:focus,
+.bon-reception-form .form-select:focus {
+  border-color: #726c7a;
+  background-color: #333;
+  outline: none;
+}

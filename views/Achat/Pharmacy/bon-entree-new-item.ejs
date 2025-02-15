@@ -1,0 +1,125 @@
+<button type="button" class="btn demand-new-button me-2" data-bs-toggle="modal" data-bs-target="#new-<%= bonEntree._id %>">
+    New Item
+  </button>
+  
+  <div class="modal fade add-storage-modal" id="new-<%= bonEntree._id %>" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content add-storage-page-container">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addstock-<%= bonEntree._id %>">New item</h5>
+  
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+  
+        <div class="modal-body">
+          <form id="addToStorageForm" method="POST" class="add-storage-form row needs-validation" action="/achat/approvisionnement/BE/<%= bonEntree._id %>" novalidate>
+          
+            <!-- Storage Select -->
+            <div id="storageSelect">
+              <label for="storage" class=" storagelabel-required">Select Storage</label>
+              <select id="storage" name="storageName" class="storage form-control mb-3">
+                <option value="" disabled selected>-- Select a storage --</option>
+                <% storages.forEach(storage => { %>
+                <option data-service="<%= storage._id %>" value="<%= storage.storageName %>">
+                  <%= storage.storageName %> - <%= storage.endroitDescription %>
+                </option>
+               
+                <% }) %>
+              </select>
+            </div>
+  
+            <hr>
+            <div class="col-12 mb-3">
+              <label for="medicament" class="form-label label-required">Item</label>
+              <select class="form-select" id="medicament-new-select" name="medicamentId" required onchange="getMinPurchasePrice('<%= bonEntree._id %>', this.value)">
+                <option value="" disabled selected>Select an Item</option>
+                <% medicaments.forEach(function(medicament) { %>
+                <option value="<%= medicament._id %>">
+                  <%= medicament.designation %>, Code: <%= medicament.code_pch %>
+                </option>
+                <% }); %>
+              </select>
+            </div>
+  
+            <!-- boite_de  Input -->
+            <div class="col-md-12">
+              <label for="boite_de" class="form-label">Boite de: <strong id="boite_de"></strong></label>
+              <input type="hidden" name="boite_de" id="boite_de_input" />
+            </div>
+            
+            <!-- Batch Number Input -->
+            <div class="col-md-6 mb-3">
+              <label for="batchNumber" class="form-label">Batch Number</label>
+              <input type="text" class="form-control" id="batchNumber" name="batchNumber">
+            </div>
+  
+            <!-- Serial Number Input (conditionally rendered) -->
+            <div class="col-md-6 mb-3">
+              <label for="serialNumber" class="form-label">Serial Number</label>
+              <input type="text" class="form-control" id="serialNumber" name="serialNumber">
+            </div>
+             <!-- Physical Quantity Input -->
+             <div class="col-md-6 mb-3">
+              <label for="quantity" class="form-label label-required">Quantity</label>
+              <input type="number" class="form-control" id="quantity" name="quantity" min="0" required>
+            </div>
+            <!-- expire date Input -->
+            <div class="col-md-6 mb-3">
+              <label for="expiryDate" class="form-label">Expiry date</label>
+              <input type="date" class="form-control" id="expiryDate" name="expiryDate">
+            </div>
+           
+            <!-- checkbox for qte Input (by boite or by unit)-->
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="QTEbyBox" name="QTEbyBox">
+              <label class="form-check-label">
+                By Box
+              </label>
+            </div>
+            
+            <hr>
+            
+            <!-- Purchase Price Input -->
+            <div class="col-md-4 mb-3">
+              <label for="purchasePrice" class="form-label">Purchase Price</label>
+              <input type="number" class="form-control" id="purchasePrice" name="purchasePrice">
+            </div>
+  
+            <!-- TVA Input -->
+            <div class="col-md-4 mb-3">
+              <label for="tva" class="form-label">TVA (%)</label>
+              <input type="number" class="form-control" id="tva" name="tva" min="0">
+            </div>
+             <!-- Purchase Price Input -->
+             <div class="col-md-4 mb-3">
+                <label for="sellPrice" class="form-label">Vente Price (40%)</label>
+                <input type="number" class="form-control" id="sellPrice" name="sellPrice">
+              </div>
+            <div class="form-group form-check">
+              <!-- checkbox for Purchase Price Input (by boite or by unit)-->
+              <input type="checkbox" class="form-check-input" id="byBox" name="byBox">
+              <label class="form-check-label">
+                By Box
+              </label>
+            </div>
+           
+            <hr>
+            <!-- remarks Input -->
+            <div class="col-12 mb-3">
+              <label for="remarks" class="form-label">Remarks</label>
+              <textarea class="form-control" id="remarks" name="remarks"></textarea>
+            </div>
+  
+  
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('purchasePrice').addEventListener('input', function() {
+      let purchasePrice = parseFloat(this.value) || 0;
+      document.getElementById('sellPrice').value = (purchasePrice * 1.4).toFixed(2);
+    });
+  </script>

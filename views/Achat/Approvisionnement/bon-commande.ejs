@@ -3,7 +3,9 @@
   <button class="btn back-btn back-button" onclick="window.location.href='/achat'"><i class="bi bi-arrow-left-circle"></i></button>
 
   <h1>List of Purchase Orders (BC)</h1>
-
+  <button type="button" class="btn demand-new-button" onclick="window.location.href='/achat/approvisionnement/BC/new'">
+    <span class="ms-1">New Bon commande</span>
+  </button>
   <form class="search-bar mb-2">
     <input type="text" id="search" placeholder="Search in Facture Proformas list" />
   </form>
@@ -22,7 +24,6 @@
       <% BonCommandes.forEach(facture => { %>
       <tr>
         <td onclick="window.location.href='/achat/approvisionnement/BC/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.bonCommandeCode %></td>
-
         <td onclick="window.location.href='/achat/approvisionnement/BC/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.fournisseurId.name %></td>
         <td onclick="window.location.href='/achat/approvisionnement/BC/details/<%= facture._id %>'" style="cursor: pointer;"><%= facture.createdBy.username %></td>
         <td onclick="window.location.href='/achat/approvisionnement/BC/details/<%= facture._id %>'" style="cursor: pointer;"> <span class="tag status-badge  <% if (facture.status === 'Pending') { %>status-pending<% } %>

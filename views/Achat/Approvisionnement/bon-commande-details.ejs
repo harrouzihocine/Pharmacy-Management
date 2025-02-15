@@ -11,8 +11,10 @@
     <table class="demand-info-table">
       <tr>
         <input type="text" class="bonDeCommande-id" value="<%=  bonDeCommande._id %>" hidden />
-        <input type="text" class="bonDeCommande-demandId" value="<%= bonDeCommande.demandId._id %>" hidden />
-        <th>bon De Commande Code</th>
+        <% if(bonDeCommande.demandId){ %>
+          <input type="text" class="facture-proforma-demandId" value="<%= bonDeCommande.demandId._id %>" hidden>
+        <% } %>
+        <th>Bon Commande Code</th>
         <td><%= bonDeCommande.bonCommandeCode %></td>
       </tr>
       <tr>
@@ -22,11 +24,11 @@
       </tr>
        <% } %>
        <% if(bonDeCommande.demandId){ %>
-       <tr>
-        <th>Demand Code</th>
-        <td><%= bonDeCommande.demandId.PurchaseRequestCode %></td>
-      </tr>
-       <% } %>
+        <tr>
+        <th>Purchase Request Code</th>
+          <td><%= bonDeCommande.demandId.PurchaseRequestCode %></td>
+        </tr>
+        <% } %>
       <tr>
         <th>Status</th>
         <td><%= bonDeCommande.status %></td>
@@ -122,29 +124,30 @@
       const filenameWithExtension = attachment.split('\\').pop();  // Extract the filename with extension
       const filename = filenameWithExtension.split('.').slice(0, -1).join('.');  // Remove extension
     %>
-      <div class="attachment-item">
-        <% if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) { %>
-          <!-- For Image files -->
-        
-            <img src="/uploads/<%= attachment %>" alt="Attachment" class="thumbnail" onclick="openModal('/uploads/<%= attachment %>')">
-            <p class="attachment-name"><%= filename %></p>  <!-- Display image filename without extension -->
-         
-        <% } else if (fileExtension === 'pdf') { %>
-          <!-- For PDF files -->
-        
-            <div class="pdf-thumbnail" onclick="openModal('/uploads/<%= attachment %>')">
-              <span>PDF</span>
-            </div>
-            <p class="attachment-name"><%= filename %></p>  <!-- Display PDF filename without extension -->
-         
-        <% } else { %>
-          <!-- For other file types -->
-          <div class="other-file-thumbnail">
-            <span>File</span>
-          </div>
-          <p class="attachment-name"><%= filename %></p>  <!-- Display other file name without extension -->
-        <% } %>
-      </div>
+    <div class="attachment-item">
+  <% if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) { %>
+    <!-- For Image files -->
+    <img src="/uploads/<%= attachment %>" alt="Attachment" class="thumbnail" onclick="openModal('/uploads/<%= attachment %>')">
+  <% } else if (fileExtension === 'pdf') { %>
+    <!-- For PDF files -->
+    <div class="pdf-thumbnail" onclick="openModal('/uploads/<%= attachment %>')">
+      <span>PDF</span>
+    </div>
+  <% } else { %>
+    <!-- For other file types -->
+    <div class="other-file-thumbnail">
+      <span>File</span>
+    </div>
+  <% } %>
+
+  <p class="attachment-name"><%= filename %></p>
+
+  
+  <button class="delete-attachment-btn" onclick="deleteAttachment('<%= attachment %>', '<%= bonDeCommande._id %>')">
+    <img width="29" height="29" src="https://img.icons8.com/color/29/close-window.png" alt="close-window"/>
+  </button>
+</div>
+
     <% }) %>
   </div>
 
@@ -178,145 +181,7 @@
 </div>
 </div>
 <style>
-.attachments-section{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: start;
-  margin: 15px 0px;
-}
-.attachments-container {
-  display: flex;            
- justify-content: center;  
- align-items: start;              
-}
-.attachment-item {
-  width: 120px;
- 
-}
 
-.attachment-name {
-  font-size: 14px;
-  color: #FFFFFF;
-  margin-top: 5px;
-
-}
-
-/* Image Thumbnails */
-.thumbnail {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.thumbnail:hover {
-  transform: scale(1.1);
-}
-
-/* PDF Thumbnails */
-.pdf-thumbnail {
-  width: 100px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #AE6001A7;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  color: #FFFFFF;
-}
-
-.pdf-thumbnail:hover {
-  background-color: #e0e0e0;
-}
-
-/* Other File Types */
-.other-file-thumbnail {
-  width: 100px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
-}
-
-.other-file-thumbnail:hover {
-  background-color: #e0e0e0;
-}
-
-
-.add-attachment-box-content {
-  width: 100px;
-  height: 100px;
-  background-color: #FFFFFF;
-  color: green;
-  border: green 1px solid;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  border-radius: 8px;
-  font-size: 40px;
-  font-weight: bold;
-  transition: transform 0.2s;
-}
-
-.plus-sign {
-  font-size: 50px;
-}
-
-.add-attachment-box-content:hover {
-  background-color: #4CAF50;
-  color: white;
-  transform: scale(1.05);
-}
-
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal img {
-  max-width: 90%;
-  max-height: 80%;
-}
-
-.modal iframe {
-  max-width: 90%;
-  max-height: 80%;
-}
-
-.modal button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: red;
-  color: white;
-  border: none;
-  font-size: 20px;
-  padding: 5px 10px;
-  cursor: pointer;
-}
 
 
 </style>
@@ -324,10 +189,9 @@
   document
     .getElementById("update-status-approve")
     .addEventListener("click", function() {
-      updateStatus("Approved"); // Send "approved" status
+      updateStatus("Approved"); 
     });
   
-
   document
     .getElementById("update-status-reject")
     .addEventListener("click", function() {
@@ -361,7 +225,7 @@
   function openModal(fileUrl) {
   // Create modal structure
   const modal = document.createElement('div');
-  modal.className = 'modal';
+  modal.className = 'attachements-modal';
 
   const fileExtension = fileUrl.split('.').pop().toLowerCase();
 
@@ -426,7 +290,7 @@ function uploadMoreAttachments(event, bonDeCommandeId) {
   });
 }
 function refreshAttachmentSection(bonDeCommandeId) {
-  // Fetch the updated attachments from the backend (optional: you can return this data after upload)
+  // Fetch the updated attachments from the backend
   fetch(`/achat/approvisionnement/BC/attachments/${bonDeCommandeId}/`)
     .then(response => response.json())
     .then(data => {
@@ -439,7 +303,7 @@ function refreshAttachmentSection(bonDeCommandeId) {
         data.attachments.forEach(attachment => {
           const attachmentItem = document.createElement('div');
           attachmentItem.classList.add('attachment-item');
-          
+
           const fileExtension = attachment.split('.').pop().toLowerCase();
           const filenameWithExtension = attachment.split('\\').pop();  // Extract the filename with extension
           const filename = filenameWithExtension.split('.').slice(0, -1).join('.');  // Remove extension
@@ -474,7 +338,14 @@ function refreshAttachmentSection(bonDeCommandeId) {
           fileNamePara.textContent = filename;  // Display file name without extension
           attachmentItem.appendChild(fileNamePara);
 
-          // Append to the container
+          // Add the delete button to each attachment item
+          const deleteButton = document.createElement('button');
+          deleteButton.classList.add('delete-attachment-btn');
+          deleteButton.innerHTML = '<img width="29" height="29" src="https://img.icons8.com/color/29/close-window.png" alt="close-window"/>';
+          deleteButton.onclick = () => deleteAttachment(attachment, bonDeCommandeId); // Attach the delete function
+          attachmentItem.appendChild(deleteButton);
+
+          // Append the attachment item to the container
           attachmentsContainer.appendChild(attachmentItem);
         });
       } else {
@@ -486,4 +357,57 @@ function refreshAttachmentSection(bonDeCommandeId) {
       alert('Error refreshing attachments');
     });
 }
+
+function deleteAttachment(attachment, bonDeCommandeId) {
+  // SweetAlert confirmation
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch('/achat/approvisionnement/BC/delete-attachment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          attachment: attachment,
+          bonDeCommandeId: bonDeCommandeId,
+        }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire(
+              'Deleted!',
+              'Your attachment has been deleted.',
+              'success'
+            );
+            // Call refreshAttachmentSection to update the attachment list
+            refreshAttachmentSection(bonDeCommandeId);
+          } else {
+            Swal.fire(
+              'Error!',
+              'There was an issue deleting the attachment.',
+              'error'
+            );
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          Swal.fire(
+            'Error!',
+            'There was an issue deleting the attachment.',
+            'error'
+          );
+        });
+    }
+  });
+}
+
 </script>
