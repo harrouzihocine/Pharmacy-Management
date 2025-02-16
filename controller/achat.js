@@ -11,7 +11,24 @@ const BonEntree = require("../models/bonEntree");
 const BonEntreeItem = require("../models/bonEntreeItem");
 const User = require("../models/user");
 const Storage = require("../models/storage");
-
+const services = [
+  { _id: 'PCS', name: 'Pharmacie centrale' },
+    { _id: 'APP', name: 'Approvisionnement' },
+    { _id: 'CON', name: 'Consultations' },
+    { _id: 'RAD', name: 'Radiologie' },
+    { _id: 'LAM', name: "Laboratoire d'analyse médicale" },
+    { _id: 'LAP', name: "Laboratoire d'anatomie-pathologique" },
+    { _id: 'HMU', name: 'Hospitalisation multidisciplinaire' },
+    { _id: 'HCA', name: 'Hospitalisation de cardiologie' },
+    { _id: 'URG', name: 'Urgences médicales' },
+    { _id: 'BOP', name: 'Blocs opératoires' },
+    { _id: 'CAT', name: 'Cathétérisme' },
+    { _id: 'REA', name: 'Réanimation' },
+    { _id: 'MIN', name: 'Médecine Interne' },
+    { _id: 'MPR', name: 'Médecine physique et réadaptation' },
+    { _id: 'DAF', name: 'Direction administrative et finance' },
+   
+  ];
 /*---------------------------------------------Pharmacy------------------------------------------------------*/
 /*-------------------------------purchaseRequest---------------------------------*/
 exports.getPurshaseRequestPage = async (req, res) => {
@@ -272,6 +289,7 @@ exports.getApprovisionementDemandDetailsPage = async (req, res) => {
     res.render("Achat/Approvisionnement/demands-details", {
       purchaseRequest,
       fournisseurs,
+    
     });
   } catch (err) {
     console.error("Error getting purchase request details:", err);
@@ -809,19 +827,90 @@ exports.getBCPage = async (req, res) => {
 };
 exports.getEditBCPage = async (req, res) => {
   try {
-    const BonCommandes = await BonDeCommande.find()
+    const BonCommande = await BonDeCommande.findById(req.params.BCId)
       .populate("demandId")
       .populate("fournisseurId")
       .populate("createdBy")
-      .select("-medicaments")
+      .populate("medicaments.medicamentId")
       .sort({ createdAt: -1 });
-
-    res.render("Achat/Approvisionnement/bon-commande", {
-      BonCommandes,
+    const Fournisseurs = await Fournisseur.find().sort({ name: 1 });
+    const Medicaments = await Medicament.find();
+ 
+    res.render("Achat/Approvisionnement/edit-bon-commande", {
+      BonCommande,
+      Fournisseurs,
+      Medicaments,
     });
   } catch (err) {
     console.error("Error fetching bon commande page:", err);
-    res.status(500).send("Error fetching bon reception page.");
+    res.status(500).send("Error fetching bon commande page.");
+  }
+};
+exports.updateBonCommande = async (req, res) => {
+  const { BCId } = req.params; // Get the Bon de Commande ID from the URL
+  const {
+    fournisseurId,
+    dateBonCommande,
+    medicaments,
+    comment,
+  } = req.body;
+
+  try {
+    // Validate required fields
+    if (!fournisseurId ||!dateBonCommande || !medicaments) {
+      req.flash("error", "Required inputs are missing: Fournisseur, Date, or Medicaments.");
+      return res.redirect(`/achat/approvisionnement/BC/edit/${BCId}`);
+    }
+
+    // Find the existing Bon de Commande
+    const bonCommande = await BonDeCommande.findById(BCId);
+    if (!bonCommande) {
+      req.flash("error", "Bon de Commande not found.");
+      return res.redirect("/achat/approvisionnement/BC");
+    }
+
+    // Validate Fournisseur
+    const fournisseur = await Fournisseur.findById(fournisseurId);
+    if (!fournisseur) {
+      req.flash("error", "Fournisseur not found.");
+      return res.redirect(`/achat/approvisionnement/BC/edit/${BCId}`);
+    }
+
+    // Process medicaments
+    const processedMedicaments = [];
+    if (Array.isArray(medicaments)) {
+      for (const item of medicaments) {
+        if (item.medicamentId && item.quantity) {
+          const medicament = await Medicament.findById(item.medicamentId);
+          if (!medicament) {
+            req.flash("error", `Medicament with ID ${item.medicamentId} not found.`);
+            return res.redirect(`/achat/approvisionnement/BC/edit/${BCId}`);
+          }
+          processedMedicaments.push({
+            medicamentId: item.medicamentId,
+            orderQuantity: Number(item.quantity),
+          });
+        }
+      }
+    }
+console.log(dateBonCommande);
+    // Update Bon de Commande fields
+    bonCommande.fournisseurId = fournisseurId;
+    bonCommande.medicaments = processedMedicaments;
+    bonCommande.status = "Pending";
+    bonCommande.comment = comment || "";
+    bonCommande.createdAt = new Date(dateBonCommande + ':00');
+    bonCommande.updatedAt = new Date();
+
+    // Save the updated Bon de Commande
+    await bonCommande.save();
+
+    req.flash("success", "Bon de Commande updated successfully!");
+    res.redirect("/achat/approvisionnement/BC");
+  } catch (err) {
+    console.error("Error updating Bon de Commande:", err);
+    req.flash("error", "An error occurred while updating the Bon de Commande.");
+    res.redirect(`/achat/approvisionnement/BC/edit/${BCId}`);
   }
 };
 exports.getCreateEmptyBCPage = async (req, res) => {
@@ -990,7 +1079,43 @@ exports.updateStatusBC = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error." });
   }
 };
+exports.cancelBC = async (req, res) => {
+  try {
+    const { BCId } = req.params;
+    const request = await BonDeCommande.findById(BCId);
 
+    // Check if the request was found
+    if (!request) {
+      req.flash("error", "Bon De Commande not found.");
+      return res.status(404).redirect("/achat/approvisionnement/BC");
+    }
+
+    // Check if it exists in BonEntree
+    const bonDeReception = await BonDeReception.findOne({ bonCommandeId: BCId });
+
+    if (bonDeReception) {
+      req.flash(
+        "error",
+        `Cannot cancel Bon De Commande as it is used in BonEntree (Code: ${bonDeReception.bonReceptionCode}).`
+      );
+      return res.redirect("/achat/approvisionnement/BC");
+    }
+
+    // Update the status
+    request.status = "Canceled";
+    await request.save();
+
+    req.flash("success", "Bon De Reception status is updated to Canceled!");
+    res.redirect("/achat/approvisionnement/BC");
+  } catch (err) {
+    console.error("Error updating Bon De Commande status:", err);
+    req.flash(
+      "error",
+      "Failed to update Bon De Commande status. Please try again."
+    );
+    res.status(500).send("Error updating Bon De Commande status.");
+  }
+};
 exports.getBCDetailsPage = async (req, res) => {
   try {
     const { BCId } = req.params;
@@ -1013,7 +1138,6 @@ exports.getBCDetailsPage = async (req, res) => {
     res.status(500).send("Error fetching Bon commande details page.");
   }
 };
-
 exports.addBCAttachments = async (req, res) => {
   try {
     const BCId = req.body.bonDeCommandeId; // Get bonDeCommande ID
@@ -1104,7 +1228,10 @@ exports.getBonReceptioncreationPage = async (req, res) => {
     const Medicaments = await Medicament.find();
    const Fournisseurs = await Fournisseur.find().sort({ name: 1 });
 
-    const BonCommandes = await BonDeCommande.find({}, "id bonCommandeCode");
+   const BonCommandes = await BonDeCommande.find(
+    { status: { $ne: "Rejected" } },
+    "id bonCommandeCode"
+  ).sort({ createdAt: -1 });
 
     const Users = await User.find();
 
@@ -1257,6 +1384,43 @@ const bonReceptionCode = `AR${lastTwoDigits}/${String(sequenceNumber).padStart(4
   req.flash("success", "Bon de réception is created successfully!");
   res.redirect("/achat/approvisionnement/R");
 };
+exports.cancelBonReception = async (req, res) => {
+  try {
+    const { RId } = req.params;
+    const request = await BonDeReception.findById(RId);
+
+    // Check if the request was found
+    if (!request) {
+      req.flash("error", "Bon De Reception not found.");
+      return res.status(404).redirect("/achat/approvisionnement/R");
+    }
+
+    // Check if it exists in BonEntree
+    const bonEntree = await BonEntree.findOne({ bonReceptionId: RId });
+
+    if (bonEntree) {
+      req.flash(
+        "error",
+        `Cannot cancel Bon De Reception as it is used in BonEntree (Code: ${bonEntree.bonEntreeCode}).`
+      );
+      return res.redirect("/achat/approvisionnement/R");
+    }
+
+    // Update the status
+    request.status = "Canceled";
+    await request.save();
+
+    req.flash("success", "Bon De Reception status is updated to Canceled!");
+    res.redirect("/achat/approvisionnement/R");
+  } catch (err) {
+    console.error("Error updating Bon De Reception status:", err);
+    req.flash(
+      "error",
+      "Failed to update Bon De Reception status. Please try again."
+    );
+    res.status(500).send("Error updating Bon De Reception.");
+  }
+};
 exports.getBonReceptionDetailsPage = async (req, res) => {
   try {
     const bonReception = await BonDeReception.findById(req.params.RId)
@@ -1273,7 +1437,7 @@ exports.getBonReceptionDetailsPage = async (req, res) => {
     }
 
     res.render("Achat/Approvisionnement/bon-reception-details", {
-      bonReception,
+      bonReception,  services
     });
   } catch (error) {
     console.error(error);
@@ -1480,7 +1644,7 @@ exports.updateBonReception = async (req, res) => {
   bonReception.observation = observation;
   bonReception.surplus = processedSurplus;
   bonReception.manque = processedManque;
-
+  bonReception.updatedAt = new Date();
   await bonReception.save();
 
   req.flash("success", "Bon de réception updated successfully!");
@@ -1490,10 +1654,13 @@ exports.updateBonReception = async (req, res) => {
 exports.getBEPage = async (req, res) => {
   try {
     const bonEntrees = await BonEntree.find()
-      .populate("bonReceptionId", "bonReceptionCode")
-      .populate("fournisseurId", "name")
-      .populate("createdBy", "username");
-
+    .populate({
+      path: "bonReceptionId",
+      populate: { path: "fournisseurId" }
+  })
+      .populate("fournisseurId")
+      .populate("createdBy", "username")
+      .sort({ createdAt: -1 });
     res.render("Achat/Pharmacy/bon-entree", { bonEntrees });
   } catch (error) {
     console.error("Error fetching Bon Entree:", error);
@@ -1529,7 +1696,7 @@ exports.getNewBEPage = async (req, res) => {
 exports.CreateBEPage = async (req, res) => {
   try {
     const { bonReceptionId, fournisseurId, serviceABV, notes } = req.body;
-
+console.log(bonReceptionId, fournisseurId, serviceABV, notes);
     const now = new Date();
     const year = now.getFullYear() % 100; 
     
@@ -1574,7 +1741,10 @@ exports.getBEDetailsPage = async (req, res, next) => {
 
   try {
     const bonEntree = await BonEntree.findById(BeId)
-     .populate("bonReceptionId", "bonReceptionCode");
+    .populate({
+      path: "bonReceptionId",
+      populate: { path: "fournisseurId" }
+  })
    const fournisseurs = await Fournisseur.find().sort({ name: 1 });
 
     const bonEntreeItems = await BonEntreeItem.find({
@@ -1624,10 +1794,7 @@ exports.CreateBEitemPage = async (req, res) => {
     byBox = req.body.byBox === "on";
     QTEbyBox = req.body.QTEbyBox === "on";
 
-    if (!bonEntreeId || !medicamentId || !quantity || !purchasePrice) {
-      return res.status(400).json({ error: "All required fields must be filled!" });
-    }
-
+    
     if (isNaN(boite_de) || boite_de <= 0) {
       boite_de = 1;
     }
@@ -1801,6 +1968,7 @@ exports.updateBEItem = async (req, res) => {
     bonEntreeItem.byBox = byBox;
     bonEntreeItem.QTEbyBox = QTEbyBox;
     bonEntreeItem.boite_de = boite_de || bonEntreeItem.boite_de;
+    bonEntreeItem.updatedAt = new Date();
 
     // Save the updated inventory item
     await bonEntreeItem.save();
@@ -1812,7 +1980,7 @@ exports.updateBEItem = async (req, res) => {
     res.status(500).json({ error: "Server error. Please try again later." });
   }
 };
-module.exports.deleteBEItem = async (req, res, next) => {
+exports.deleteBEItem = async (req, res, next) => {
   try {
     const itemId = req.params.itemId;
 

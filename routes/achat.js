@@ -23,6 +23,7 @@ const {
     getBCPage,
     createBC,
     getEditBCPage,
+    updateBonCommande,
     addBCAttachments,
     deleteBCAttachments,
     getBCAttachments,
@@ -34,8 +35,10 @@ const {
     getBonReceptionPage,
     getBonReceptioncreationPage,
     createBonReception,
+    cancelBC,
     getEditBonReceptioncreationPage,
     getBonReceptionDetailsPage,
+    cancelBonReception,
     addRAttachments,
     deleteRAttachments,
     getRAttachments,
@@ -78,7 +81,9 @@ const {
   router.route("/approvisionnement/BC/attachments/:BCId").get( isLoggedIn,isAchteur,catchAsync(getBCAttachments))
   router.route("/approvisionnement/BC/delete-attachment").post( isLoggedIn,isAchteur,catchAsync(deleteBCAttachments))
   router.route("/approvisionnement/BC/details/:BCId").get( isLoggedIn,isAchteur,catchAsync(getBCDetailsPage))
-  router.route("/approvisionnement/BC/edit/:RId").get( isLoggedIn,isAchteur,catchAsync(getEditBCPage))
+  router.route("/approvisionnement/BC/edit/:BCId").get( isLoggedIn,isAchteur,catchAsync(getEditBCPage))
+  .post(isLoggedIn,isAchteur,catchAsync(updateBonCommande))
+  router.route("/approvisionnement/BC/cancel/:BCId").get( isLoggedIn,isAchteur,catchAsync(cancelBC))
   .put(isLoggedIn,isAchteur,catchAsync(updateBonReception))
   router.route("/approvisionnement/R").get( isLoggedIn,isAchteur,catchAsync(getBonReceptionPage))
   router.route("/approvisionnement/R/new").get( isLoggedIn,isAchteur,catchAsync(getBonReceptioncreationPage))
@@ -87,6 +92,7 @@ const {
   router.route("/approvisionnement/R/delete-attachment").post( isLoggedIn,isAchteur,catchAsync(deleteRAttachments))
   router.route("/approvisionnement/R/edit/:RId").get( isLoggedIn,isAchteur,catchAsync(getEditBonReceptioncreationPage))
   .put(isLoggedIn,isAchteur,catchAsync(updateBonReception))
+  router.route("/approvisionnement/R/cancel/:RId").get( isLoggedIn,isAchteur,catchAsync(cancelBonReception))
   router.route("/approvisionnement/R/details/:RId").get( isLoggedIn,isAchteur,catchAsync(getBonReceptionDetailsPage))
   router.route("/approvisionnement/R/attachments/:RId").get( isLoggedIn,isAchteur,catchAsync(getRAttachments))
   router.route("/approvisionnement/BE").get( isLoggedIn,isPharmacienPrincipal,catchAsync(getBEPage))

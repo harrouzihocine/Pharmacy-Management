@@ -11,7 +11,7 @@
     <!-- Common fields outside table -->
     <div class="row mb-3">
       <div class="col-md-6">
-        <label for="fournisseur" class="form-label">Fournisseur</label>
+        <label for="fournisseur" class="form-label label-required">Fournisseur</label>
         <select id="fournisseur" name="fournisseurId" class="form-select" required>
           <option value="" disabled selected>Select fournisseur</option>
           <% fournisseurs.forEach(fournisseur => { %>
@@ -20,7 +20,7 @@
         </select>
       </div>
       <div class="col-md-6">
-        <label for="date" class="form-label">Date</label>
+        <label for="date" class="form-label label-required">Date</label>
         <input type="date" id="date" name="date" class="form-control" required>
       </div>
     </div>
@@ -28,8 +28,8 @@
     <table class="create-prescription-table mt-2" id="prescription-MedicamentTable">
       <thead>
         <tr>
-          <th>Item</th>
-          <th>Quantity</th>
+          <th class="label-required">Item</th>
+          <th class="label-required">Quantity</th>
           <th>Actions</th>
         </tr>
       </thead>

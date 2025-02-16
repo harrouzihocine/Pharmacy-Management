@@ -10,7 +10,9 @@
     <h2>General Information</h2>
     <table class="demand-info-table">
       <tr>
-        <input type="text" class="bonReception-id" value="<%= bonReception._id %>" hidden />
+        <input type="text" class="bonReception-id" id="bonReception-id" value="<%= bonReception._id %>" hidden />
+        <input type="text" class="fournisseur-id" id="fournisseur-id" value="<%= bonReception.fournisseurId._id %>" hidden />
+      
         <th>Bon Reception Code</th>
         <td><%= bonReception.bonReceptionCode %></td>
       </tr>
@@ -31,8 +33,8 @@
         <td><%= new Date(bonReception.dateReception).toLocaleString() %></td>
       </tr>
       <tr>
-        <th>Number of Packages</th>
-        <td><%= bonReception.nombreColis %></td>
+        <th>Number of Colis</th>
+        <td><%= bonReception.nombreColis?bonReception.nombreColis:0 %></td>
       </tr>
     </table>
   </div>
@@ -50,11 +52,11 @@
         <td><%= bonReception.bonLivraison.date ? new Date(bonReception.bonLivraison.date).toLocaleString() : 'N/A' %></td>
       </tr>
       <tr>
-        <th>Invoice Number</th>
+        <th>Facture Number</th>
         <td><%= bonReception.facture.numero || 'N/A' %></td>
       </tr>
       <tr>
-        <th>Invoice Date</th>
+        <th>Facture Date</th>
         <td><%= bonReception.facture.date ? new Date(bonReception.facture.date).toLocaleString() : 'N/A' %></td>
       </tr>
     </table>
@@ -62,21 +64,21 @@
 
   <!-- Supplier Information Section -->
   <div class="demand-info-section">
-    <h2>Supplier Information</h2>
+    <h2>Fournisseur Information</h2>
     <table class="demand-info-table">
       <tr>
-        <th>Supplier Name</th>
+        <th>Fournisseur Name</th>
         <td><%= bonReception.fournisseurId.name %></td>
       </tr>
       <tr>
-        <th>Supplier Address</th>
+        <th>Fournisseur Address</th>
         <td>
           <%= bonReception.fournisseurId.wilaya || 'N/A' %>,
           <%= bonReception.fournisseurId.city || 'N/A' %>
         </td>
       </tr>
       <tr>
-        <th>Supplier Contact</th>
+        <th>Fournisseur Contact</th>
         <td>
           <p><strong>Phone:</strong> <%= bonReception.fournisseurId.phone || 'N/A' %></p>
           <% if (bonReception.fournisseurId.mobile && bonReception.fournisseurId.mobile.length > 0) { %>
@@ -178,30 +180,25 @@
 
       <% }) %>
     </div>
-
     <!-- Add More Attachments Box -->
+    <% if (bonReception.status === 'Pending') { %>
     <div class="add-attachment-box">
       <input type="file" id="attachment-input" style="display: none;" multiple onchange="uploadMoreAttachments(event, '<%= bonReception._id %>')">
       <div class="add-attachment-box-content" onclick="document.getElementById('attachment-input').click()">
         <span class="plus-sign">+</span>
       </div>
     </div>
-  </div>
-
-  <!-- Action Buttons -->
-  <div>
-    <% if(bonReception.status === 'Pending'){ %>
-    <button id="update-status-complete" class="btn demand-new-button mt-2">
-      Mark as Complete
-    </button>
-    <button id="update-status-partial" class="btn demand-new-button mt-2">
-      Mark as Partially Received
-    </button>
-    <button id="update-status-reject" class="btn demand-reject-button mt-2">
-      Reject
-    </button>
     <% } %>
+    
   </div>
+  <% if (bonReception.status === 'Pending') { %>
+  <button id="create-be-SweetAlert"
+   class="btn demand-new-button mt-2"
+    data-services="<%= JSON.stringify(services) %>"
+    onclick="createBeSweetAlert(JSON.parse(this.getAttribute('data-services')))">
+    Create Bon Entree (BE)
+  </button>
+  <% } %>
 </div>
 
 <script>
@@ -214,7 +211,7 @@
     });
   });
 
-  function updateStatus(newStatus) {
+function updateStatus(newStatus) {
     const brId = document.querySelector('.bonReception-id').value;
 
     fetch("/achat/reception/update-status", {
@@ -238,7 +235,7 @@
       .catch((error) => console.error("Error:", error));
   }
 
-  function openModal(fileUrl) {
+function openModal(fileUrl) {
     const modal = document.createElement('div');
     modal.className = 'modal';
 
@@ -270,7 +267,7 @@
     document.body.appendChild(modal);
   }
 
-  function uploadMoreAttachments(event, bonReceptionId) {
+function uploadMoreAttachments(event, bonReceptionId) {
     const files = event.target.files;
     const formData = new FormData();
 
@@ -298,7 +295,7 @@
       });
   }
 
-  function refreshAttachmentSection(bonReceptionId) {
+function refreshAttachmentSection(bonReceptionId) {
     fetch(`/achat/approvisionnement/R/attachments/${bonReceptionId}/`)
       .then(response => response.json())
       .then(data => {
@@ -356,7 +353,7 @@
       });
   }
 
-  function deleteAttachment(attachment, bonReceptionId) {
+function deleteAttachment(attachment, bonReceptionId) {
     // SweetAlert confirmation
     Swal.fire({
       title: 'Are you sure?',
@@ -407,4 +404,71 @@
       }
     });
   }
+
+
+function createBeSweetAlert(services) {
+  // Validate the services array
+  if (!Array.isArray(services) || services.length === 0) {
+    return Swal.fire("Error", "No services available!", "error");
+  }
+  
+  const fournisseurId = document.querySelector('.fournisseur-id').value;
+  const bonReceptionId = document.querySelector('.bonReception-id').value;
+  console.log(fournisseurId, bonReceptionId);
+  
+  // Build the dropdown options: display the service name and use _id as the value
+  const serviceOptions = services.map(service =>
+    `<option value="${service._id}">${service.name}</option>`
+  ).join("");
+  
+  // Show SweetAlert2 popup with a dropdown for selecting a service and a textarea for notes
+  Swal.fire({
+    title: "Select a Service and add notes",
+    html: `
+      <select id="service-select" class="swal2-select" style="width: 80%; margin-bottom: 1rem;">
+        ${serviceOptions}
+      </select>
+      <textarea id="notes" class="swal2-textarea" placeholder="Enter notes..." style="width: 80%;"></textarea>
+    `,
+    width: '600px',
+    showCancelButton: true,
+    confirmButtonText: "Create BE",
+    preConfirm: () => {
+      const selectedService = document.getElementById("service-select").value;
+      const notes = document.getElementById("notes").value;
+      if (!selectedService) {
+        Swal.showValidationMessage("Please select a service");
+      }
+      return { selectedService, notes };
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Send the selected service _id and notes to the backend
+      fetch("/achat/approvisionnement/BE/new", { 
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 
+          serviceABV: result.value.selectedService,
+          notes: result.value.notes,
+          fournisseurId: fournisseurId, 
+          bonReceptionId: bonReceptionId 
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          // Redirect if the response is ok
+          window.location.href = "/achat/approvisionnement/BE";
+        } else {
+          throw new Error("Network response was not ok.");
+        }
+      })
+      .catch(error => {
+        Swal.fire("Error", "Something went wrong!", "error");
+      });
+    }
+  });
+}
+
 </script>

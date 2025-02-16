@@ -13,6 +13,7 @@
       <tr>
         <th>BE Code</th>
         <th>R Code</th>
+        <th>Fournisseur</th>
         <th>Service</th>
         <th>Storage</th>
         <th>Created At</th>
@@ -32,6 +33,16 @@
           <% }else{ %>
           N/A
           <% } %>
+        </td>
+        <td onclick="window.location.href='/achat/approvisionnement/BE/<%= bonEntree.id %>'">
+          <% if(bonEntree.bonReceptionId){ %>
+          <%= bonEntree.bonReceptionId.fournisseurId.name || 'N/A' %>
+          <% }else{ %>
+            <%if(bonEntree.fournisseurId){ %>
+              <%= bonEntree.fournisseurId.name || 'N/A' %>
+          <% }else{ %>
+            N/A
+            <% }} %>
         </td>
         <td onclick="window.location.href='/achat/approvisionnement/BE/<%= bonEntree.id %>'"><%= bonEntree.serviceABV || 'N/A' %></td>
         <td onclick="window.location.href='/achat/approvisionnement/BE/<%= bonEntree.id %>'"><%= bonEntree.totalAmount || 'N/A' %></td>

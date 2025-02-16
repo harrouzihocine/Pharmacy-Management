@@ -58,7 +58,11 @@ const bonDeCommandeSchema = new mongoose.Schema({
       type: String, 
     },
   ],
- 
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    immutable: false  
+  }
 },
   { timestamps: true });
 

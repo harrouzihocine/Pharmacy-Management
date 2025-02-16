@@ -12,7 +12,7 @@
     <div class="row g-3 mb-4 ">
       <!-- New fields for User and Fournisseur -->
       <div class="col-md-6">
-        <label class="form-label">Affaire suivie par Mr :</label>
+        <label class="form-label label-required">Affaire suivie par Mr</label>
         <select class="form-select user-select" name="userId" required>
           <option value="" disabled selected>Select user</option>
           <% Users.forEach(user => { %>
@@ -23,7 +23,7 @@
 
          <!-- Supplier Select -->
       <div class="col-md-6">
-        <label for="fournisseur" class="form-label">Fournisseur</label>
+        <label for="fournisseur" class="form-label label-required">Fournisseur</label>
         <select id="fournisseur" name="fournisseurId" class="form-select" required>
           <option value="" disabled selected>Select fournisseur</option>
           <% Fournisseurs.forEach(fournisseur => { %>
@@ -61,7 +61,7 @@
       </div>
 
       <div class="col-md-6">
-        <label class="form-label">Reçu Conforme le</label>
+        <label class="form-label label-required">Reçu Conforme le</label>
         <input type="date" class="form-control" name="dateReception" required id="dateReception">
       </div>
 
@@ -85,7 +85,7 @@
       <tbody>
         <tr>
           <td style="width: 60%;">
-            <select class="form-select medicament-select" name="surplus[0][medicamentId]" required>
+            <select class="form-select medicament-select" name="surplus[0][medicamentId]">
               <option value="" disabled selected>Select item</option>
               <% Medicaments.forEach(Medicament => { %>
                 <option value="<%= Medicament._id %>"><%= Medicament.designation %></option>
@@ -116,7 +116,7 @@
       <tbody>
         <tr>
           <td style="width: 60%;">
-            <select class="form-select medicament-select" name="manque[0][medicamentId]" required>
+            <select class="form-select medicament-select" name="manque[0][medicamentId]">
               <option value="" disabled selected>Select item</option>
               <% Medicaments.forEach(Medicament => { %>
                 <option value="<%= Medicament._id %>"><%= Medicament.designation %></option>
@@ -144,7 +144,7 @@
 <template id="surplusRowTemplate">
   <tr>
     <td style="width: 60%;">
-      <select class="form-select medicament-select" name="surplus[{{index}}][medicamentId]" required>
+      <select class="form-select medicament-select" name="surplus[{{index}}][medicamentId]">
         <option value="" disabled selected>Select item</option>
         <% Medicaments.forEach(Medicament => { %>
           <option value="<%= Medicament._id %>"><%= Medicament.designation %></option>
@@ -163,7 +163,7 @@
 <template id="manqueRowTemplate">
   <tr>
     <td style="width: 60%;">
-      <select class="form-select medicament-select" name="manque[{{index}}][medicamentId]" required>
+      <select class="form-select medicament-select" name="manque[{{index}}][medicamentId]">
         <option value="" disabled selected>Select item</option>
         <% Medicaments.forEach(Medicament => { %>
           <option value="<%= Medicament._id %>"><%= Medicament.designation %></option>
@@ -255,28 +255,35 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Form validation
-  document.getElementById("createBonReceptionForm").addEventListener("submit", function(event) {
+   // Form validation and preprocessing
+   document.getElementById("createBonReceptionForm").addEventListener("submit", function(event) {
     const surplusTable = document.getElementById("surplus-table").querySelector("tbody");
     const manqueTable = document.getElementById("manque-table").querySelector("tbody");
-    
-    const validateTable = (table) => {
+
+    // Function to clean up table rows
+    const cleanUpTable = (table) => {
       const rows = table.querySelectorAll("tr");
-      for (let row of rows) {
+      rows.forEach(row => {
         const medicamentSelect = row.querySelector('select[name*="[medicamentId]"]');
-        const quantity = row.querySelector('input[name*="[quantity]"]');
-        
-        if (medicamentSelect.value && !quantity.value || !medicamentSelect.value && quantity.value) {
-          return false;
+        const quantityInput = row.querySelector('input[name*="[quantity]"]');
+
+        // If either medicament or quantity is missing, remove the row
+        if (!medicamentSelect.value || !quantityInput.value) {
+          row.remove();
         }
-      }
-      return true;
+      });
     };
 
-    if (!validateTable(surplusTable) || !validateTable(manqueTable)) {
-      event.preventDefault();
-      alert("Please ensure all items have both a selection and quantity.");
-    }
+    // Clean up both tables
+    cleanUpTable(surplusTable);
+    cleanUpTable(manqueTable);
+
+    // Optionally, you can add additional validation here if needed
+    // For example, ensure at least one row exists in either table
+    const surplusRows = surplusTable.querySelectorAll("tr");
+    const manqueRows = manqueTable.querySelectorAll("tr");
+
+   
   });
 });
 </script>

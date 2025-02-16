@@ -176,7 +176,7 @@ module.exports.createInventory = async (req, res, next) => {
   }
 };
 
-exports.addInventoryItem = async (req, res) => {
+module.exports.addInventoryItem = async (req, res) => {
   try {
     const inventoryId = req.params.inventoryId;
     let {
@@ -308,7 +308,7 @@ module.exports.getUpdateItemPage = async (req, res, next) => {
     next(error); // Handle errors appropriately
   }
 };
-exports.updateInventoryItem = async (req, res) => {
+module.exports.updateInventoryItem = async (req, res) => {
   try {
     const inventoryItemId = req.params.itemId; 
     let {

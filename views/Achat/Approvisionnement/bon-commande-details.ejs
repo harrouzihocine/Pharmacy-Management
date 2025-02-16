@@ -110,7 +110,7 @@
   </table>
   <% if(bonDeCommande.comment){ %>
   <div class="other-medicaments-section">
-    <h2>Comment</h2>
+    <h2>Notes</h2>
     <span><%= bonDeCommande.comment %></span>
   </div>
   <% } %>
@@ -175,7 +175,7 @@
   <% }else{ %>
     <% if(bonDeCommande.status === 'Approved'){ %>
   <button id="submit-proforma-factures" class="btn demand-new-button mt-2">
-    Generate Delivery receipt (BR)
+    Generate Bon Reception (AR)
   </button>
   <% }} %>
 </div>

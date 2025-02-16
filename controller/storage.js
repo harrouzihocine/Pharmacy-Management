@@ -65,7 +65,7 @@ exports.addStorage = async (req, res, next) => {
     }
   };
   // Get all depots
-  exports.getStorage = async (req, res, next) => {
+exports.getStorage = async (req, res, next) => {
     try {
       const userServices = req.user.services.map(service => service.serviceABV); // Get user's accessible service abbreviations
   
@@ -130,16 +130,12 @@ exports.addStorage = async (req, res, next) => {
       next(error); // Pass errors to middleware
     }
   };
-  
-  
-
-    // Get add form
 exports.showAddStorageForm = async (req, res, next) => {
    
       res.render('Storage/new', { services: services, endroits: endroits }); 
    
   };
-  exports.unassignLocation = async (req, res) => {
+exports.unassignLocation = async (req, res) => {
     const { locationId,storageId } = req.params;
     console.log(locationId, storageId);
    
@@ -151,7 +147,7 @@ exports.showAddStorageForm = async (req, res, next) => {
 
     res.redirect("back");
   };
-  exports.getaddLocationsForm = async (req, res) => {
+exports.getaddLocationsForm = async (req, res) => {
     try {
       const { storageId } = req.params;
       // Get the storage by its ID
@@ -167,7 +163,7 @@ exports.showAddStorageForm = async (req, res, next) => {
     }
   };
  // Inside the route where you assign locations to storage
- exports.assignLocationsToStorage = async (req, res, next) => {
+exports.assignLocationsToStorage = async (req, res, next) => {
     try {
         const { storageId } = req.params;
         const {
@@ -214,11 +210,7 @@ exports.showAddStorageForm = async (req, res, next) => {
         res.status(500).send("Error assigning locations");
     }
 };
-
-  
-  
-
-module.exports.serviceLocations = async (req, res, next) => {
+exports.serviceLocations = async (req, res, next) => {
     const { serviceId } = req.params;
 
   try {
@@ -238,7 +230,7 @@ module.exports.serviceLocations = async (req, res, next) => {
     res.status(500).send('Server Error');
   }
   };
-  module.exports.storageLocations = async (req, res, next) => {
+exports.storageLocations = async (req, res, next) => {
     const { serviceId, storageId } = req.params;
   
     try {
@@ -259,7 +251,7 @@ module.exports.serviceLocations = async (req, res, next) => {
       res.status(500).send('Server Error');
     }
   };
-  exports.locationDetails = async (req, res, next) => {
+exports.locationDetails = async (req, res, next) => {
     try {
       const { serviceId, storageId, locationId } = req.params;
   

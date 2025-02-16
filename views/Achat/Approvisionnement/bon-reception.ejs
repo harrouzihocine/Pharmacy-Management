@@ -4,7 +4,7 @@
 
   <h1>List of Reception Orders (AR)</h1>
   <button type="button" class="btn demand-new-button" onclick="window.location.href='/achat/approvisionnement/R/new'">
-    <span class="ms-1">New Reception Order</span>
+    <span class="ms-1">New Bon Reception</span>
   </button>
   <form class="search-bar mb-2">
     <input type="text" id="search" placeholder="Search in Reception Orders list" />
@@ -21,6 +21,7 @@
         <th>Reception Date</th>
         <th>Status</th>
         <th>Created At</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody id="tablebody">
@@ -52,17 +53,25 @@
         <td>
           <span class="tag status-badge 
             <% if (reception.status === 'Pending') { %>status-pending<% } %>
-            <% if (reception.status === 'Partially Received') { %>status-partial<% } %>
+            <% if (reception.status === 'Canceled') { %>status-rejected<% } %>
             <% if (reception.status === 'Completed') { %>status-approved<% } %>
             <% if (reception.status === 'Rejected') { %>status-rejected<% } %>">
             <%= reception.status %>
           </span>
-          <button type="button" class="btn edit-btn px-2 py-1" onclick="window.location.href='/achat/approvisionnement/R/edit/<%= reception._id %>'">
-            <i class="bi bi-pencil-fill"></i>
-          </button>
+        
         </td>
         <td onclick="window.location.href='/achat/approvisionnement/R/details/<%= reception._id %>'" style="cursor: pointer;">
           <%= new Date(reception.createdAt).toLocaleString() %>
+        </td>
+        <td>
+          <% if (reception.status === 'Pending') { %>
+          <button type="button" class="btn edit-btn px-2 py-1" onclick="window.location.href='/achat/approvisionnement/R/edit/<%= reception._id %>'">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+          <button  class="btn btn-danger cancel-AR delete-btn" data-id="<%=reception._id %>">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+          <% } %>
         </td>
       </tr>
       <% }) %>
@@ -76,3 +85,30 @@
   </table>
  
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Add event listeners to all validate buttons
+    const validateButtons = document.querySelectorAll(".cancel-AR");
+    validateButtons.forEach((button) => {
+      button.addEventListener("click", function(e) {
+        e.stopPropagation(); // Prevent row click event
+        const ArId = button.getAttribute("data-id");
+
+        // Show SweetAlert confirmation dialog
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Do you want to cancel this Facture proforama?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, cancel it!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = `/achat/approvisionnement/R/cancel/${ArId}`;
+          }
+        });
+      });
+    });
+  });
+</script>

@@ -44,13 +44,12 @@ const bonDeReceptionSchema = new mongoose.Schema(
     },
     nombreColis: {
       type: Number,
-      required: true,
       min: 0,
     },
     observation: String,
     status: {
       type: String,
-      enum: ["Pending", "Partially Received", "Completed", "Rejected"],
+      enum: ["Pending", "Canceled", "Completed", "Rejected"],
       default: "Pending",
     },
     surplus: [

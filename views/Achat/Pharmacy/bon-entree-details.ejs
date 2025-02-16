@@ -19,6 +19,20 @@
       <strong>Service:</strong>
       <span><%= bonEntree.serviceABV %></span>
     </div>
+    <!-- Service and Storage -->
+
+    <div class="info-box">
+      <strong>Service:</strong>
+      <% if(bonEntree.bonReceptionId){ %>
+       <span> <%= bonEntree.bonReceptionId.fournisseurId.name %></span>
+        <% }else{ %>
+          <%if(bonEntree.fournisseurId){ %>
+            <span> <%= bonEntree.fournisseurId.name  %> </span>
+        <% }else{ %>
+          <span>N/A</span>
+        <% }} %>
+     
+    </div>
     <!-- Montant HT -->
     <div class="info-box">
       <strong>Montant HT:</strong>
