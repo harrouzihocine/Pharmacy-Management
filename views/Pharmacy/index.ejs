@@ -1,0 +1,61 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="pharmacy-table-container">
+  <h1>List of Medicaments (Interne)</h1>
+  <form action="/pharmacy/importInventory" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".xlsx, .xls" required>
+    <button class="btn demand-new-button" type="submit">Upload</button>
+   
+</form>
+  <form class="search-bar">
+    <input type="text" id="search"  placeholder="Search medicaments" />
+</form>
+  <table class="pharmacy-table">
+    <thead>
+      <tr>
+        <th>Code Interne</th>
+        <th>Designation</th>
+        <th>Existing QTE</th>
+        <th>Min Qte</th>
+        <th>Pre Expiration Days</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody  id="tablebody">
+      <% selectedMedicaments.forEach((medicament) => { %>
+        <tr>
+          <td onclick="window.location.href='/inStock/stock-details/<%= medicament.medicamentId._id %>'" style="cursor: pointer;">
+            <%= medicament.medicamentId.code_interne %>
+          </td>
+          <td onclick="window.location.href='/inStock/stock-details/<%= medicament.medicamentId._id %>'" style="cursor: pointer;">
+            <%= medicament.medicamentId.designation %>
+            <% if (medicament.totalQuantity === 0) { %>
+              <span class="tag out-of-stock">Out of Stock</span>
+            <% } else if (medicament.totalQuantity < medicament.minquantity) { %>
+              <span class="tag low-stock">Low Stock</span>
+            <% } %>
+            <% if (medicament.isExpiringSoon) { %>
+              <span class="tag out-of-stock">Expiring Risk</span>
+            <% } %>
+          </td>
+         
+          <td onclick="window.location.href='/inStock/stock-details/<%= medicament.medicamentId._id %>'" style="cursor: pointer;">
+            <%= medicament.totalQuantity %>
+          </td>
+          <td onclick="window.location.href='/inStock/stock-details/<%= medicament.medicamentId._id %>'" style="cursor: pointer;">
+            <%= medicament.minquantity ? medicament.minquantity : 'N/A' %>
+          </td>
+          <td onclick="window.location.href='/inStock/stock-details/<%= medicament.medicamentId._id %>'" style="cursor: pointer;">
+            <%= medicament.PreExpirationAlert ? medicament.PreExpirationAlert : 'N/A' %>
+          </td>
+          <td>
+            <div class="d-flex">
+            <%- include("./addtostorage", { medicament, services }) %>
+            <%- include("./settings", { medicament }) %>
+          </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

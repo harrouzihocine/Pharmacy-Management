@@ -1,0 +1,52 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="stock-details-container">
+  <button  class="btn back-btn back-button" onclick="window.location.href='/pharmacy'"><i class="bi bi-arrow-left-circle"></i></button>
+  <h1>Stock Details for Medicament</h1>
+  <h2><%= designation %></h2>
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in admissions list" />
+  </form>
+  <table class="stock-details-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Storage</th>
+        <th>Location Code</th>
+        <th>Quantity</th>
+        <th>Purchase price</th>
+        <th>Batch Number</th>
+        <th>Serial number</th>
+        <th>Expiry Date</th>
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% if (stockDetails.length) { %>
+       
+      <% stockDetails.forEach((stock) => { %>
+      <tr>
+        <!-- Service and Storage -->
+        <td><%= stock.storageId ? stock.storageId.service : 'Not Assigned' %></td>
+        <td><%= stock.storageId ? stock.storageId.storageName : 'Not Assigned' %></td>
+
+        <!-- Existing Details -->
+        <td><%= stock.locationCode ? stock.locationCode : 'Not Assigned' %></td>
+        <td><%= stock.quantity %></td>
+        <td><%= stock.purchase_price %> DA</td>
+        <td><%= stock.batchNumber %></td>
+        <td><%= stock.serialNumber?stock.serialNumber:'N/A'  %> </td>
+        <td><%= stock.expiryDate ? new Date(stock.expiryDate).toLocaleDateString() : 'N/A' %>
+            <% if (stock.isExpiringSoon !='Valid' ) { %>
+          <span class="tag out-of-stock"><%= stock.isExpiringSoon %></span>
+        <% } %>
+         
+        </td>
+      </tr>
+      <% }); }else{%>
+        <tr>
+          <td colspan="6">No stock details found for this medicament.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,40 @@
+<% layout('layouts/boilerplate') %>
+<div class="location-table-container">
+  <h1>Table of locations</h1>
+  <table class="location-table">
+    <thead>
+      <tr>
+        <th>Code de Localisation</th>
+        <th>Type de Localisation</th>
+        <th>Description de l'Endroit</th>
+        <th>Service Destination</th>
+        <th>Code de l'Endroit</th>
+        <th>information de Rangement</th>
+       
+      </tr>
+    </thead>
+    <tbody id="locationTableBody">
+      <% for (location of locations) { %>
+        <tr>
+          <td><%= location.locationCode %></td>
+          <% if (location.locationType ==='PC'){ %>
+          <td>(PC) Pharmacy Central</td>
+          <% }else{ %>
+            <td>(PS) Pharmacy Service</td>
+          <% } %>
+          <td><%= location.endroitDescription %></td>
+          <td><%= location.destinationService %></td>
+          <td><%= location.endroitCode %></td>
+          <td>
+            <% if (location.outilRangement === 'RY') { %>
+              Rayonnage ( Bloc: <%= location.bloc %>, Niveau: <%= location.niveauRayon %>)
+            <% } else { %>
+              <%= location.outilRangement %> (<%= location.outilNumero %>)
+            <% } %>
+          </td>
+        
+        </tr>
+      <% }; %>
+    </tbody>
+  </table>
+</div>

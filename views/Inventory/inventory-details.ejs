@@ -1,0 +1,284 @@
+<% layout('layouts/boilerplate') %>
+<div class="inventory-details-container">
+  <button class="btn back-btn back-button " onclick="window.location.href='/inventory/users/<%= inventory.id %>'"><i class="bi bi-arrow-left-circle"></i></button>
+  <!-- Title Section -->
+  <h2>Inventory Details: <%= inventory.title %></h2>
+
+  <!-- Service and Storage Information -->
+  <div class="inventory-information-section">
+    <!-- Inventory Title -->
+    <div class="info-box">
+      <strong>Inventory Title:</strong>
+      <span><%= inventory.title %></span>
+    </div>
+
+    <!-- Service and Storage -->
+    <% if (inventory.serviceABV) { %>
+      
+      <div class="info-box">
+      <strong>Service:</strong>
+      <span><%= inventory.serviceABV %></span>
+      </div>
+      <% if (inventory.storageName) { %>
+        <div class="info-box">
+      <strong>Storage:</strong>
+      <span><%= inventory.storageName %></span>
+    </div>
+ 
+      <% } %>
+      <% } else { %>
+       
+        <div class="info-box">
+      <strong>Service:</strong>
+      <span>All Services</span>
+    </div>
+    <div class="info-box">
+      <strong>Storage:</strong>
+      <span>All storages</span>
+    </div>
+    
+      <% } %>
+      
+      <!-- Description -->
+      <div class="info-box">
+        <strong>Description:</strong>
+        <span><%= inventory.description %></p></span>
+      </div>
+      <!-- Description -->
+      <div class="info-box">
+        <strong>Status:</strong>
+        <span class="tag status-badge <%= status === 'Draft' ? 'status-Draft' : 'status-Validated' %>">
+          <%=status%>
+        </span>
+      </div>
+    </div>
+   
+  <% if(status == 'Draft'){ %>
+  <!-- New Item Form Section -->
+  <div class="new-item-form-section">
+    <h3>Add / search Item</h3>
+    <%- include("./new-item", { medicaments, groupedStorages, inventory,fournisseurs }) %>
+    <%- include("./medicaments", { medicaments}) %>
+  </div>
+  <% } %>
+  <h3 class="mt-4">Inventory Items</h3>
+ 
+
+  <!-- Inventory Items Table Section -->
+  <form class="search-bar mb-2">
+    <input type="text" id="search" placeholder="Search in inventory items" />
+  </form>
+  <table class="inventory-items-table sortable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Medicament</th>
+        <% if (!inventory.serviceABV) { %>
+        <th>Service</th>
+        <% } %>
+        <% if (!inventory.storageName) { %>
+        <th>Storage</th>
+        <% } %>
+        <th>Batch Number</th>
+        <th>Serial Number</th>
+        <% if (!inventory.isEmpty) { %>
+        <th>System Qty</th>
+        <% } %>
+        <th>Physical Qty</th>
+        <% if (!inventory.isEmpty) { %>
+        <th>Difference</th>
+        <% } %>
+        <th>Purchase Price</th>
+        <th>TVA</th>
+        <th>Montant HT</th>
+        <th>Vente Price</th>
+        <th>Remarks</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% if (inventoryItems.length > 0) { %>
+      <% inventoryItems.forEach((item, index) => { %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= item.medicamentId.designation %></td>
+        <% if (!inventory.serviceABV) { %>
+        <td><%= item.serviceABV || 'N/A' %></td>
+        <% } %>
+        <% if (!inventory.storageName) { %>
+        <td><%= item.storageName || 'N/A' %></td>
+        <% } %>
+        <td><%= item.batchNumber %></td>
+        <td><%= item.serialNumber || 'N/A' %></td>
+        <% if (!inventory.isEmpty) { %>
+        <td><%= item.systemQuantity || 0 %></td>
+        <% } %>
+        <td>
+          <% if (status === 'Draft') { %>
+          <input 
+            type="number" 
+            class="form-control physical-qty-input" 
+            value="<%= item.physicalQuantity %>" 
+            data-item-id="<%= item._id %>"
+            data-system-qty="<%= item.systemQuantity || 0 %>"
+            min="0"
+            step="1"
+            onkeypress="handleEnterKey(event, this)"
+            onchange="updatePhysicalQuantity(this)"
+            style="width: 80px; text-align: center;"
+          />
+          <% } else { %>
+          <%= item.physicalQuantity %>
+          <% } %>
+        </td>
+        <% if (!inventory.isEmpty) { %>
+        <td class="difference-cell" data-item-id="<%= item._id %>">
+          <span class="<%= (item.physicalQuantity - (item.systemQuantity || 0)) > 0 ? 'text-success' : (item.physicalQuantity - (item.systemQuantity || 0)) < 0 ? 'text-danger' : '' %>">
+            <%= (item.physicalQuantity - (item.systemQuantity || 0)) %>
+          </span>
+        </td>
+        <% } %>
+        <td><%= item.purchasePrice ? item.purchasePrice.toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) : parseInt(0).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></td>
+
+        <td><%= item.tva?item.tva:'N/A'%> %</td>
+        <td><%= (parseFloat(item.purchasePrice?item.purchasePrice:0) * item.physicalQuantity).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' })%></td>
+        <% if(item.serviceABV == 'URG'){%>
+        <td><%=(parseFloat(item.purchasePrice?item.purchasePrice:0) * 1.4).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></td>
+        <% } else {%>
+        <td><%= (parseFloat(item.purchasePrice?item.purchasePrice:0) * 1.36).toLocaleString('fr-DZ', { style: 'currency', currency: 'DZD' }) %></td>
+        <% } %>
+        <td><%= item.remarks || 'None' %></td>
+        <td>
+          <div class="d-flex">
+            <button class="btn visibility-btn py-1 px-2 me-1" id="hide-item" data-user="<%= item.createdBy.username || 'None' %>" data-url="/inventory/item/<%= item._id %>" data-visibility="<%= item.visibility ? 'true' : 'false' %>" onclick="toggleVisibility(this)">
+              <%- item.visibility ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>' %>
+            </button>
+            <% if(status === 'Draft'){ %>
+         
+           <button 
+  type="button" 
+  id="edititempage" 
+  class="btn edit-btn px-2 py-1 edit-button-container hidden" 
+  data-url="/inventory/item/<%= inventory.id %>/<%= item._id %>?userId=<%= user.id %>"
+  onclick="handleEditClick(event, this)"
+  oncontextmenu="handleRightClick(event, this)">
+  <i class="bi bi-pencil-fill"></i>
+</button>
+            <button type="button" class="btn delete-btn delete-item-btn py-1 px-2" data-url="/inventory/item/<%= item._id %>?_method=DELETE">
+              <i class="bi bi-trash"></i>
+            </button>
+            <% } %>
+          </div>
+
+         
+        </td>
+      </tr>
+      <% }); %>
+      <% } else { %>
+      <tr>
+        <td colspan="<%= inventory.isEmpty ? 13 : 15 %>" class="inventory-empty-row">No items found.</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<style>
+.text-success {
+  color: #28a745 !important;
+  font-weight: bold;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+  font-weight: bold;
+}
+
+
+.physical-qty-input {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+.physical-qty-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+</style>
+
+<script>
+// Handle Enter key press on physical quantity inputs
+function handleEnterKey(event, input) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    updatePhysicalQuantity(input);
+  }
+}
+
+// Update physical quantity via AJAX
+function updatePhysicalQuantity(input) {
+  const itemId = input.getAttribute('data-item-id');
+  const newQuantity = parseFloat(input.value) || 0;
+  const systemQty = parseFloat(input.getAttribute('data-system-qty')) || 0;
+  
+  // Show loading state
+  input.disabled = true;
+  input.style.backgroundColor = '#f8f9fa';
+  
+  // Send AJAX request to update quantity
+  fetch(`/inventory/item/${itemId}/update-quantity`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      physicalQuantity: newQuantity
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Update the difference cell if it exists
+      const differenceCell = document.querySelector(`.difference-cell[data-item-id="${itemId}"] span`);
+      if (differenceCell) {
+        const difference = newQuantity - systemQty;
+        differenceCell.textContent = difference;
+        
+        // Update color classes
+        differenceCell.className = '';
+        if (difference > 0) {
+          differenceCell.classList.add('text-success');
+        } else if (difference < 0) {
+          differenceCell.classList.add('text-danger');
+        }
+      }
+      
+      // Show success feedback
+      input.style.backgroundColor = '#d4edda';
+      setTimeout(() => {
+        input.style.backgroundColor = '';
+      }, 1000);
+    } else {
+      // Show error feedback
+      input.style.backgroundColor = '#f8d7da';
+      setTimeout(() => {
+        input.style.backgroundColor = '';
+      }, 2000);
+      console.error('Error updating quantity:', data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    input.style.backgroundColor = '#f8d7da';
+    setTimeout(() => {
+      input.style.backgroundColor = '';
+    }, 2000);
+  })
+  .finally(() => {
+    input.disabled = false;
+  });
+}
+</script>

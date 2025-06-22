@@ -1,0 +1,49 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="patient-details-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/storage'"><i class="bi bi-arrow-left-circle"></i></button>
+  <div class="col m-auto">
+    <h3 class="mb-4 text-center">Patients List</h3>
+    <div class="mb-3">
+      <%- include("./new") %>
+    </div>
+
+    <form class="search-bar mb-2">
+      <input type="text" id="search" placeholder="Search in patient list" />
+    </form>
+
+    <table class="patient-details-table sortable">
+      <thead>
+        <tr>
+          <th scope="col">Fullname</th>
+          <th scope="col">Birthdate</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Adress</th>
+          
+          <th scope="col">Phone</th>
+          <th id="item1" scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+        <% var i = 1 %> 
+        <% for (patient of patients) { %>
+          <tr>
+            <td onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= patient.fullname %></td>
+            <td onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= patient.date_of_birth.toLocaleDateString() %></td>
+            <td onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= patient.gender %></td>
+            <td onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'" style="cursor: pointer;"><%= patient.address %></td>
+            
+            <td onclick="window.location.href='/admission/<%= patient._id %>?serviceABV=<%= serviceABV %>'"><%= patient.phone %></td>
+            <td>
+              <div class="d-flex justify-content-center align-items-center">
+               
+                
+               <%- include("../Admission/new") %> 
+              </div>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

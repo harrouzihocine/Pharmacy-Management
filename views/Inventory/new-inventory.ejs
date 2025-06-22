@@ -1,0 +1,164 @@
+<% layout('layouts/boilerplate') %>
+<div class="new-inventory-container">
+    <h1>Create a New Inventory</h1>
+    
+    <!-- Form to create a new inventory -->
+    <form action="/inventory/new" method="POST" onsubmit="return validateForm()">
+      <!-- Title Input -->
+      <div class="form-group">
+        <label for="title">Inventory Title:</label>
+        <input type="text" id="title" name="title" class="form-control" placeholder="Enter title" required>
+      </div>
+
+      <!-- Description Input -->
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" class="form-control" placeholder="Enter description"></textarea>
+      </div>
+
+      <!-- Inventory Type Selection -->
+      <div class="form-group workflow-section">
+        <label>Inventory Type:</label>
+
+        <div>
+          <label>
+            <input type="radio" name="inventoryType" value="empty" checked onchange="toggleWorkflowSection()"> 
+            Empty Inventory (Manual entry)
+          </label><br>
+          <label>
+            <input type="radio" name="inventoryType" value="prefilled" onchange="toggleWorkflowSection()"> 
+            Pre-filled Inventory (From system stock)
+          </label>
+        </div>
+      </div>
+
+ <div class="form-group workflow-section" id="workflowSection">
+    <label>Inventory Type:</label>
+      
+     
+<div>
+  <label>
+      <input type="radio" name="workflowType" value="allInOne" onchange="showFields()"> All in one inventory
+  </label><br>
+  <label>
+      <input type="radio" name="workflowType" value="specificService" onchange="showFields()"> Inventory by service
+  </label><br>
+  <label>
+      <input type="radio" name="workflowType" value="serviceStorage" onchange="showFields()"> Inventory by service and storage
+  </label>
+</div>
+
+<!-- Service Select (grouped by serviceABV) -->
+<div id="serviceSelect" style="display:none;">
+  <label for="service">Select Service:</label>
+  <select id="service" name="serviceABV" class="form-control" onchange="filterStorages(this.value)">
+    <option value="">-- Select a service --</option>
+    <% groupedStorages.forEach(group => { %>
+      <% if (group.storages.length > 0) { %>
+        <option value="<%= group._id %>">
+          <%= group.storages[0].service %>
+        </option>
+      <% } %>
+    <% }) %>
+  </select>
+</div>
+
+<!-- Storage Select -->
+<div id="storageSelect" style="display:none;">
+  <label for="storage">Select Storage:</label>
+  <select id="storage" name="storageName" class="form-control">
+    <option value="">-- Select a storage --</option>
+    <% groupedStorages.forEach(group => { %>
+      <% group.storages.forEach(storage => { %>
+        <option data-service="<%= group._id %>" value="<%= storage.storageName %>">
+          <%= storage.storageName %> - <%= storage.endroitDescription %>
+        </option>
+      <% }) %>
+    <% }) %>
+  </select>
+</div>
+</div>
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+
+</div>
+
+<script>
+
+
+function showFields() {
+    const workflowTypeRadio = document.querySelector('input[name="workflowType"]:checked');
+    const serviceSelect = document.getElementById('serviceSelect');
+    const storageSelect = document.getElementById('storageSelect');
+
+    if (!workflowTypeRadio) {
+        serviceSelect.style.display = 'none';
+        storageSelect.style.display = 'none';
+        return;
+    }
+
+    const workflowType = workflowTypeRadio.value;
+
+    if (workflowType === 'allInOne') {
+        serviceSelect.style.display = 'none';
+        storageSelect.style.display = 'none';
+    } else if (workflowType === 'specificService') {
+        serviceSelect.style.display = 'block';
+        storageSelect.style.display = 'none';
+    } else if (workflowType === 'serviceStorage') {
+        serviceSelect.style.display = 'block';
+        storageSelect.style.display = 'block';
+    }
+}
+
+function filterStorages(selectedService) {
+    const storageOptions = document.querySelectorAll('#storage option');
+    
+    storageOptions.forEach(option => {
+        if (option.value === '') {
+            option.style.display = 'block'; // Always show the default option
+        } else if (option.getAttribute('data-service') === selectedService) {
+            option.style.display = 'block';
+        } else {
+            option.style.display = 'none';
+        }
+    });
+    
+    // Reset storage selection when service changes
+    document.getElementById('storage').value = '';
+}
+
+function validateForm() {
+    const inventoryType = document.querySelector('input[name="inventoryType"]:checked').value;
+    
+    if (inventoryType === 'prefilled') {
+        const workflowType = document.querySelector('input[name="workflowType"]:checked');
+        
+        if (!workflowType) {
+            alert('Please select a workflow type for pre-filled inventory.');
+            return false;
+        }
+        
+        const workflowValue = workflowType.value;
+        
+        if (workflowValue === 'specificService' || workflowValue === 'serviceStorage') {
+            const service = document.getElementById('service').value;
+            if (!service) {
+                alert('Please select a service.');
+                return false;
+            }
+        }
+        
+        if (workflowValue === 'serviceStorage') {
+            const storage = document.getElementById('storage').value;
+            if (!storage) {
+                alert('Please select a storage.');
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+</script>

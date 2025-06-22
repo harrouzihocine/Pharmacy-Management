@@ -1,0 +1,50 @@
+<button type="button" class="btn demand-new-button" data-bs-toggle="modal" data-bs-target="#medicaments">
+    Search in items
+  </button>
+  
+  <div class="modal fade add-storage-modal" id="medicaments" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content add-storage-page-container">
+        <div class="modal-header">
+          <h5 class="modal-title" id="medicamentss">Search in items</h5>
+  
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+  
+        <div class="modal-body">
+            <form class="search-bar mb-2">
+                <input type="text" id="searchMED"  placeholder="Search medicaments" />
+            </form>
+            <table class="medicament-table sortable" >
+                <thead>
+                    <tr>
+                       
+                        <th>Code PCH</th>
+                        <th>Designation</th>
+                        
+                        <th>Forme</th>
+                        <th>Boite de</th>
+                        <th>Nom Commercial</th>
+                        
+                    </tr>
+                </thead>
+                <tbody  id="tablebodyMED">
+                    <% for (med of medicaments) { %>
+                    <tr>
+                       
+                        <td ><%= med.code_pch ? med.code_pch : 'N/A' %></td>
+                        <td ><%= med.designation %></td>
+          
+                        <td ><%= med.forme %></td>
+                        <td ><%= med.boite_de %></td>
+                        <td ><%= med.nom_commercial ? med.nom_commercial : 'N/A' %></td>
+                       
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  

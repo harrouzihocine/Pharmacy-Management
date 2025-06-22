@@ -1,0 +1,30 @@
+<% if (success && success.length) { %>
+  <div class="alert alert-success alert-dismissible fade show " role="alert">
+    <i class="bi bi-check-circle-fill"></i> <%= success %>
+    
+  </div>
+  <% } %>
+  <% if (error && error.length) { %>
+  <div class="alert alert-danger alert-dismissible fade show " role="alert">
+    <i class="bi bi-exclamation-triangle-fill"></i> <%= error %>
+    
+  </div>
+  <% } %>
+  <script>
+    // Ensure the DOM is fully loaded before running the script
+    document.addEventListener("DOMContentLoaded", function () {
+      // Select all alerts
+      const alerts = document.querySelectorAll(".alert");
+      // Delay and fade out each alert
+      alerts.forEach((alert) => {
+        setTimeout(() => {
+          alert.style.transition = "opacity 1.2s ease-out";
+          alert.style.opacity = "0";
+          setTimeout(() => {
+            alert.remove(); // Remove the alert completely after fading out
+          }, 800); // Wait for fade-out to complete
+        }, 1500); // Initial delay before fade-out starts
+      });
+    });
+  </script>
+  

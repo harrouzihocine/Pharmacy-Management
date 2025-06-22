@@ -1,0 +1,135 @@
+<!-- Edit Button in Each Row -->
+<button type="button" class="btn edit-btn px-2 py-1" data-bs-toggle="modal" data-bs-target="#edit-<%= fournisseur.id %>">
+  <i class="bi bi-pencil-fill"></i>
+</button>
+
+<div
+  class="modal fade add-storage-modal"
+  id="edit-<%= fournisseur.id %>"
+  data-bs-keyboard="true"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content add-storage-page-container">
+      <div class="modal-header">
+        <h5 class="modal-title" id="edition-<%= fournisseur.id %>">New Fournisseur</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form  class="add-storage-form row needs-validation" action="/fournisseur/<%= fournisseur.id %>/?_method=PUT" id="editForm" method="POST" novalidate>
+         <!-- Code client -->
+         <div class="form-group col-6">
+          <label for="codeClient" class="form-label">Code client</label>
+          <input id="codeClient" name="fournisseur[codeClient]" type="text" class="form-control" style="text-transform: capitalize" value="<%= fournisseur.codeClient %>"  autofocus />
+          <div class="valid-feedback">BIEN</div>
+        </div>
+       <!-- Statut juridique -->
+<div class="form-group col-6">
+  <label for="reason" class="form-label">Statut juridique</label>
+  <select id="reason" name="fournisseur[statutjuridique]" class="form-control" required>
+    <option value="">Empty</option>
+    <option value="SARL" <% if (fournisseur.statutjuridique === 'SARL') { %> selected <% } %>>SARL</option>
+    <option value="EURL" <% if (fournisseur.statutjuridique === 'EURL') { %> selected <% } %>>EURL</option>
+    <option value="SPA" <% if (fournisseur.statutjuridique === 'SPA') { %> selected <% } %>>SPA</option>
+    <option value="SNC" <% if (fournisseur.statutjuridique === 'SNC') { %> selected <% } %>>SNC</option>
+    <option value="SCS" <% if (fournisseur.statutjuridique === 'SCS') { %> selected <% } %>>SCS</option>
+    <option value="SCA" <% if (fournisseur.statutjuridique === 'SCA') { %> selected <% } %>>SCA</option>
+    <option value="GR" <% if (fournisseur.statutjuridique === 'GR') { %> selected <% } %>>GR</option>
+  </select>
+</div>
+
+        <div class="form-group col-12">
+          <label for="name" class="form-label">Nom commercial</label>
+          <input id="name" name="fournisseur[name]" type="text" class="form-control" style="text-transform: capitalize" required value="<%= fournisseur.name %>" />
+        </div>
+        <div class="form-group">
+          <label for="website" class="form-label">Adresse</label>
+          <input type="text" class="form-control" id="website" name="fournisseur[adress]" value="<%= fournisseur.adress %>" />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="wilaya" class="form-label">Wilaya</label>
+          <input class="form-control" id="wilaya" name="fournisseur[wilaya]" list="cities" onchange="makeSubmenu(this.value, '<%= fournisseur.id %>')" value="<%= fournisseur.wilaya %>" />
+          <datalist id="cities">
+            <option class="option" value="">Ville</option>
+            <% for (city of states) { %>
+            <option class="option" value="<%= city.name %>">
+              <%= city.id + " - " + city.name %>
+            </option>
+            <% } %>
+          </datalist>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="city<%= fournisseur.id %>" class="form-label">Ville</label>
+          <select id="city<%= fournisseur.id %>" name="fournisseur[city]" class="form-select">
+            <option class="option" value="" disabled selected>Ville</option>
+            <option class="option" value="<%= fournisseur.city %>" selected><%= fournisseur.city %></option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="phone1" class="form-label">Télephone</label>
+          <input type="text" class="form-control" id="phone1" name="fournisseur[phone]" maxlength="20" value="<%= fournisseur.phone %>" />
+        </div>
+          <!-- Postal Code -->
+          <div class="form-group col-md-6">
+            <label for="postalCode" class="form-label">Code postal</label>
+            <input type="text" class="form-control" id="postalCode" name="fournisseur[postalCode]" maxlength="10" required value="<%= fournisseur.postalCode %>"/>
+            <div class="valid-feedback">BIEN</div>
+          </div>
+        <div class="form-group col-md-6">
+          <label for="fax" class="form-label">Fax</label>
+          <input type="text" class="form-control" id="fax" name="fournisseur[fax]" maxlength="20" value="<%= fournisseur.fax %>" />
+        </div>
+        
+        
+        <div class="form-group col-md-6">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" name="fournisseur[email]" style="text-transform: lowercase" value="<%= fournisseur.email %>" />
+        </div>
+        
+          <!-- N° Accounts -->
+          <div class="col-12 mb-3">
+            <textarea class="form-control" name="fournisseur[Naccount]" id="description" rows="4" placeholder="N° Accounts" style="text-transform: capitalize"><%= fournisseur.Naccount %></textarea>
+          </div>
+       
+        <span>Données de facturation</span>
+        <hr>
+        <div class="form-group col-md-6">
+          <label for="nrc" class="form-label">N° RC</label>
+          <input type="text" class="form-control" id="nrc" name="fournisseur[nrc]" value="<%= fournisseur.nrc %>" />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="nif" class="form-label">NIF</label>
+          <input type="text" class="form-control" id="nif" name="fournisseur[nif]" value="<%= fournisseur.nif %>" />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="narticle" class="form-label">N° Article</label>
+          <input type="text" class="form-control" id="narticle" name="fournisseur[narticle]" value="<%= fournisseur.narticle %>" />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="nis" class="form-label">NIS</label>
+          <input type="text" class="form-control" id="nis" name="fournisseur[nis]" value="<%= fournisseur.nis %>" />
+        </div>
+
+          <!-- Save Button -->
+          <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $("#newfournisseur").on("shown.bs.modal", function () {
+    $(this).find("[autofocus]").focus();
+  });
+ 
+</script>

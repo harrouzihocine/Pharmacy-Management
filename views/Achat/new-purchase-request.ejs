@@ -1,0 +1,170 @@
+<% layout('layouts/boilerplate') %>
+<div class="create-prescription-page-container">
+  <div class="create-prescription-header">
+    <button class="btn back-btn back-button" onclick="window.location.href='/achat/demands'"><i class="bi bi-arrow-left-circle"></i></button>
+    <h1>Create Purchase requests</h1>
+  </div>
+
+
+
+  <!-- Form to submit prescription -->
+  <form id="createPrescriptionForm" action="/achat/demands/new" method="POST">
+   
+    
+    <table class="create-prescription-table mt-2" id="prescription-MedicamentTable">
+      <thead>
+        <tr>
+          <th>Medicament</th>
+          <th>Quantity</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="width: 60%;">
+            <select class="form-select form-select-lg medicament-select" name="request[0][medicamentId]" required>
+              <option value="" disabled selected>Select Medicament</option>
+              <% Medicaments.forEach(Medicament => { %>
+                <option value="<%= Medicament._id %>">
+                  <%= Medicament.designation %>
+                </option>
+              <% }) %>
+            </select>
+          </td>
+         
+          <td>
+            <input type="number" class="form-control" name="request[0][quantity]" min="0" placeholder="Enter quantity">
+        </td>
+        
+          <td>
+            <button type="button" class="btn delete-btn"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+   
+    <button type="button" class="btn add-command" id="addRowBtn">Add Medicament</button>
+      <!-- Notes -->
+      <div class="col-12 mt-2">
+        <label for="notes" class="form-label">Notes</label>
+        <textarea id="notes" name="notes" class="form-control" rows="2" placeholder="Enter notes for the request"></textarea>
+        <div class="invalid-feedback">
+          Please provide a request notes here .
+        </div>
+      </div>
+    <div class="prescription-action-buttons">
+      <button type="submit" class="btn create-prescription-btn">Create Purchase request</button>
+    </div>
+   
+  </form>
+</div>
+
+<!-- Template for new rows -->
+<template id="rowTemplate">
+  <tr>
+    <td style="width: 60%;">
+      <select class="form-select form-select-lg medicament-select" name="request[{{index}}][medicamentId]" required>
+        <option value="" disabled selected>Select Medicament</option>
+        <% Medicaments.forEach(Medicament => { %>
+          <option value="<%= Medicament._id %>">
+            <%= Medicament.designation %>
+          </option>
+        <% }) %>
+      </select>
+    </td>
+    <td>
+      <input type="number" class="form-control" name="request[{{index}}][quantity]" min="0" placeholder="Enter quantity">
+  </td>
+  
+   
+    <td>
+      <button type="button" class="btn delete-btn"><i class="bi bi-trash"></i></button>
+    </td>
+  </tr>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Initialize Choices.js for all medicament selects
+    const initializeChoices = (selectElement) => {
+      return new Choices(selectElement, {
+        searchEnabled: true,
+        itemSelectText: "",
+        noResultsText: "No items found",
+        placeholder: true,
+        placeholderValue: "Select an Item",
+        searchFloor: 1,
+        searchResultLimit: 0,
+        shouldSort: false,
+        position: "bottom",
+        fuseOptions: {
+          includeScore: true,
+          threshold: 0.3,
+          distance: 100,
+          ignoreLocation: true,
+          keys: ["label"],
+        },
+      });
+    };
+    // Initialize Choices.js for the first row
+    const medicamentSelects = document.querySelectorAll('.medicament-select');
+    medicamentSelects.forEach(select => {
+      initializeChoices(select);
+    });
+
+    // Dynamically add a new row to the Medicament table
+    document.getElementById("addRowBtn").addEventListener("click", function () {
+      const table = document.getElementById("prescription-MedicamentTable").querySelector("tbody");
+      const rowCount = table.rows.length;
+
+      // Get the template and replace placeholders
+      const template = document.getElementById("rowTemplate").innerHTML;
+      const newRowHTML = template.replace(/{{index}}/g, rowCount);
+
+      // Create a new row from the template
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = newRowHTML;
+
+      // Reinitialize Choices.js for the new select element
+      const newSelect = newRow.querySelector('.medicament-select');
+      if (newSelect) {
+        initializeChoices(newSelect);
+      }
+
+      // Append the new row to the table
+      table.appendChild(newRow);
+    });
+
+    // Remove row functionality
+    document.getElementById("prescription-MedicamentTable").addEventListener("click", function (event) {
+      if (event.target.classList.contains("delete-btn")) {
+        event.target.closest("tr").remove();
+      }
+    });
+
+    // Form submission validation
+    document.getElementById("createPrescriptionForm").addEventListener("submit", function (event) {
+      const table = document.getElementById("prescription-MedicamentTable").querySelector("tbody");
+      const rows = table.querySelectorAll("tr");
+      let isValid = false;
+
+      rows.forEach((row) => {
+        const medicamentSelect = row.querySelector('select[name*="[medicamentId]"]');
+        const quantityWhole = row.querySelector('select[name*="[quantity]"]');
+      
+
+        // Check if the row is valid
+        if (medicamentSelect.value && quantity.value ) {
+          isValid = true;
+        }
+      });
+
+      // If no valid rows, prevent submission
+      if (!isValid) {
+        event.preventDefault();
+        alert("Please add at least one valid medicament with a quantity.");
+      }
+    });
+  });
+</script>

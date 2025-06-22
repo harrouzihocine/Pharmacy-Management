@@ -1,0 +1,109 @@
+<% layout('layouts/boilerplate') %>
+<div class="receive-demand-page-container">
+  <div class="receive-demand-header">
+    <button class="btn back-btn back-button" onclick="window.location.href='/demand/demand-details/<%= demand._id %>'"><i class="bi bi-arrow-left-circle"></i></button>
+    <h1>Receive Demand N° <%= demand.demandNumber %></h1>
+    <h2>From <%= demand.source %> To <%= demand.destination %></h2>
+  </div>
+
+  <!-- Begin form for submitting received quantities -->
+  <form class="search-bar">
+    <input type="text" id="search" placeholder="Search in Received liste" />
+  </form>
+  <form id="receivedDemandForm" action="/demand/<%= demand._id %>" method="POST">
+    <table class="receive-demand-table">
+      <thead>
+        <tr>
+          <th>Barcode</th>
+          <th>Designation</th>
+          <th>Boite de</th>
+          <th>Batch Number</th>
+          <th>Serial Number</th>
+          <th>Expiry Date</th>
+          <th>Quantity Transferred</th>
+          <th>Quantity Received</th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+        <% receivedstock.forEach(stock => { %>
+          <tr class="distock-medicaments-row" data-medicament-id="<%= stock.medicamentId %>">
+            <td class="barcode"><%= stock.barcode %></td>
+            <td class="designation"><%= stock.designation %></td>
+            <td class="boite_de"><%= stock.boite_de %></td>
+            <td class="batch-number"><%= stock.batchNumber %></td>
+            <td class="serial-number"><%= stock.serialNumber ? stock.serialNumber : 'N/A' %></td>
+            <td class="expiry-date"><%= stock.expiryDate ? new Date(stock.expiryDate).toLocaleDateString() : 'N/A' %></td>
+            <td class="transferredQuantity"><%= stock.quantityTransferred %></td>
+            <td>
+                <input type="hidden" name="transferredQuantity[<%= stock.virtualStockID %>]" value="<%= stock.quantityTransferred %>">
+                <input type="hidden" name="virtualStockID[<%= stock.virtualStockID%>]" value="<%= stock.virtualStockID%>">
+              <input 
+                type="number" 
+                class="form-control receive-quantity-input" 
+                name="receivedQuantity[<%= stock.virtualStockID %>]" 
+                id="receivedQuantity_<%= stock.virtualStockID %>" 
+                min="0"
+               
+                value="<%= stock.receivedQuantity? stock.receivedQuantity : "0" %>"
+                required
+              >
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <div class="receive-action-buttons">
+      <button type="submit" class="btn receive-save-btn">Save</button>
+    </div>
+  </form>
+</div>
+<script>
+ document.getElementById('search').addEventListener('keydown', function (event) {
+  if (event.key === 'Enter') {
+    event.preventDefault(); // Prevent the default form submission
+
+    const searchValue = this.value.trim(); // Get the input value
+    const rows = document.querySelectorAll('.distock-medicaments-row'); // Get all table rows
+
+    let found = false;
+
+    // Loop through rows to find a matching barcode or designation
+    for (let row of rows) {
+      const barcodeCell = row.querySelector('.barcode'); // Get barcode cell
+      const barcode = barcodeCell ? barcodeCell.textContent.trim() : '';
+      const designationCell = row.querySelector('.designation');
+      const designation = designationCell ? designationCell.textContent.trim() : '';
+
+      if (barcode === searchValue || designation.toLowerCase().includes(searchValue.toLowerCase())) {
+        // Matching row found, focus on the input field
+        const quantityInput = row.querySelector('.receive-quantity-input');
+        quantityInput.focus(); // Move cursor to the input field
+        quantityInput.value = 1; // Set default value to 1
+
+        // Highlight the matching row
+        row.style.backgroundColor = 'lightgreen';
+        setTimeout(() => {
+          row.style.backgroundColor = ''; // Remove the highlight after 1 second
+        }, 1000);
+
+        // Listen for the next Enter key press to confirm the value
+        quantityInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent form submission
+            document.getElementById('search').value = ''; // Clear the search input
+            document.getElementById('search').focus(); // Move cursor back to the search bar
+          }
+        });
+
+        found = true;
+        break; // Stop searching after the match
+      }
+    }
+
+    // If no match found, alert the user (optional)
+    if (!found) {
+      alert('Barcode / Designation not found in the list.');
+    }
+  }
+});
+</script>

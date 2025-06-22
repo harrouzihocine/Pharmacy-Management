@@ -1,0 +1,195 @@
+<% layout('layouts/boilerplate') %>
+<div class="create-prescription-page-container">
+  <div class="create-prescription-header mb-4">
+    <button class="btn back-btn back-button" onclick="window.location.href='/achat/approvisionnement/BC'">
+      <i class="bi bi-arrow-left-circle"></i>
+    </button>
+    <h1>Edit Bon de Commande</h1>
+  </div>
+
+  <form id="editBonCommandeForm" class="bon-reception-form" action="/achat/approvisionnement/BC/edit/<%= BonCommande._id %>" method="POST">
+    <!-- Header Information -->
+    <div class="row g-3 mb-4">
+    
+      <!-- Supplier Select -->
+      <div class="col-md-6">
+        <label for="fournisseur" class="form-label label-required">Fournisseur</label>
+        <select id="fournisseur" name="fournisseurId" class="form-select" required>
+          <option value="" disabled>Select fournisseur</option>
+          <% Fournisseurs.forEach(fournisseur => { %>
+            <option value="<%= fournisseur._id %>" <%= fournisseur._id.toString() === BonCommande.fournisseurId._id.toString() ? 'selected' : '' %>><%= fournisseur.name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+     
+
+      <!-- Date Bon de Commande -->
+      <div class="col-md-6">
+        <label class="form-label">Date Bon de Commande</label>
+        <input type="datetime-local"
+        class="form-control"
+        name="dateBonCommande"
+        value="<%= new Date(BonCommande.createdAt.getTime() - BonCommande.createdAt.getTimezoneOffset()*60000).toISOString().slice(0,16) %>"
+        required>
+ 
+
+      </div>
+
+     
+    </div>
+
+    <!-- Medicaments Table -->
+    <h3 class="mt-4">Medicaments</h3>
+    <table class="create-prescription-table mt-2" id="medicaments-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Quantity</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% BonCommande.medicaments.forEach((medicament, index) => { %>
+          <tr>
+            <td style="width: 60%;">
+              <select class="form-select medicament-select" name="medicaments[<%= index %>][medicamentId]" required>
+                <option value="" disabled>Select item</option>
+                <% Medicaments.forEach(Medicament => { %>
+                    <option value="<%= Medicament._id %>" <%= Medicament._id.toString() === medicament.medicamentId._id.toString() ? 'selected' : '' %>><%= Medicament.designation %></option>
+
+                <% }) %>
+              </select>
+            </td>
+            <td>
+              <input type="number" class="form-control" name="medicaments[<%= index %>][quantity]" value="<%= medicament.orderQuantity %>" min="0" placeholder="Enter quantity" required>
+            </td>
+            <td>
+              <button type="button" class="btn btn-danger delete-btn"><i class="bi bi-trash"></i></button>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <button type="button" class="btn add-command mt-2" id="addMedicamentBtn">Add Item</button>
+
+    <div class="col-12 mt-2">
+        <label for="comment" class="form-label">Notes</label>
+        <textarea id="comment" name="comment" class="form-control" rows="2" placeholder="Enter notes"><%= BonCommande.comment %></textarea>
+      </div>
+    <div class="form-actions mt-4">
+      <button type="submit" class="btn demand-new-button">Update Bon de Commande</button>
+    </div>
+  </form>
+</div>
+
+<!-- Templates -->
+<template id="medicamentRowTemplate">
+  <tr>
+    <td style="width: 60%;">
+      <select class="form-select medicament-select" name="medicaments[{{index}}][medicamentId]">
+        <option value="" disabled selected>Select item</option>
+        <% Medicaments.forEach(Medicament => { %>
+          <option value="<%= Medicament._id %>"><%= Medicament.designation %></option>
+        <% }) %>
+      </select>
+    </td>
+    <td>
+      <input type="number" class="form-control" name="medicaments[{{index}}][quantity]" min="0" placeholder="Enter quantity">
+    </td>
+    <td>
+      <button type="button" class="btn btn-danger delete-btn"><i class="bi bi-trash"></i></button>
+    </td>
+  </tr>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const initializeChoices = (selectElement) => {
+    return new Choices(selectElement, {
+      searchEnabled: true,
+      itemSelectText: "",
+      noResultsText: "No items found",
+      placeholder: true,
+      placeholderValue: "Select an Item",
+      searchFloor: 1,
+      searchResultLimit: 0,
+      shouldSort: false,
+      position: "bottom",
+      fuseOptions: {
+        includeScore: true,
+        threshold: 0.3,
+        distance: 100,
+        ignoreLocation: true,
+        keys: ["label"],
+      },
+    });
+  };
+
+  initializeChoices(document.getElementById('fournisseur'));
+  document.querySelectorAll('.medicament-select').forEach(select => {
+    initializeChoices(select);
+  });
+
+  // Function to add new row
+  const addRow = (tableId, templateId) => {
+    const table = document.getElementById(tableId).querySelector("tbody");
+    const rowCount = table.rows.length;
+    const template = document.getElementById(templateId).innerHTML;
+    const newRowHTML = template.replace(/{{index}}/g, rowCount);
+    
+    const newRow = document.createElement("tr");
+    newRow.innerHTML = newRowHTML;
+    
+    const newSelect = newRow.querySelector('.medicament-select');
+    if (newSelect) {
+      initializeChoices(newSelect);
+    }
+    
+    table.appendChild(newRow);
+  };
+
+  // Add row buttons
+  document.getElementById("addMedicamentBtn").addEventListener("click", () => {
+    addRow("medicaments-table", "medicamentRowTemplate");
+  });
+
+  // Delete row functionality
+  document.addEventListener("click", function(event) {
+    if (event.target.classList.contains("delete-btn")) {
+      event.target.closest("tr").remove();
+    }
+  });
+
+  // Form validation and preprocessing
+  document.getElementById("editBonCommandeForm").addEventListener("submit", function(event) {
+    const medicamentsTable = document.getElementById("medicaments-table").querySelector("tbody");
+
+    // Function to clean up table rows
+    const cleanUpTable = (table) => {
+      const rows = table.querySelectorAll("tr");
+      rows.forEach(row => {
+        const medicamentSelect = row.querySelector('select[name*="[medicamentId]"]');
+        const quantityInput = row.querySelector('input[name*="[quantity]"]');
+
+        // If either medicament or quantity is missing, remove the row
+        if (!medicamentSelect.value || !quantityInput.value) {
+          row.remove();
+        }
+      });
+    };
+
+    // Clean up the table
+    cleanUpTable(medicamentsTable);
+
+    // Optionally, you can add additional validation here if needed
+    // For example, ensure at least one row exists in the table
+    const medicamentRows = medicamentsTable.querySelectorAll("tr");
+    if (medicamentRows.length === 0) {
+      event.preventDefault();
+      alert("Please add at least one medicament.");
+    }
+  });
+});
+</script>

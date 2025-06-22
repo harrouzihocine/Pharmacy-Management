@@ -1,0 +1,165 @@
+<% layout('layouts/boilerplate') %>
+<div class="create-prescription-page-container">
+  <div class="create-prescription-header">
+    <button class="btn back-btn back-button" onclick="window.location.href='/achat/approvisionnement/facture-proforma'">
+      <i class="bi bi-arrow-left-circle"></i>
+    </button>
+    <h1>Create Facture Proforma</h1>
+  </div>
+
+  <form id="createPrescriptionForm" action="/achat/approvisionnement/facture-proforma/new" method="POST">
+    <table class="create-prescription-table mt-2" id="prescription-MedicamentTable">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Quantity</th>
+          <th>Fournisseurs</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="width: 40%;">
+            <select class="form-select form-select-lg medicament-select" name="request[0][medicamentId]" required>
+              <option value="" disabled selected>Select item</option>
+              <% Medicaments.forEach(Medicament => { %>
+                <option value="<%= Medicament._id %>"><%= Medicament.designation %></option>
+              <% }) %>
+            </select>
+          </td>
+          <td>
+            <input type="number" class="form-control" name="request[0][quantity]" min="0" placeholder="Enter quantity" required>
+          </td>
+          <td>
+            <select class="fournisseur-select" name="request[0][fournisseurs][]" multiple required>
+              <% fournisseurs.forEach(fournisseur => { %>
+                <option value="<%= fournisseur._id %>"><%= fournisseur.name %></option>
+              <% }) %>
+            </select>
+          </td>
+          <td>
+            <button type="button" class="btn delete-btn"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="button" class="btn add-command" id="addRowBtn">Add Item</button>
+
+    <div class="col-12 mt-2">
+      <label for="notes" class="form-label">Notes</label>
+      <textarea id="notes" name="notes" class="form-control" rows="2" placeholder="Enter notes"></textarea>
+    </div>
+
+    <div class="prescription-action-buttons mt-3">
+      <button type="submit" class="btn btn-primary create-facture-proforma-btn">Create Facture Proforma</button>
+    </div>
+  </form>
+</div>
+
+<template id="rowTemplate">
+  <tr>
+    <td style="width: 40%;">
+      <select class="form-select form-select-lg medicament-select" name="request[{{index}}][medicamentId]" required>
+        <option value="" disabled selected>Select item</option>
+        <% Medicaments.forEach(Medicament => { %>
+          <option value="<%= Medicament._id %>"><%= Medicament.designation %></option>
+        <% }) %>
+      </select>
+    </td>
+    <td>
+      <input type="number" class="form-control" name="request[{{index}}][quantity]" min="0" placeholder="Enter quantity" required>
+    </td>
+    <td>
+      <select class="fournisseur-select" name="request[{{index}}][fournisseurs][]" multiple required>
+        <% fournisseurs.forEach(fournisseur => { %>
+          <option value="<%= fournisseur._id %>"><%= fournisseur.name %></option>
+        <% }) %>
+      </select>
+    </td>
+    <td>
+      <button type="button" class="btn delete-btn"><i class="bi bi-trash"></i></button>
+    </td>
+  </tr>
+</template>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+  // Initialize Choices.js for select elements
+  const initializeChoices = (selectElement, isMultiple = false) => {
+    return new Choices(selectElement, {
+      searchEnabled: true,
+      itemSelectText: "",
+      noResultsText: "No items found",
+      placeholder: true,
+      placeholderValue: isMultiple ? "Select fournisseurs..." : "Select item",
+      removeItemButton: isMultiple,
+      searchFloor: 1,
+      searchResultLimit: 0,
+      shouldSort: false,
+      position: "bottom"
+    });
+  };
+
+  // Initialize selects for the first row
+  document.querySelectorAll('.medicament-select').forEach(select => {
+    initializeChoices(select);
+  });
+
+  document.querySelectorAll('.fournisseur-select').forEach(select => {
+    initializeChoices(select, true);
+  });
+
+  // Add new row functionality
+  document.getElementById("addRowBtn").addEventListener("click", function () {
+    const tbody = document.querySelector("#prescription-MedicamentTable tbody");
+    const rowCount = tbody.rows.length;
+    
+    // Get template content and replace index
+    const template = document.getElementById("rowTemplate").innerHTML;
+    const newRowHTML = template.replace(/{{index}}/g, rowCount);
+    
+    // Create and append new row
+    const newRow = document.createElement("tr");
+    newRow.innerHTML = newRowHTML;
+    tbody.appendChild(newRow);
+
+    // Initialize Choices.js for new selects
+    initializeChoices(newRow.querySelector('.medicament-select'));
+    initializeChoices(newRow.querySelector('.fournisseur-select'), true);
+  });
+
+  // Delete row functionality
+  document.querySelector("#prescription-MedicamentTable").addEventListener("click", function(e) {
+    if (e.target.closest('.delete-btn')) {
+      const row = e.target.closest('tr');
+      if (document.querySelectorAll("#prescription-MedicamentTable tbody tr").length > 1) {
+        row.remove();
+      } else {
+        alert("Cannot delete the last row");
+      }
+    }
+  });
+
+  // Form validation
+  document.getElementById("createPrescriptionForm").addEventListener("submit", function(e) {
+    const rows = document.querySelectorAll("#prescription-MedicamentTable tbody tr");
+    let isValid = true;
+
+    rows.forEach(row => {
+      const medicament = row.querySelector('[name$="[medicamentId]"]').value;
+      const quantity = row.querySelector('[name$="[quantity]"]').value;
+      const fournisseurs = row.querySelector('[name$="[fournisseurs]"]').selectedOptions;
+
+      if (!medicament || !quantity || fournisseurs.length === 0) {
+        isValid = false;
+      }
+    });
+
+    if (!isValid) {
+      e.preventDefault();
+      alert("Please fill in all required fields and select at least one fournisseur for each row");
+    }
+  });
+});
+</script>

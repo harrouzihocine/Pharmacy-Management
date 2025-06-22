@@ -1,0 +1,148 @@
+<% layout('layouts/boilerplate') %>
+<div class="storage-table-container">
+  <button
+    class="btn back-btn back-button"
+    onclick="window.location.href='/storage'"
+  >
+    <i class="bi bi-arrow-left-circle"></i>
+  </button>
+  <h1>Dispensing Sessions</h1>
+
+  <!-- Button for New Dispensing Session -->
+  <button
+    class="btn demand-new-button"
+    onclick="window.location.href='/dispensing/<%= serviceABV %>/new'"
+  >
+    <i class="bi bi-plus-circle"></i>
+    New Dispensing Session
+  </button>
+
+  <!-- Search bar -->
+  <form class="search-bar mb-2">
+    <input
+      type="text"
+      id="search"
+      placeholder="Search in dispensing sessions"
+    />
+  </form>
+
+  <!-- Table of Dispensing Sessions -->
+
+  <table class="storage-table sortable mt-2">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Total Items</th>
+        <th>Created By</th>
+
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tablebody">
+      <% if (dispensings && dispensings.length > 0) { %> <%
+      dispensings.forEach((dispensing, index) => { %>
+      <tr>
+        <td
+          onclick="window.location.href='/dispensing/<%= serviceABV %>/<%= dispensing._id %>'"
+          style="cursor: pointer"
+        >
+          <%= index + 1 %>
+        </td>
+        <td
+          onclick="window.location.href='/dispensing/<%= serviceABV %>/<%= dispensing._id %>'"
+          style="cursor: pointer"
+        >
+          <%= new Date(dispensing.CreationDate).toLocaleString() %>
+        </td>
+        <td
+          onclick="window.location.href='/dispensing/<%= serviceABV %>/<%= dispensing._id %>'"
+          style="cursor: pointer"
+        >
+          <%= dispensing.totalItems %>
+        </td>
+        <td
+          onclick="window.location.href='/dispensing/<%= serviceABV %>/<%= dispensing._id %>'"
+          style="cursor: pointer"
+        >
+          <%= dispensing.createdBy.username %>
+        </td>
+        <td>
+          <div class="action-buttons">
+                     
+            <button
+              class="view-btn"
+              style="background-color: rgba(255 0 0 / 0.5)"
+              onclick="deleteDispensing('<%= dispensing._id %>')"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+           
+          </div>
+        </td>
+      </tr>
+      <% }); %> <% } else { %>
+      <tr>
+        <td colspan="7" class="text-center">No dispensing sessions found</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  
+
+  function deleteDispensing(dispensingId) {
+    // Prevent row click from triggering when clicking delete button
+    event.stopPropagation();
+
+    // Show confirmation dialog using SweetAlert
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Send delete request
+        fetch(`/dispensing/delete/${dispensingId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              Swal.fire(
+                "Deleted!",
+                "The dispensing session has been deleted.",
+                "success"
+              ).then(() => {
+                // Reload page after successful deletion
+                window.location.reload();
+              });
+            } else {
+              Swal.fire(
+                "Error!",
+                "There was an issue deleting the dispensing session.",
+                "error"
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            Swal.fire(
+              "Error!",
+              "There was an issue with the request.",
+              "error"
+            );
+          });
+      }
+    });
+  }
+</script>

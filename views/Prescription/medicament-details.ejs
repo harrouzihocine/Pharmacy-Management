@@ -1,0 +1,52 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="patient-details-container">
+  <button class="btn back-btn back-button" onclick="window.location.href='/prescription/details/<%= medicaments._id %>?serviceABV=<%= serviceABV %>'"><i class="bi bi-arrow-left-circle"></i></button>
+  <div class="col m-auto">
+    <h3 class="mb-2 text-center">Medicaments List for prescription: <%= medicaments.prescriptionCode %></h3>
+    <h4 class="mb-4 text-center">Medicament: <%= medicament.designation %> </h4>
+    <h4 class="mb-4 text-center">Patient: <%= patient.fullname %> </h4>
+    <form class="search-bar mb-2">
+      <input type="text" id="search" placeholder="Search in medicaments list" />
+    </form>
+
+    <table class="patient-details-table sortable">
+      <thead>
+        <tr>
+
+          <th scope="col">service</th>
+          <th scope="col">Barcode</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Distocked By</th>
+          <th scope="col">Distocked At</th>
+          <th scope="col">Actions</th>
+         
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+        <% var i = 1 %>
+        <% for (medicament of medicaments.distockedmedicaments) { %>
+        <tr>
+          <td><%= medicament.service %></td>
+          <td><%= medicament.barCode %></td>
+          <td  ><%= medicament.quantity %></td>
+          <td><%= medicament.distockedBy.username %></td>
+          <td><%= medicament.distockedAt.toLocaleString() %></td>
+          <td>
+            <button 
+            class="view-btn signBtn py-1 px-2" 
+            style="background-color: rgba(0 208 255 / 0.56);" 
+            data-medicament="<%= medicament.designation %>" 
+            data-patient="<%= patient.fullname %>" 
+            data-quantity="<%= medicament.quantity %>"
+          >
+            <img width="30" height="30" src="https://img.icons8.com/color-glass/48/hand-with-a-pill.png" alt="hand-with-a-pill"/>
+          </button>
+          </td>
+         
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

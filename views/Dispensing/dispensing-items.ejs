@@ -1,0 +1,278 @@
+<% layout('layouts/boilerplate') %>
+<div class="storage-table-container">
+  <button
+    class="btn back-btn back-button"
+    onclick="window.location.href='/dispensing/<%= serviceABV %>'"
+  >
+    <i class="bi bi-arrow-left-circle"></i>
+  </button>
+  <h1>Dispensing Session Details for <%= serviceABV %></h1>
+
+  <!-- Session Info -->
+  <div class="info-box-container">
+    <div class="info-box">
+      <strong>Date:</strong>
+      <span><%= new Date(dispensing.CreationDate).toLocaleString() %></span>
+    </div>
+    <div class="info-box">
+      <strong>Created By:</strong>
+      <span><%= dispensing.createdBy.username %></span>
+    </div>
+    <div class="info-box">
+      <strong>Total Items:</strong>
+      <span><%= totalQuantity %></span>
+    </div>
+  </div>
+
+ 
+  <!-- Barcode Scanner Input -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="search-bar" style="width: 300px;">
+      <input
+        type="text"
+        id="barcodeInput"
+        class="form-control"
+        placeholder="Scan barcode here..."
+        autofocus
+      />
+    </div>
+  </div>
+
+  <!-- Table of Dispensed Items -->
+  <table class="storage-table sortable">
+    <thead>
+      <tr>
+        <th>Date/hour</th>
+        <th>Medicament</th>
+        <th>Batch Number</th>
+        <th>Serial Number</th>
+        <th>Expiry Date</th>
+        <th>Quantity</th>
+        <th>By</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tablebody">      <% if (dispensingItems && dispensingItems.length > 0) { %>
+        <% for (const item of dispensingItems) { %>
+          <tr data-barcode="<%= item.barcode %>" 
+              class="<%= highlightItemId && highlightItemId === item._id.toString() ? 'highlight-row' : '' %>"
+              id="item-<%= item._id %>">
+            <td><%= moment(item.createdAt).format('DD/MM/YYYY HH:mm') %></td>
+            <td><%= item.medicamentId ? item.medicamentId.designation : 'N/A' %></td>
+            <td><%= item.batchNumber || 'N/A' %></td>
+            <td><%= item.serialNumber || 'N/A' %></td>
+            <td><%= item.expiryDate ? moment(item.expiryDate).format('DD/MM/YYYY') : 'N/A' %></td>
+            <td class="quantity-cell"><%= item.quantity || 0 %></td>
+            <td><%= item.dispensedBy ? item.dispensedBy.username : 'N/A' %></td>
+            <td>
+              <div class="action-buttons">
+                <button
+                  class="view-btn"
+                  style="background-color: rgba(255 0 0 / 0.5)"
+                  onclick="deleteDispensedItem('<%= item._id %>')"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        <% } %>
+        
+      <% } else { %>
+        <tr>
+          <td colspan="8" class="text-center">No dispensed items found</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .highlight-row {
+    background-color: #d4edda !important;
+    border: 2px solid #28a745 !important;
+    animation: highlightFade 3s ease-in-out;
+  }
+  
+  @keyframes highlightFade {
+    0% {
+      background-color: #28a745;
+      transform: scale(1.02);
+    }
+    50% {
+      background-color: #d4edda;
+    }
+    100% {
+      background-color: #d4edda;
+      transform: scale(1);
+    }
+  }
+  
+  .highlight-row td {
+    font-weight: bold;
+  }
+</style>
+
+<script>
+  const barcodeInput = document.getElementById('barcodeInput');
+  let isProcessing = false; // Prevent multiple simultaneous scans
+  
+  // Ensure input always has focus
+  function ensureFocus() {
+    if (document.activeElement !== barcodeInput) {
+      barcodeInput.focus();
+    }
+  }
+  
+  // Set focus to input when page loads
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      barcodeInput.focus();
+      console.log('Page loaded, input focused');
+      
+      // Handle row highlighting
+      handleRowHighlight();
+    }, 100);
+  });
+
+  // Set focus when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      barcodeInput.focus();
+      console.log('DOM ready, input focused');
+      
+      // Handle row highlighting
+      handleRowHighlight();
+    }, 100);
+  });
+
+  function handleRowHighlight() {
+    const highlightedRow = document.querySelector('.highlight-row');
+    if (highlightedRow) {
+      console.log('Found highlighted row, scrolling to it');
+      
+      // Scroll to the highlighted row
+      highlightedRow.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+      
+      // Remove highlight after 4 seconds
+      setTimeout(() => {
+        highlightedRow.classList.remove('highlight-row');
+        console.log('Highlight removed');
+      }, 4000);
+    }
+  }
+
+  // Set focus back to input when clicked anywhere on the page
+  document.addEventListener('click', (e) => {
+    // Don't refocus if clicking on buttons or other interactive elements
+    if (!e.target.matches('button, a, input[type="button"], input[type="submit"]')) {
+      setTimeout(ensureFocus, 100);
+    }
+  });
+
+  // Ensure focus is maintained more frequently
+  setInterval(ensureFocus, 500);
+
+  barcodeInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      
+      // Prevent multiple simultaneous scans
+      if (isProcessing) {
+        console.log('Scan already in progress, ignoring...');
+        return;
+      }
+      
+      const barcode = this.value.trim();
+      
+      if (!barcode) {
+        return;
+      }
+      
+      console.log('Processing barcode:', barcode);
+      this.value = ''; // Clear input for next scan
+
+      // Call API to process the scan
+      processScan(barcode);
+    }
+  });
+
+  function processScan(barcode) {
+    const serviceABV = '<%= serviceABV %>';
+    const dispensingId = '<%= dispensing._id %>';
+    
+    isProcessing = true; // Set processing flag
+    
+    console.log('=== FRONTEND PROCESSING SCAN ===');
+    console.log('Data being sent:', { barcode, serviceABV, dispensingId });
+    console.log('isProcessing set to true');
+
+    axios.post(`/dispensing/${serviceABV}/${dispensingId}/scan`, {
+      barcode
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+      }
+    })
+    .then(response => {
+      console.log('=== SCAN RESPONSE ===');
+      console.log('Response:', response.data);
+      
+      // Always reload the page regardless of success or failure
+      // Flash messages will be shown after reload
+      console.log('Reloading page after scan response');
+      window.location.reload();
+    })
+    .catch(error => {
+      console.error('=== SCAN ERROR ===');
+      console.error('Error:', error);
+      
+      // Always reload the page even on network errors
+      console.log('Reloading page after scan error');
+      window.location.reload();
+    });
+  }
+
+  function deleteDispensedItem(itemId) {
+    // Prevent row click from triggering when clicking delete button
+    event.stopPropagation();
+
+    // Show confirmation dialog using SweetAlert
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Make DELETE request to server
+        axios.delete(`/dispensing/item/${itemId}`)
+          .then(() => {
+            // Show success message and reload page
+            Swal.fire(
+              "Deleted!",
+              "The dispensed item has been deleted.",
+              "success"
+            ).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch(() => {
+            // Show error message if request fails
+            Swal.fire(
+              "Error!",
+              "There was an issue deleting the item.",
+              "error"
+            );
+          });
+      }
+    });
+  }
+</script>

@@ -1,0 +1,59 @@
+<button
+type="button"
+class="btn me-2 gear-btn px-2 py-1"
+data-bs-toggle="modal"
+data-bs-target="#settings-<%= medicament.medicamentId._id %>"
+>
+<i class="bi bi-gear"></i>
+</button>
+<div
+class="modal fade add-storage-modal"
+id="settings-<%= medicament.medicamentId._id %>"
+data-bs-keyboard="true"
+tabindex="-1"
+aria-labelledby="staticBackdropLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+  <div class="modal-content add-storage-page-container">
+    <div class="modal-header">
+      <h5 class="modal-title" id="addstock-<%= medicament.medicamentId._id %>">Medicament Settings</h5>
+      <h6><%= medicament.medicamentId.designation %></h6>
+
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+
+    <div class="modal-body">
+      <form
+        id="addToStorageForm"
+        method="POST"
+        class="add-storage-form row needs-validation"
+        action="/pharmacy/settings"
+        novalidate
+      >
+        <input type="hidden" id="medicamentId" name="medicamentId" value="<%= medicament.medicamentId._id %>">
+       
+
+        <!-- Other Fields -->
+        <div class="form-group">
+          <label for="minquantity" class="form-label">Min Quantity:</label>
+          <input name="minquantity" id="minquantity" class="form-control" value="<%= medicament.minquantity ? medicament.minquantity : 0 %>" type="number" min="1" placeholder="Enter quantity" required>
+        </div>
+        <!-- Other Fields -->
+        <div class="form-group">
+          <label for="PreExpirationAlert" class="form-label">Pre-Expiration Days:</label>
+          <input name="PreExpirationAlert" id="PreExpirationAlert" value="<%= medicament.PreExpirationAlert? medicament.PreExpirationAlert: 0%>" class="form-control" type="number" min="1" placeholder="Enter Pre-Expiration Alert (Days)" required>
+        </div>
+       
+
+        <button type="submit"  class="btn btn-primary">Save</button>
+      </form>
+    </div>
+  </div>
+</div>
+</div>

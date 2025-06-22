@@ -1,0 +1,108 @@
+<% layout('layouts/boilerplate') %>
+<div class="create-ticket-container">
+  <h1 class="text-ticket"><i class="fas fa-box"></i> Create a Demand Request</h1>
+
+  <!-- Error message display -->
+  <div class="error-message" id="error-message"></div>
+
+  <form action="/create-demand" method="POST" id="create-demand-form">
+    
+    <!-- Demand Title -->
+    <div class="form-group">
+      <label for="title">Request Title: <span class="required">*</span></label>
+      <input type="text" id="title" name="title" class="custom-input-ticket" required placeholder="Enter the request title (e.g., paper, badges)">
+      <span class="error" id="title-error"></span>
+    </div>
+
+    <!-- Category Selection -->
+    <div class="form-group">
+      <label for="category">Category: <span class="required">*</span></label>
+      <select id="category" name="category" class="custom-select-ticket" required>
+        <option value="">Select a category</option>
+        <option value="OfficeSupplies">Office Supplies</option>
+        <option value="Printing">Printing Requests</option>
+        <option value="MedicalEquipment">Medical Equipment</option>
+        <option value="ITSupport">IT Support</option>
+        <option value="Furniture">Furniture Requests</option>
+      </select>
+      <span class="error" id="category-error"></span>
+    </div>
+    
+    <!-- Service Selection -->
+    <div class="form-group">
+      <label for="service">Service: <span class="required">*</span></label>
+      <select id="service" name="service" class="custom-select-ticket" required>
+        <option value="">Select a service</option>
+        <option value="Radiology">Radiology</option>
+        <option value="Cardiology">Cardiology</option>
+        <option value="Orthopedics">Orthopedics</option>
+        <option value="Laboratory">Laboratory</option>
+        <option value="Surgery">Surgery</option>
+        <option value="Pharmacy">Pharmacy</option>
+        <option value="Reception">Reception</option>
+        <option value="Administration">Administration</option>
+      </select>
+      <span class="error" id="service-error"></span>
+    </div>
+
+    <!-- Priority Level -->
+    <div class="form-group">
+      <label for="priority">Priority Level: </label>
+      <select id="priority" name="priority" class="custom-select-ticket">
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+        <option value="Urgent">Urgent</option>
+      </select>
+      <span class="error" id="priority-error"></span>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">Request Description: <span class="required">*</span></label>
+      <textarea id="description" name="description" class="custom-textarea-ticket" rows="4" required placeholder="Provide a detailed description of the item or service required"></textarea>
+      <span class="error" id="description-error"></span>
+    </div>
+
+    <!-- Quantity or Specific Request (Only visible when certain categories are selected) -->
+    <div class="form-group" id="quantity-group" style="display:none;">
+      <label for="quantity">Quantity / Specific Request:</label>
+      <input type="text" id="quantity" name="quantity" class="custom-input-ticket" placeholder="Specify quantity or details (e.g., 10 boxes of paper)">
+      <span class="error" id="quantity-error"></span>
+    </div>
+
+    <!-- Attachments (optional) -->
+    <div class="form-group">
+      <label for="attachment">Upload Attachment (optional):</label>
+      <label for="attachment" class="custom-file-upload">
+        <input type="file" id="attachment" name="attachment" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+        Choose File
+      </label>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="form-group">
+      <label for="contact">Contact Info: <span class="required">*</span></label>
+      <input type="text" id="contact" name="contact" class="custom-input-ticket" required placeholder="Enter your email / phone for follow-up">
+      <span class="error" id="contact-error"></span>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="custom-btn-ticket"><i class="fas fa-paper-plane"></i> Submit Request</button>
+  </form>
+</div>
+
+<script>
+  // Show quantity input based on category selection
+  document.getElementById("category").addEventListener("change", function() {
+    var selectedCategory = this.value;
+    var quantityGroup = document.getElementById("quantity-group");
+    
+    // Show quantity field for Office Supplies and Printing Requests
+    if (selectedCategory === "OfficeSupplies" || selectedCategory === "Printing") {
+      quantityGroup.style.display = "block";
+    } else {
+      quantityGroup.style.display = "none";
+    }
+  });
+</script>

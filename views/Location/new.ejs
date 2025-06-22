@@ -1,0 +1,84 @@
+<% layout('layouts/boilerplate') %>
+<div class="add-location-page-container">
+    <h2>Add un Emplacement</h2>
+    
+    <!-- Formulaire d'ajout d'emplacement -->
+    
+    <form id="form-emplacement" action="/location/new" method="POST" class="add-location-form">
+        <!-- Choix du type d'emplacement -->
+        <div class="form-group">
+            <label for="locationType" class="form-label">Type d'entrepôt :</label>
+            <select id="locationType" name="locationType" class="form-control" required>
+                <option value="">Sélectionner le type</option>
+                <option value="PC">Pharmacie Centrale (PC)</option>
+                <option value="PS">Pharmacie de Service (PS)</option>
+            </select>
+        </div>
+
+        <!-- Choix de la destination (service) -->
+        <div class="form-group">
+            <label for="destinationService" class="form-label">Service :</label>
+            <select id="destinationService" name="destinationService" class="form-control" required>
+                <option value="">Sélectionner le service</option>
+                <option value="APP">Approvisionnement (APP)</option>
+                <option value="URG">Urgences (URG)</option>
+                <option value="LAB">Laboratoire (LAB)</option>
+                <option value="RAD">Radiologie (RAD)</option>
+            </select>
+        </div>
+
+        <!-- Description endroit -->
+        <div class="form-group">
+            <label for="endroitDescription" class="form-label">Description endroit :</label>
+            <select id="endroitDescription" name="endroitDescription" class="form-control" required>
+                <option value="">Sélectionner l'outil</option>
+                <option value="Salle de réanimation">Salle de réanimation</option>
+                <option value="Salle de chirurgie 1">Salle de chirurgie 1</option>
+                <option value="Sous-sol">Sous-sol</option>
+                <option value="Salle des analyses médicales">Salle des analyses médicales</option>
+            </select>
+        </div>
+        
+        <!-- Code d'endroit -->
+        <div class="form-group">
+            <label for="endroitCode" class="form-label">Code d'endroit :</label>
+            <input type="number" id="endroitCode" name="endroitCode" class="form-control" placeholder="Entrez le numéro (1, 2, 3...)" required>
+        </div>
+     
+        <!-- Choix de l'outil de rangement -->
+        <div class="form-group">
+            <label for="outilRangement" class="form-label">Outil de Rangement :</label>
+            <select id="outilRangement" name="outilRangement" class="form-control" required>
+                <option value="">Sélectionner l'outil</option>
+                <option value="AR">Armoire (AR)</option>
+                <option value="CF">Congélateur (CF)</option>
+                <option value="FR">Frigo (FR)</option>
+                <option value="RY">Rayonnage (RY)</option>
+            </select>
+        </div>
+
+        <!-- Numéro de l'outil de rangement -->
+        <div class="form-group">
+            <label for="outilNumero" class="form-label">Numéro de l'Outil:</label>
+            <input type="number" id="outilNumero" name="outilNumero" class="form-control" placeholder="Entrez le numéro (1, 2, 3...)" required>
+        </div>
+
+        <!-- Détails supplémentaires pour le rayonnage -->
+        <div id="rayonnageDetails" class="form-group" style="display: none;">
+            <label for="bloc" class="form-label">Bloc :</label>
+            <select id="bloc" name="bloc" class="form-control">
+                <option value="">Sélectionner le bloc</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+  
+            <label for="niveauRayon" class="form-label">Niveau du Rayon :</label>
+            <input type="number" id="niveauRayon" name="niveauRayon" class="form-control" placeholder="Niveau du rayon (1, 2, 3...)">
+        </div>
+
+        <!-- Bouton de soumission -->
+        <button type="submit" class="btn btn-primary mt-3">Save</button>
+  
+    </form>
+</div>

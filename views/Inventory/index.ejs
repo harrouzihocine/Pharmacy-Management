@@ -1,0 +1,62 @@
+<% layout('layouts/boilerplate') %>
+<div class="inventories-container">
+  <h1>Inventories</h1>
+  <button type="button" class="btn demand-new-button" onclick="window.location.href='/inventory/new'">
+    <span class="ms-1">New Inventory</span>
+  </button>
+  <form class="search-bar mb-2">
+    <input type="text" id="search"  placeholder="Search in inventory items" />
+</form>
+  <table class="inventories-table sortable">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Service</th>
+        <th>Storage</th>
+        <th>Created At</th>
+        <th>Status</th>
+        <th>Actions</th>
+
+      </tr>
+    </thead >
+    <tbody id="tablebody">
+      <% if (inventories.length > 0) { %>
+      <% inventories.forEach(inventory => { %>
+      <tr>
+        <td onclick="window.location.href='/inventory/users/<%= inventory.id %>'"><%= inventory.title %></td>
+        <td onclick="window.location.href='/inventory/users/<%= inventory.id %>'"><%= inventory.description || 'N/A' %></td>
+        <td onclick="window.location.href='/inventory/users/<%= inventory.id %>'"><%= inventory.serviceABV || 'N/A' %></td>
+        <td onclick="window.location.href='/inventory/users/<%= inventory.id %>'"><%= inventory.storageName || 'N/A' %></td>
+        <td onclick="window.location.href='/inventory/users/<%= inventory.id %>'"><%= inventory.createdAt.toLocaleString() %></td>
+        
+        <td>
+          <span class="tag status-badge <%= inventory.status === 'Draft' ? 'status-Draft' : 'status-Validated' %>">
+            <%= inventory.status%>
+          </span>
+         
+        </td>
+        <td>
+          <%if (inventory.status === 'Validated'){ %>
+          <button class="btn view-btn py-1 px-2" onclick="window.location.href='/inventory/<%= inventory.id %>'"><i class="fa-solid fa-eye fs-5"></i></button>
+         <% }else{ %>
+         <% if (userInventoryIds.includes(inventory.id.toString())) { %>
+          <!-- Don't show the Add User button if the user is already associated with the inventory -->
+        <% } else { %>
+          <button class="btn add-btn" onclick="window.location.href='/inventory/add-user/<%= inventory.id %>'">
+            <i class="fa-solid fa-plus fs-5"></i>
+          </button>
+        <% }} %>
+         
+        </td>
+      </tr>
+      <% }); %>
+      <% } else { %>
+      <tr>
+        <td colspan="8">No inventories found.</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+

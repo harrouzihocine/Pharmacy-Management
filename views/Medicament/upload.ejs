@@ -1,0 +1,21 @@
+<% layout('layouts/boilerplate') %>
+<div class="container">
+    <h1 class="mb-3">Import Medicaments Data</h1>
+    <div class="d-flex">
+     <div class="mx-5">
+        <a href="/medicament/downloadTemplate" class="btn btn-primary">
+            Download template
+          </a>
+    </div> 
+   
+   
+    <form action="/medicament/importMedicaments" method="POST" enctype="multipart/form-data">
+        <label for="file">Upload Excel File:</label>
+        <input type="file" name="file" accept=".xlsx, .xls" required>
+        <button class="btn btn-primary" type="submit">Upload</button>
+    </form>
+   
+</div>
+  
+
+</div>

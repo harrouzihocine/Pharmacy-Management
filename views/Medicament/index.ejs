@@ -1,0 +1,51 @@
+<% layout('layouts/boilerplate') %>
+<div class="medicament-table-container">
+    <h1>List of Medications</h1>
+
+    <%- include("./new") %>
+    <!-- Search Form -->
+    <form class="search-bar mb-2">
+        <input type="text" id="search"  placeholder="Search medicaments" />
+    </form>
+    <table class="medicament-table sortable" >
+        <thead>
+            <tr>
+                <th>Code Interne</th>
+                <th>Code PCH</th>
+                <th>Designation</th>
+                <th>Type</th>
+                <th>Forme</th>
+                <th>Boite de</th>
+                <th>Nom Commercial</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody  id="tablebody">
+            <% for (med of medicaments) { %>
+            <tr>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.code_interne %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.code_pch ? med.code_pch : 'N/A' %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.designation %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.type_medicament %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.forme %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.boite_de %></td>
+                <td onclick="window.location.href='/medicament/<%= med._id %>'"><%= med.nom_commercial ? med.nom_commercial : 'N/A' %></td>
+                <td>
+                    <div class="d-flex">
+                        <button class=" btn selectmedicament assign-btn py-1 px-1" data-medicament-id="<%= med._id %>" data-selected="<%= med.isSelected ? 'true' : 'false' %>">
+                            <% if(med.isSelected){ %>
+                               Unselect
+                                 <% }else{ %> 
+                                    Select
+                                 <% } %>
+                        </button>
+                       
+                    </div>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    
+</div>

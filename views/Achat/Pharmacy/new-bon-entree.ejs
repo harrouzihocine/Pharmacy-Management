@@ -1,0 +1,82 @@
+<% layout('layouts/boilerplate') %>
+<div class="create-prescription-page-container">
+    <div class="create-prescription-header">
+        <button class="btn back-btn back-button" onclick="window.location.href='/achat/approvisionnement/BE'">
+          <i class="bi bi-arrow-left-circle"></i>
+        </button>
+        <h1>Create an Entry Receipt</h1>
+      </div>
+    
+    <!-- Form to create a new Entry Receipt -->
+    <form action="/achat/approvisionnement/BE/new"  class="bon-reception-form" method="POST" >
+        <div class="row g-3 mb-4 ">
+      <!-- Reception Receipt Select -->
+      <div class=" col-4">
+        <label class="form-label" for="bonReceptionId">Bon Reception Code:</label>
+        <select id="bonReceptionId" name="bonReceptionId" class="form-select">
+          <option value="">-- Select a reception receipt --</option>
+          <% bonReceptions.forEach(bonReception => { %>
+            <option value="<%= bonReception._id %>"><%= bonReception.bonReceptionCode %></option>
+          <% }) %>
+        </select>
+      </div>
+      
+      <!-- Supplier Select -->
+      <div class="col-4">
+        <label for="fournisseur" class="form-label">Fournisseur</label>
+        <select id="fournisseur" name="fournisseurId" class="form-select" required>
+          <option value="" disabled selected>Select fournisseur</option>
+          <% fournisseurs.forEach(fournisseur => { %>
+            <option value="<%= fournisseur._id %>"><%= fournisseur.name %></option>
+          <% }) %>
+        </select>
+      </div>
+    
+    <div class="col-4">
+<div >
+    <label  class="form-label" for="service">Select Service:</label>
+    <select id="service" name="serviceABV" class="form-control" required>
+      <option value="">-- Select a service --</option>
+      <% groupedStorages.forEach(group => { %>
+        <% if (group.storages.length > 0) { %>
+          <option value="<%= group._id %>">
+            <%= group.storages[0].service %>
+          </option>
+        <% } %>
+      <% }) %>
+    </select>
+  </div>
+</div>
+ 
+      <!-- Notes Input -->
+      <div class="col-12">
+        <label class="form-label" for="notes">Notes:</label>
+        <textarea id="notes" name="notes" class="form-control" placeholder="Add notes"></textarea>
+      </div>
+      </div>
+      <!-- Submit Button -->
+      <button type="submit" class="btn demand-new-button">Create Bon Entree BE</button>
+    </form>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+   const initializeChoices = (selectElement) => {
+    return new Choices(selectElement, {
+      searchEnabled: true,
+      itemSelectText: "",
+      noResultsText: "No items found",
+      placeholder: true,
+      placeholderValue: "Select item",
+      searchFloor: 1,
+      searchResultLimit: 0,
+      shouldSort: false,
+      position: "bottom"
+    });
+  };
+
+  initializeChoices(document.getElementById('fournisseur'));
+  initializeChoices(document.getElementById('service'));
+  initializeChoices(document.getElementById('bonReceptionId'));
+
+});
+</script>

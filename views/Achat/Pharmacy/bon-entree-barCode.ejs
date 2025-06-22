@@ -1,0 +1,119 @@
+<button
+  type="button"
+  class="btn me-2 scan-btn px-2 py-1"
+  data-bs-toggle="modal"
+  data-bs-target="#barcode-<%= item._id %>"
+>
+  <i class="bi bi-qr-code"></i>
+</button>
+<div
+  class="modal fade add-storage-modal"
+  id="barcode-<%= item._id %>"
+  data-bs-keyboard="true"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content add-storage-page-container">
+      <div class="modal-header">
+        <h5 class="modal-title" id="barcode-<%= item._id %>">Medicament QR Code</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Ticket Preview -->
+        <div class="mb-3">
+          <div class="label" style="width: 120mm; height: 70mm; padding: 3mm; margin: 0 auto; background-color: white; display: grid; grid-template-columns: 80mm 40mm; gap: 1.5mm; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; border: 1px solid #ccc;">
+            <div class="main-section" style="display: flex; flex-direction: column; height: 54mm;">
+              <div class="header" style="display: flex; flex-direction: column;  margin-bottom: 1.5mm;">
+                <div class="pharmacy-name" style="font-size: 12px; font-weight: 600; color: #000; text-transform: uppercase; letter-spacing: 0.3mm;">CLINIQUE DES OASIS</div>
+                <div class="med-name" style="font-size: 15px;color: #000; font-weight: bold; line-height: 1.2;  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word;"><%= item.medicamentId.designation %></div>
+              </div>
+              <div class="barcode-section" style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 1.5mm;">
+                <div class="barcode" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                  <% if (item.barcode) { %>
+                    <img src="<%= item.barcode %>" alt="QR Code" style="width: 37mm; height: 37mm; object-fit: contain;"
+                      onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'300\' viewBox=\'0 0 300 300\'><rect width=\'100%\' height=\'100%\' fill=\'%23f8f9fa\'/><text x=\'50%\' y=\'50%\' font-size=\'36\' fill=\'%23dc3545\' text-anchor=\'middle\'>No QR</text></svg>'"/>
+                   
+                  <% } %>
+                </div>
+              </div>
+               <div style="font-size: 12px; text-align: center;  color: #000;">
+                      <%= item.originalBarcode || '-' %>
+                    </div>
+            </div>
+
+            <div class="info-section" style="border-left: 0.6mm solid #ccc; padding-left: 1.5mm; display: flex; flex-direction: column;align-items: start; height: 61mm;">
+              <div class="info-group" style="display: flex; flex-direction: column; align-items: start; gap: 0.6mm;">
+                <span class="info-label" style="font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;">LOT</span>
+                <span class="info-value" style="font-size: 15px; font-weight: bold; color: #000; line-height: 1;"><%= item.batchNumber || '-' %></span>
+              </div>
+              
+              <div class="info-group" style="display: flex; flex-direction: column; align-items: start; gap: 0.6mm;">
+                <span class="info-label" style="font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase;">EXP</span>
+                <span class="info-value" style="font-size: 15px; font-weight: bold; color: #000; line-height: 1;"><%= item.expiryDate ? new Date(item.expiryDate).toLocaleDateString('en-GB') : '-' %></span>
+              </div>
+
+              <% if (item.serialNumber) { %>
+              <div class="serial-number" style="font-size: 12px; color: #666; margin-top: auto;  border-top: 0.3mm solid #eee; padding-top: 0.9mm;">
+                <span class="info-label">S/N:</span>
+                <span class="info-value"><%= item.serialNumber %></span>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Print Button -->
+        <div class="mb-3 text-center">
+            <button 
+            type="button" 
+            class="btn gear-btn" 
+            onclick="printTicket({
+              designation: '<%= item.medicamentId.designation %>',
+              barcode: '<%= item.barcode %>',
+              serialNumber: '<%= item.serialNumber %>',
+              batchNumber: '<%= item.batchNumber %>',
+              expiryDate: '<%= item.expiryDate %>',
+              originalBarcode: '<%= item.originalBarcode %>'
+            })"
+          >
+            Print Ticket
+          </button>
+          
+          
+        </div>
+
+        <!-- Change Barcode Form -->
+        <form
+          id="addToStorageForm"
+          method="POST"
+          class="row needs-validation"
+          action="/achat/approvisionnement/BE/updateBarCode/<%= item._id %>"
+          novalidate
+        >
+          <div class="form-group mb-3">
+            <label for="BarCode-<%= item._id %>" class="form-label">Modify Barcode:</label>
+            <input 
+              name="BarCode" 
+              id="BarCode-<%= item._id %>" 
+              value="<%= item.originalBarcode %>" 
+              class="form-control" 
+              type="text" 
+              placeholder="Enter your custom barcode" 
+              required 
+            />
+          </div>
+          <input type="hidden" name="itemId" value="<%= item.inStockId._id %>">
+          <button type="submit" class="btn assign-btn">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

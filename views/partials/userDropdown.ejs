@@ -1,0 +1,55 @@
+<% if (currentUser){ %>
+<a
+  class="nav-link dropdown-toggle"
+  href="#"
+  id="navbarDarkDropdownMenuLink"
+  role="button"
+  data-bs-toggle="dropdown"
+  aria-expanded="false"
+>
+  <img
+    src="https://ui-avatars.com/api/?name=<%= currentUser.firstname%>+<%= currentUser.lastname%>&background=AAD4A6&color=000000&size=200&font-size=0.5&rounded=true&bold=true"
+    alt=""
+    width="30"
+    height="30"
+    class="rounded-circle me-2"
+  />
+</a>
+<% } else { %>
+<a
+  class="nav-link dropdown-toggle"
+  href="#"
+  id="navbarDarkDropdownMenuLink"
+  role="button"
+  data-bs-toggle="dropdown"
+  aria-expanded="false"
+>
+  <i class="bi bi-person-circle"></i>
+</a>
+<% } %>
+<ul
+  class="dropdown-menu bg-antiqueSteel fw-bold"
+  aria-labelledby="navbarDarkDropdownMenuLink"
+>
+  <% if (!currentUser) {%>
+  <li>
+    <a class="dropdown-item fw-bold" href="/user/login"
+      >Login <i class="bi bi-box-arrow-in-right fw-bold"></i
+    ></a>
+  </li>
+  <li>
+    <a class="dropdown-item fw-bold" href="/user/register">Register</a>
+  </li>
+  <% } else { %>
+  <li>
+    <a class="dropdown-item fw-bold" href="/user/<%= currentUser._id %>/profile"
+      >Profile <i class="bi bi-person-fill fw-bold"></i
+    ></a>
+  </li>
+  <li>
+    <a class="dropdown-item fw-bold" href="/user/logout"
+      >Logout <i class="bi bi-box-arrow-right fw-bold"></i
+    ></a>
+  </li>
+  <% } %>
+</ul>
